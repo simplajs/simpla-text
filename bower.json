@@ -1,0 +1,36 @@
+{
+  "name": "simpla-text",
+  "description": "adds editable dynamic text",
+  "version": "0.0.0",
+  "authors": [
+    "Simpla <admin@simpla.io>"
+  ],
+  "license": "MIT",
+  "main": "simpla-text.html",
+  "keywords": [
+    "simpla",
+    "web component",
+    "polymer",
+    "text"
+  ],
+  "ignore": [
+    "*",
+    "!src",
+    "!simpla-text.html",
+    "!LICENSE"
+  ],
+  "dependencies": {
+    "webcomponentsjs": "^0.7.14",
+    "polymer": "^1.1.4",
+    "simpla": "git@github.com:simplaio/simpla.git",
+    "sm-css": "git@github.com:simplaio/sm-css.git"
+  },
+  "devDependencies": {
+    "web-component-tester": "^3.3.22",
+    "test-fixture": "PolymerElements/test-fixture#~1.0.0"
+  },
+  "simplaImports": [
+    "polymer/polymer.html",
+    "sm-css/sm-css.html"
+  ]
+}

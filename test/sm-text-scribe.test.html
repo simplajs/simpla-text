@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>sm-text-scribe</title>
+    <script src="../../webcomponentsjs/webcomponents.min.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../test-fixture/test-fixture-mocha.js"></script>
+    <link rel="import" href="../../test-fixture/test-fixture.html">
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../simpla-text.html">
+    <script src="./sm-text-scribe.fixtures.js"></script>
+  </head>
+  <body>
+    <test-fixture id="default">
+      <template>
+        <sm-text-scribe></sm-text-scribe>
+      </template>
+    </test-fixture>
+    <test-fixture id="propertes">
+      <template>
+        <sm-text-scribe></sm-text-scribe>
+      </template>
+    </test-fixture>
+    <test-fixture id="explicit-inline">
+      <template>
+        <sm-text-scribe inline></sm-text-scribe>
+      </template>
+    </test-fixture>
+    <test-fixture id="explicit-block">
+      <template>
+        <sm-text-scribe block></sm-text-scribe>
+      </template>
+    </test-fixture>
+    <test-fixture id="implicit-inline">
+      <template>
+        <span><sm-text-scribe></sm-text-scribe></span>
+      </template>
+    </test-fixture>
+    <test-fixture id="implicit-block">
+      <template>
+        <div><sm-text-scribe></sm-text-scribe></div>
+      </template>
+    </test-fixture>
+    <script>
+      describe('<sm-text-scribe>', function() {
+
+        var component,
+            componentFixtures;
+
+        componentFixtures = window.fixtures['sm-text-scribe'];
+
+        beforeEach(function() {
+          component = fixture('default');
+        });
+
+        it('is okay', function() {
+          expect(component).to.be.ok;
+        });
+
+        describe('commands', function() {
+          it('should compute an array version of the commands', function() {
+            component.commands = ' floo   foo   bar    foo-bar';
+
+            expect(component._commands).to.deep.equal(['floo', 'foo', 'bar', 'foo-bar']);
+          });
+        });
+
+        describe('scribe', function() {
+          beforeEach(function() {
+            component._scribe.setContent('');
+            component.value = '';
+          });
+
+          it('should bind its value to component\'s value', function() {
+            var value = componentFixtures.content;
+            component._scribe.setContent(value);
+
+            expect(component.value).to.equal(value);
+          });
+
+          it('should be updated when value changes', function() {
+            var value = componentFixtures.content;
+            component.value = value;
+
+            expect(component._scribe.getContent()).to.equal(value);
+          });
+        });
+
+        describe('inline / block', function() {
+          var component;
+
+          it('attribute should make it inline', function() {
+            component = fixture('explicit-inline');
+            expect(component.shouldInline()).to.be.true;
+          });
+
+          it('attribute should make it block', function() {
+            component = fixture('explicit-block');
+            expect(component.shouldInline()).to.be.false;
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
