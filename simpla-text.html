@@ -4176,7 +4176,7 @@
     <style>
 ::host{border:none}
 </style>
-    <sm-text-scribe><content></content></sm-text-scribe>
+    <sm-text-scribe id="scribe"><content></content></sm-text-scribe>
   </template>
   <script>/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -4246,6 +4246,11 @@
 	    key: 'beforeRegister',
 	    value: function beforeRegister() {
 	      this.is = 'simpla-text';
+	    }
+	  }, {
+	    key: 'behaviors',
+	    get: function get() {
+	      return [simpla.behaviors.editable];
 	    }
 	  }]);
 
