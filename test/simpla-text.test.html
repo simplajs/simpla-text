@@ -39,6 +39,16 @@
         it('should have editable behavior', function() {
           expect(component.editable).to.not.be.undefined;
         });
+
+        describe('scribe', function() {
+          it('should follow editable status of simpla-text', function() {
+            component.editable = false;
+            expect(scribe.editable).to.be.false;
+
+            component.editable = true;
+            expect(scribe.editable).to.be.true;
+          });
+        });
       });
     </script>
   </body>
