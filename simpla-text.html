@@ -4246,6 +4246,19 @@
 	    key: 'beforeRegister',
 	    value: function beforeRegister() {
 	      this.is = 'simpla-text';
+
+	      this.properties = {
+	        commands: String,
+	        _commands: {
+	          type: Array,
+	          computed: 'parseCommands(commands)'
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'parseCommands',
+	    value: function parseCommands(commands) {
+	      return commands.trim().split(/\s+/);
 	    }
 	  }, {
 	    key: 'behaviors',

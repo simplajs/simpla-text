@@ -49,7 +49,15 @@
             expect(scribe.editable).to.be.true;
           });
         });
-      });
+
+        describe('commands', function() {
+          it('should compute an array version of the commands', function() {
+            component.commands = ' floo   foo   bar    foo-bar';
+
+            expect(component._commands).to.deep.equal(['floo', 'foo', 'bar', 'foo-bar']);
+
+          });
+        });
     </script>
   </body>
 </html>
