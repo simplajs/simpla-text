@@ -57,6 +57,11 @@
             expect(component._commands).to.deep.equal(['floo', 'foo', 'bar', 'foo-bar']);
 
           });
+
+          it('should bind down to sm-text-scribe', function() {
+            component.commands = 'foo bar';
+            expect(scribe.commands).to.deep.equal(['foo', 'bar']);
+          });
         });
     </script>
   </body>
