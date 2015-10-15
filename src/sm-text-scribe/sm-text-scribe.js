@@ -1,4 +1,5 @@
 import Scribe from 'scribe-editor';
+import { INLINE_ELEMENTS } from './constants';
 
 class SmHelperScribe {
   beforeRegister() {
@@ -24,15 +25,19 @@ class SmHelperScribe {
 
   ready() {
     let target = this.$['container'];
+    this._setupScribe(target);
+  }
+
+  parseCommands(commands) {
+    return commands.trim().split(/\s+/);
+  }
+
+  _setupScribe(target) {
     this._scribe = new Scribe(target);
 
     this._scribe.on('content-changed', () => {
       this.value = this._scribe.getContent();
     });
-  }
-
-  parseCommands(commands) {
-    return commands.trim().split(/\s+/);
   }
 
   _valueChanged(value) {
@@ -48,6 +53,10 @@ class SmHelperScribe {
    * @return {boolean}
    */
   shouldInline() {
+    let parent,
+        name,
+        shouldBeInline;
+
     if (this.inline) {
       return true;
     }
@@ -56,7 +65,11 @@ class SmHelperScribe {
       return false;
     }
 
-    return false;
+    parent = this.parentNode;
+    name = parent.nodeName.toLowerCase();
+    shouldBeInline = INLINE_ELEMENTS.indexOf(name) !== -1;
+
+    return shouldBeInline;
   }
 }
 

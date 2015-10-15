@@ -100,6 +100,20 @@
             component = fixture('explicit-block');
             expect(component.shouldInline()).to.be.false;
           });
+
+          it('should be inline when nesting inside inline', function() {
+            var wrapper = fixture('implicit-inline');
+            component = wrapper.children[0];
+
+            expect(component.shouldInline()).to.be.true;
+          });
+
+          it('should be block when nesting inside block', function() {
+            var wrapper = fixture('implicit-block');
+            component = wrapper.children[0];
+
+            expect(component.shouldInline()).to.be.false;
+          });
         });
       });
     </script>
