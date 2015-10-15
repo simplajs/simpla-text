@@ -1,10 +1,10 @@
-<html><head><meta charset="UTF-8"><link rel="import" href="../sm-css/sm-css.html"><link rel="import" href="../polymer/polymer.html"></head><body><div hidden="" by-vulcanize=""><dom-module id="sm-text-scribe" assetpath="../sm-text-scribe/">
+<html><head><meta charset="UTF-8"><link rel="import" href="../sm-css/sm-css.html"><link rel="import" href="../simpla/simpla.html"><link rel="import" href="../polymer/polymer.html"></head><body><div hidden="" by-vulcanize=""><dom-module id="sm-text-scribe" assetpath="../sm-text-scribe/">
   <template>
     <style>
 .container{outline:none}
 </style>
 
-    <div id="container" class="container">
+    <div id="container" class="container" contenteditable$="[[editable]]">
       <content></content>
     </div>
   </template>
@@ -136,6 +136,10 @@
 	      this._scribe.on('content-changed', function () {
 	        _this.value = _this._scribe.getContent();
 	      });
+
+	      // Because scribe override contenteditable, we should set it again to make
+	      //  sure it propagates down
+	      this.toggleAttribute('contenteditable', this.editable, this.$.container);
 	    }
 	  }, {
 	    key: '_valueChanged',
@@ -171,6 +175,11 @@
 	      shouldBeInline = _constants.INLINE_ELEMENTS.indexOf(name) !== -1;
 
 	      return shouldBeInline;
+	    }
+	  }, {
+	    key: 'behaviors',
+	    get: function get() {
+	      return [simpla.behaviors.editable];
 	    }
 	  }]);
 
@@ -4167,7 +4176,7 @@
     <style>
 ::host{border:none}
 </style>
-
+    <sm-text-scribe><content></content></sm-text-scribe>
   </template>
   <script>/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache

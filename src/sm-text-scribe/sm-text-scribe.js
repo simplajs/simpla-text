@@ -23,6 +23,12 @@ class SmHelperScribe {
     };
   }
 
+  get behaviors() {
+    return [
+      simpla.behaviors.editable
+    ];
+  }
+
   ready() {
     let target = this.$['container'];
     this._setupScribe(target);
@@ -38,6 +44,10 @@ class SmHelperScribe {
     this._scribe.on('content-changed', () => {
       this.value = this._scribe.getContent();
     });
+
+    // Because scribe override contenteditable, we should set it again to make
+    //  sure it propagates down
+    this.toggleAttribute('contenteditable', this.editable, this.$.container);
   }
 
   _valueChanged(value) {
