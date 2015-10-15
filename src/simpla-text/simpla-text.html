@@ -4,7 +4,13 @@
   <template>
     <style include="sm-css"></style>
     <link rel="stylesheet" href="./simpla-text.css" />
-    <sm-text-scribe id="scribe" commands="[[_commands]]"><content></content></sm-text-scribe>
+    <sm-text-scribe
+      id="scribe"
+      editable="[[editable]]"
+      commands="[[_commands]]"
+    >
+        <content></content>
+    </sm-text-scribe>
   </template>
   <script src="./simpla-text.js"></script>
 </dom-module>

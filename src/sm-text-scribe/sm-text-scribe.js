@@ -23,6 +23,12 @@ class SmHelperScribe {
     };
   }
 
+  get behaviors() {
+    return [
+      simpla.behaviors.editable
+    ];
+  }
+
   ready() {
     let target = this.$['container'];
     this._setupScribe(target);

@@ -4,7 +4,7 @@
 .container{outline:none}
 </style>
 
-    <div id="container" class="container">
+    <div id="container" class="container" contenteditable$="[[editable]]">
       <content></content>
     </div>
   </template>
@@ -122,6 +122,38 @@
 	      var target = this.$['container'];
 	      this._setupScribe(target);
 	    }
+<<<<<<< HEAD
+	  }, {
+	    key: 'parseCommands',
+	    value: function parseCommands(commands) {
+	      return commands.trim().split(/\s+/);
+	    }
+	  }, {
+	    key: '_setupScribe',
+	    value: function _setupScribe(target) {
+	      var _this = this;
+
+	      this._scribe = new _scribeEditor2['default'](target);
+
+	      this._scribe.on('content-changed', function () {
+	        _this.value = _this._scribe.getContent();
+	      });
+
+	      // Because scribe override contenteditable, we should set it again to make
+	      //  sure it propagates down
+	      this.toggleAttribute('contenteditable', this.editable, this.$.container);
+	    }
+	  }, {
+	    key: '_valueChanged',
+	    value: function _valueChanged(value) {
+	      // Note we use setHTML as setContent will trigger a content-changed event
+	      //  which will set off an infinite loop
+	      if (this._scribe && this._scribe.setHTML) {
+	        this._scribe.setHTML(value);
+	      }
+	    }
+=======
+>>>>>>> master
 
 	    /**
 	     * Returns true if inline
@@ -149,6 +181,11 @@
 	      return shouldBeInline;
 	    }
 	  }, {
+<<<<<<< HEAD
+	    key: 'behaviors',
+	    get: function get() {
+	      return [simpla.behaviors.editable];
+=======
 	    key: '_setupScribe',
 	    value: function _setupScribe(target) {
 	      var _this = this;
@@ -172,6 +209,7 @@
 	    key: '_commandsObserver',
 	    value: function _commandsObserver(value) {
 	      (0, _utilsCommandControl.bindCommands)(value);
+>>>>>>> master
 	    }
 	  }]);
 
@@ -4228,7 +4266,11 @@
     <style>
 ::host{border:none}
 </style>
+<<<<<<< HEAD
+    <sm-text-scribe id="scribe" editable="[[editable]]"><content></content></sm-text-scribe>
+=======
     <sm-text-scribe id="scribe" commands="[[_commands]]"><content></content></sm-text-scribe>
+>>>>>>> master
   </template>
   <script>/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -4314,6 +4356,11 @@
 	    key: '_parseCommands',
 	    value: function _parseCommands(commands) {
 	      return commands.trim().split(/\s+/);
+	    }
+	  }, {
+	    key: 'behaviors',
+	    get: function get() {
+	      return [simpla.behaviors.editable];
 	    }
 	  }]);
 

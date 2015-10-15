@@ -140,6 +140,26 @@
             expect(component.shouldInline()).to.be.false;
           });
         });
+
+        describe('editable', function() {
+          it('should be a behavior', function() {
+            expect(component.editable).to.not.be.undefined;
+          });
+
+          it('if not there, contenteditable should be false', function() {
+            var container = component.$.container;
+
+            component.editable = false;
+            expect(container.hasAttribute('contenteditable')).to.be.false;
+          });
+
+          it('if there, should have contenteditable', function() {
+            var container = component.$.container;
+
+            component.editable = true;
+            expect(container.hasAttribute('contenteditable')).to.be.true;
+          });
+        });
       });
     </script>
   </body>

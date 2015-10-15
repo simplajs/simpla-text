@@ -17,6 +17,12 @@ class SimplaText {
   _parseCommands(commands) {
     return commands.trim().split(/\s+/);
   }
+
+  get behaviors() {
+    return [
+      simpla.behaviors.editable
+    ];
+  }
 }
 
 Polymer(SimplaText);
