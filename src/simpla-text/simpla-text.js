@@ -3,7 +3,10 @@ class SimplaText {
     this.is = 'simpla-text';
 
     this.properties = {
-      commands: String,
+      commands: {
+        type: String,
+        value: ''
+      },
       _commands: {
         type: Array,
         computed: '_parseCommands(commands)'

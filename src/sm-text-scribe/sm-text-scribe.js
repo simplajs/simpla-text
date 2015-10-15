@@ -1,5 +1,6 @@
 import Scribe from 'scribe-editor';
 import { INLINE_ELEMENTS } from './constants';
+import { bindCommands } from './utils/command-control';
 
 class SmHelperScribe {
   beforeRegister() {
@@ -11,10 +12,9 @@ class SmHelperScribe {
         value: '',
         observer: '_valueChanged'
       },
-      commands: String,
-      _commands: {
+      commands: {
         type: Array,
-        computed: 'parseCommands(commands)'
+        observer: '_commandsObserver'
       },
       inline: Boolean,
       block: Boolean,

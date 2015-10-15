@@ -88,6 +88,8 @@
 
 	var _constants = __webpack_require__(2);
 
+	var _utilsCommandControl = __webpack_require__(71);
+
 	var SmHelperScribe = (function () {
 	  function SmHelperScribe() {
 	    _classCallCheck(this, SmHelperScribe);
@@ -104,10 +106,9 @@
 	          value: '',
 	          observer: '_valueChanged'
 	        },
-	        commands: String,
-	        _commands: {
+	        commands: {
 	          type: Array,
-	          computed: 'parseCommands(commands)'
+	          observer: '_commandsObserver'
 	        },
 	        inline: Boolean,
 	        block: Boolean,
@@ -121,6 +122,7 @@
 	      var target = this.$['container'];
 	      this._setupScribe(target);
 	    }
+<<<<<<< HEAD
 	  }, {
 	    key: 'parseCommands',
 	    value: function parseCommands(commands) {
@@ -150,6 +152,8 @@
 	        this._scribe.setHTML(value);
 	      }
 	    }
+=======
+>>>>>>> f9c5165... Add disable / enable commands
 
 	    /**
 	     * Returns true if inline
@@ -177,9 +181,35 @@
 	      return shouldBeInline;
 	    }
 	  }, {
+<<<<<<< HEAD
 	    key: 'behaviors',
 	    get: function get() {
 	      return [simpla.behaviors.editable];
+=======
+	    key: '_setupScribe',
+	    value: function _setupScribe(target) {
+	      var _this = this;
+
+	      this._scribe = new _scribeEditor2['default'](target);
+
+	      this._scribe.on('content-changed', function () {
+	        _this.value = _this._scribe.getContent();
+	      });
+	    }
+	  }, {
+	    key: '_valueChanged',
+	    value: function _valueChanged(value) {
+	      // Note we use setHTML as setContent will trigger a content-changed event
+	      //  which will set off an infinite loop
+	      if (this._scribe && this._scribe.setHTML) {
+	        this._scribe.setHTML(value);
+	      }
+	    }
+	  }, {
+	    key: '_commandsObserver',
+	    value: function _commandsObserver(value) {
+	      (0, _utilsCommandControl.bindCommands)(value);
+>>>>>>> f9c5165... Add disable / enable commands
 	    }
 	  }]);
 
@@ -4167,6 +4197,66 @@
 	  return assignDefaults;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
+/***/ },
+/* 71 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.bindCommands = bindCommands;
+	var enabled = undefined;
+
+	function backupFunctions() {
+	  for (var _len = arguments.length, fns = Array(_len), _key = 0; _key < _len; _key++) {
+	    fns[_key] = arguments[_key];
+	  }
+
+	  fns.filter(function (fn) {
+	    return !document[fn]._simpla;
+	  }).forEach(function (fn) {
+	    return document['_' + fn] = document[fn];
+	  });
+	};
+
+	// Backem up
+	backupFunctions('queryCommandEnabled', 'execCommand');
+
+	document.queryCommandEnabled = function () {
+	  for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	    args[_key2] = arguments[_key2];
+	  }
+
+	  var command = args[0],
+	      want = document._queryCommandEnabled.apply(this, args);
+
+	  if (!enabled) {
+	    return want;
+	  }
+
+	  return enabled.indexOf(command) !== -1 && want;
+	};
+
+	document.execCommand = function () {
+	  for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+	    args[_key3] = arguments[_key3];
+	  }
+
+	  var command = args[0];
+
+	  if (!enabled || enabled.indexOf(command) === -1) {
+	    document._execCommand.apply(this, args);
+	  }
+	};
+
+	function bindCommands(commands) {
+	  enabled = commands;
+	}
+
+	;
+
 /***/ }
 /******/ ]);</script>
 </dom-module>
@@ -4248,16 +4338,19 @@
 	      this.is = 'simpla-text';
 
 	      this.properties = {
-	        commands: String,
+	        commands: {
+	          type: String,
+	          value: ''
+	        },
 	        _commands: {
 	          type: Array,
-	          computed: 'parseCommands(commands)'
+	          computed: '_parseCommands(commands)'
 	        }
 	      };
 	    }
 	  }, {
-	    key: 'parseCommands',
-	    value: function parseCommands(commands) {
+	    key: '_parseCommands',
+	    value: function _parseCommands(commands) {
 	      return commands.trim().split(/\s+/);
 	    }
 	  }, {

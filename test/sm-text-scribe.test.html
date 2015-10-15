@@ -47,12 +47,14 @@
       describe('<sm-text-scribe>', function() {
 
         var component,
-            componentFixtures;
+            componentFixtures,
+            scribe;
 
         componentFixtures = window.fixtures['sm-text-scribe'];
 
         beforeEach(function() {
           component = fixture('default');
+          scribe = component._scribe;
         });
 
         it('is okay', function() {
@@ -60,10 +62,33 @@
         });
 
         describe('commands', function() {
-          it('should compute an array version of the commands', function() {
-            component.commands = ' floo   foo   bar    foo-bar';
+          var enabled = ['bold', 'italic'],
+              disabled = ['underline', 'subscript'],
+              stub;
 
-            expect(component._commands).to.deep.equal(['floo', 'foo', 'bar', 'foo-bar']);
+          beforeEach(function() {
+            component.commands = enabled;
+
+            // To be able to do this, we override the queryEnabled on command,
+            //  so in these tests, we need to stub the internal method to return
+            //  true so we can test it gets overriden when we have disabled commands
+            stub = sinon.stub(document, '_queryCommandEnabled').returns(true);
+          });
+
+          afterEach(function() {
+            stub.restore();
+          });
+
+          it('should have enabled, enabled', function() {
+            enabled
+              .map(function(command) { return scribe.getCommand(command); })
+              .forEach(function(command) { expect(command.queryEnabled()).to.be.true });
+          });
+
+          it('should have disabled, disabled', function() {
+            disabled
+              .map(function(command) { return scribe.getCommand(command); })
+              .forEach(function(command) { expect(command.queryEnabled()).to.be.false });
           });
         });
 
