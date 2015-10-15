@@ -22,12 +22,14 @@
       describe('<simpla-text>', function() {
 
         var component,
-            componentFixtures;
+            componentFixtures,
+            scribe;
 
         componentFixtures = window.fixtures;
 
         beforeEach(function() {
           component = fixture('default');
+          scribe = component.$.scribe;
         });
 
         it('is okay', function() {
@@ -39,6 +41,11 @@
             component.commands = ' floo   foo   bar    foo-bar';
 
             expect(component._commands).to.deep.equal(['floo', 'foo', 'bar', 'foo-bar']);
+          });
+
+          it('should bind down to sm-text-scribe', function() {
+            component.commands = 'foo bar';
+            expect(scribe.commands).to.deep.equal(['foo', 'bar']);
           });
         });
       });
