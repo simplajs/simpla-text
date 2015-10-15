@@ -56,7 +56,9 @@ class SmHelperScribe {
     this._scribe = new Scribe(target);
 
     this._scribe.on('content-changed', () => {
-      this.value = this._scribe.getContent();
+      // Use getHTML instead of getContent so as not to apply 'for export'
+      //  formatting. See https://github.com/guardian/scribe/blob/master/src/scribe.js#L147
+      this.value = this._scribe.getHTML();
     });
   }
 
