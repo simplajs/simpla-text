@@ -48,6 +48,19 @@
             component.editable = true;
             expect(scribe.editable).to.be.true;
           });
+
+          it('should follow commands of simpla-text', function() {
+            component.commands = 'foo bar';
+            expect(scribe.commands).to.deep.equal(['foo', 'bar']);
+          });
+        });
+
+        describe('commands', function() {
+          it('should compute an array version of the commands', function() {
+            component.commands = ' floo   foo   bar    foo-bar';
+
+            expect(component._commands).to.deep.equal(['floo', 'foo', 'bar', 'foo-bar']);
+          });
         });
       });
     </script>
