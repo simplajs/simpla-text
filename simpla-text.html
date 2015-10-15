@@ -1,4 +1,4 @@
-<html><head><meta charset="UTF-8"><link rel="import" href="../sm-css/sm-css.html"><link rel="import" href="../polymer/polymer.html"></head><body><div hidden="" by-vulcanize=""><dom-module id="sm-text-scribe" assetpath="../sm-text-scribe/">
+<html><head><meta charset="UTF-8"><link rel="import" href="../sm-css/sm-css.html"><link rel="import" href="../simpla/simpla.html"><link rel="import" href="../polymer/polymer.html"></head><body><div hidden="" by-vulcanize=""><dom-module id="sm-text-scribe" assetpath="../sm-text-scribe/">
   <template>
     <style>
 .container{outline:none}
@@ -4237,6 +4237,19 @@
 	    key: 'beforeRegister',
 	    value: function beforeRegister() {
 	      this.is = 'simpla-text';
+
+	      this.properties = {
+	        commands: String,
+	        _commands: {
+	          type: Array,
+	          computed: 'parseCommands(commands)'
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'parseCommands',
+	    value: function parseCommands(commands) {
+	      return commands.trim().split(/\s+/);
 	    }
 	  }]);
 
