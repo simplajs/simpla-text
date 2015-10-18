@@ -23,7 +23,7 @@ document.queryCommandEnabled = function(...args) {
 document.execCommand = function(...args) {
   let command = args[0];
 
-  if (!enabled || enabled.indexOf(command) === -1) {
+  if (!enabled || enabled.indexOf(command) !== -1) {
     document._execCommand.apply(this, args);
   }
 };
