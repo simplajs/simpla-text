@@ -2,27 +2,27 @@ import gulp from 'gulp';
 import del from 'del';
 import webpack from 'webpack-stream';
 import named from 'vinyl-named';
-import csswring from 'csswring';
 import autoprefixer from 'autoprefixer';
+import easings from 'postcss-easings';
 import wct from 'web-component-tester';
 import notify from 'gulp-notify';
+import gulprun from 'run-sequence';
 import vulcanize from 'gulp-vulcanize';
 import gulpif from 'gulp-if';
 import eslint from 'gulp-eslint';
 import postcss from 'gulp-postcss';
+import minify from 'gulp-minify-inline';
 import plumber from 'gulp-plumber';
+import yargs from 'yargs';
 import browserSync from 'browser-sync';
-import { simplaImports, name as ELEMENT_NAME } from './bower.json';
+import { componentImports, name as ELEMENT_NAME } from './bower.json';
 import path from 'path';
-import gulprun from 'run-sequence';
 
-const imports = simplaImports.map(dep => `../${dep}`),
-      bs = browserSync.create();
-
-// Get WCT going
-wct.gulp.init(gulp);
-
-const options = {
+const imports = componentImports.map(dep => `../${dep}`),
+      bs = browserSync.create(),
+      argv = yargs.alias('d', 'debug').boolean(['debug']).argv,
+      errorNotifier = () => plumber({ errorHandler: notify.onError('Error: <%= error.message %>') }),
+      options = {
         webpack: {
           output: {
             filename: '[name].js'
@@ -34,8 +34,8 @@ const options = {
           }
         },
         postcss: [
-          autoprefixer(),
-          csswring()
+          easings(),
+          autoprefixer()
         ],
         vulcanize: {
           inlineCss: true,
@@ -53,8 +53,9 @@ const options = {
           },
           open: false
         }
-      },
-      errorNotifier = () => plumber({ errorHandler: notify.onError('Error: <%= error.message %>') });
+      };
+
+wct.gulp.init(gulp);
 
 gulp.task('process', () => {
   return gulp.src(['src/*/*.{html,js,css}', 'src/*.{html,js,css}'])
@@ -79,16 +80,21 @@ gulp.task('process', () => {
 gulp.task('build', ['process'], () => {
   return gulp.src([`.tmp/${ELEMENT_NAME}/${ELEMENT_NAME}.html`,`.tmp/${ELEMENT_NAME}.html`])
           .pipe(errorNotifier())
-          .pipe(gulpif('*.html', vulcanize(options.vulcanize)))
-          .pipe(gulp.dest('.'));
+          .pipe(vulcanize(options.vulcanize))
+          .pipe(gulpif(!argv.debug, minify()))
+        .pipe(gulp.dest('.'));
+});
+
+gulp.task('run', callback => {
+  if (argv.debug) {
+    gulprun('build', callback)
+  } else {
+    gulprun('build', 'clean', callback)
+  }
 });
 
 gulp.task('clean', () => {
   return del([ '.tmp' ]);
-});
-
-gulp.task('run', callback => {
-  gulprun('build', 'clean', callback);
 });
 
 gulp.task('demo', (callback) => {
@@ -97,7 +103,7 @@ gulp.task('demo', (callback) => {
   return bs.init(options.browserSync);
 });
 
-gulp.task('test', ['build', 'test:local']);
+gulp.task('test', ['run', 'test:local']);
 
 gulp.task('watch', () => gulp.watch(['src/**/*'], ['run']));
 gulp.task('default', ['run', 'demo', 'watch']);

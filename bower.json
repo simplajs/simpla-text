@@ -22,16 +22,14 @@
   "dependencies": {
     "webcomponentsjs": "^0.7.14",
     "polymer": "^1.1.4",
-    "simpla": "git@github.com:simplaio/simpla.git",
-    "sm-css": "git@github.com:simplaio/sm-css.git"
+    "simpla": "git@github.com:simplaio/simpla.git"
   },
   "devDependencies": {
     "web-component-tester": "^3.3.22",
     "test-fixture": "PolymerElements/test-fixture#~1.0.0"
   },
-  "simplaImports": [
+  "componentImports": [
     "polymer/polymer.html",
-    "simpla/simpla.html",
-    "sm-css/sm-css.html"
+    "simpla/simpla.html"
   ]
 }
