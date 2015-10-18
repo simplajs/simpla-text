@@ -25,7 +25,7 @@ class SmHelperScribe {
 
   get behaviors() {
     return [
-      simpla.behaviors.editable
+      simpla.behaviors.editable()
     ];
   }
 
