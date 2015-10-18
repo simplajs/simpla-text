@@ -15,7 +15,8 @@ class SimplaText {
   }
 
   _parseCommands(commands) {
-    return commands.trim().split(/\s+/);
+    const trimmed = commands ? commands.trim() : '';
+    return trimmed === '' ? null : trimmed.split(/\s+/);
   }
 
   get behaviors() {

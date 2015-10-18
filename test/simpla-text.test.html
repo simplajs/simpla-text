@@ -61,6 +61,14 @@
 
             expect(component._commands).to.deep.equal(['floo', 'foo', 'bar', 'foo-bar']);
           });
+
+          it('should set _commands to null if commands is empty string', function() {
+            component.commands = '';
+            expect(component._commands).to.equal(null);
+
+            component.commands = '   ';
+            expect(component._commands).to.equal(null);
+          });
         });
       });
     </script>
