@@ -25,7 +25,7 @@ class SmHelperScribe {
 
   get behaviors() {
     return [
-      simpla.behaviors.editable
+      simpla.behaviors.editable()
     ];
   }
 
@@ -66,6 +66,10 @@ class SmHelperScribe {
       //  formatting. See https://github.com/guardian/scribe/blob/master/src/scribe.js#L147
       this.value = this._scribe.getHTML();
     });
+
+    // Make sure the contenteditable attribute is reset as it may have been
+    //  override by scribe during setup
+    this.toggleAttribute('contenteditable', this.editable, target);
   }
 
   _valueChanged(value) {
