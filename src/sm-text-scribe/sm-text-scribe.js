@@ -10,7 +10,8 @@ class SmHelperScribe {
       value: {
         type: String,
         value: '',
-        observer: '_valueChanged'
+        observer: '_valueChanged',
+        notify: true
       },
       commands: {
         type: Array,
@@ -56,6 +57,18 @@ class SmHelperScribe {
     shouldBeInline = INLINE_ELEMENTS.indexOf(name) !== -1;
 
     return shouldBeInline;
+  }
+
+  focus(...args) {
+    this._scribe.el.focus(...args);
+  }
+
+  _fireFocus() {
+    this.fire('focus');
+  }
+
+  _fireBlur() {
+    this.fire('blur');
   }
 
   _setupScribe(target) {
