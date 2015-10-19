@@ -93,17 +93,13 @@ gulp.task('run', callback => {
   }
 });
 
-gulp.task('clean', () => {
-  return del([ '.tmp' ]);
-});
+gulp.task('clean', () => del([ '.tmp' ]));
 
-gulp.task('demo', (callback) => {
-  gulp.watch('./*.{html,js}').on('change', bs.reload);
+gulp.task('demo', (callback) => bs.init(options.browserSync));
 
-  return bs.init(options.browserSync);
-});
+gulp.task('refresh', () => bs.reload);
 
 gulp.task('test', ['run', 'test:local']);
 
-gulp.task('watch', () => gulp.watch(['src/**/*'], ['run']));
+gulp.task('watch', () => gulp.watch(['src/**/*'], gulprun('run', 'refresh')));
 gulp.task('default', ['run', 'demo', 'watch']);
