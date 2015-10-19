@@ -10,7 +10,8 @@ class SmHelperScribe {
       value: {
         type: String,
         value: '',
-        observer: '_valueChanged'
+        observer: '_valueChanged',
+        notify: true
       },
       commands: {
         type: Array,
@@ -38,28 +39,6 @@ class SmHelperScribe {
     return commands.trim().split(/\s+/);
   }
 
-  _setupScribe(target) {
-    this._scribe = new Scribe(target);
-
-    this._scribe.on('content-changed', () => {
-      // Use getHTML instead of getContent so as not to apply 'for export'
-      //  formatting. See https://github.com/guardian/scribe/blob/master/src/scribe.js#L147
-      this.value = this._scribe.getHTML();
-    });
-
-    // Because scribe override contenteditable, we should set it again to make
-    //  sure it propagates down
-    this.toggleAttribute('contenteditable', this.editable, this.$.container);
-  }
-
-  _valueChanged(value) {
-    // Note we use setHTML as setContent will trigger a content-changed event
-    //  which will set off an infinite loop
-    if (this._scribe && this._scribe.setHTML) {
-      this._scribe.setHTML(value);
-    }
-  }
-
   /**
    * Returns true if inline
    * @return {boolean}
@@ -82,6 +61,44 @@ class SmHelperScribe {
     shouldBeInline = INLINE_ELEMENTS.indexOf(name) !== -1;
 
     return shouldBeInline;
+  }
+
+  focus(...args) {
+    this._scribe.el.focus(...args);
+  }
+
+  _fireFocus() {
+    this.fire('focus');
+  }
+
+  _fireBlur() {
+    this.fire('blur');
+  }
+
+  _setupScribe(target) {
+    this._scribe = new Scribe(target);
+
+    this._scribe.on('content-changed', () => {
+      // Use getHTML instead of getContent so as not to apply 'for export'
+      //  formatting. See https://github.com/guardian/scribe/blob/master/src/scribe.js#L147
+      this.value = this._scribe.getHTML();
+    });
+
+    // Make sure the contenteditable attribute is reset as it may have been
+    //  override by scribe during setup
+    this.toggleAttribute('contenteditable', this.editable, target);
+  }
+
+  _valueChanged(value) {
+    // Note we use setHTML as setContent will trigger a content-changed event
+    //  which will set off an infinite loop
+    if (this._scribe && this._scribe.setHTML) {
+      this._scribe.setHTML(value);
+    }
+  }
+
+  _commandsObserver(value) {
+    bindCommands(value);
   }
 }
 

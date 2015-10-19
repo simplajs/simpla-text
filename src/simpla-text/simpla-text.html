@@ -4,7 +4,17 @@
   <template>
     <style include="sm-css"></style>
     <link rel="stylesheet" href="./simpla-text.css" />
-    <sm-text-scribe id="scribe" commands="[[_commands]]"><content></content></sm-text-scribe>
+    <sm-text-scribe
+      id="scribe"
+      editable="[[editable]]"
+      commands="[[_commands]]"
+      value="{{value}}"
+      on-focus="_disablePlaceholder"
+      on-blur="_checkPlaceholder"
+    >
+        <content></content>
+    </sm-text-scribe>
+    <sm-meta-placeholder id="placeholder" show="[[usePlaceholder]]">[[placeholder]]</sm-meta-placeholder>
   </template>
   <script src="./simpla-text.js"></script>
 </dom-module>

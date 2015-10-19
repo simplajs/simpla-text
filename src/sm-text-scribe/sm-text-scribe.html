@@ -2,7 +2,7 @@
   <template>
     <link rel="stylesheet" href="./sm-text-scribe.css" />
 
-    <div id="container" class="container" contenteditable$="[[editable]]">
+    <div id="container" on-focus="_fireFocus" on-blur="_fireBlur" class="container" contenteditable$="[[editable]]">
       <content></content>
     </div>
   </template>

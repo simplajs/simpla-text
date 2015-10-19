@@ -30,6 +30,7 @@
   },
   "componentImports": [
     "polymer/polymer.html",
-    "simpla/simpla.html"
+    "simpla/simpla.html",
+    "sm-meta-placeholder/sm-meta-placeholder.html"
   ]
 }

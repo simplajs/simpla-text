@@ -10,6 +10,11 @@ class SimplaText {
       _commands: {
         type: Array,
         computed: '_parseCommands(commands)'
+      },
+      value: {
+        type: String,
+        value: '',
+        observer: '_valueChanged'
       }
     };
   }
@@ -21,9 +26,27 @@ class SimplaText {
 
   get behaviors() {
     return [
-      simpla.behaviors.editable(),
+      simpla.behaviors.editable({
+        observer: '_checkPlaceholder'
+      }),
       simpla.behaviors.placeholder()
     ];
+  }
+
+  _valueChanged() {
+    this._checkPlaceholder();
+  }
+
+  _disablePlaceholder() {
+    this.usePlaceholder = false;
+  }
+
+  _checkPlaceholder() {
+    if (this.value === '' && this.editable) {
+      this.usePlaceholder = true;
+    } else {
+      this.usePlaceholder = false;
+    }
   }
 }
 

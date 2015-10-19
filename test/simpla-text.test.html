@@ -75,6 +75,55 @@
             expect(component._commands).to.equal(null);
           });
         });
+
+        describe('placeholder', function() {
+          /**
+           * The placeholder should be visible if the following three conditions are met:
+           * 	- there is no content in text
+           * 	- text is not in focus
+           * 	- in edit mode (should be handled by sm-meta-placeholder)
+           */
+          beforeEach(function() {
+            component.editable = true;
+          });
+
+          it('shouldn\'t be there with content', function() {
+            scribe.value = 'foobar';
+            expect(component.usePlaceholder).to.be.false;
+          });
+
+          it('should be there without', function() {
+            scribe.value = '';
+            expect(component.usePlaceholder).to.be.true;
+          });
+
+          it('shouldn\'t be there when in focus', function() {
+            scribe.value = '';
+            scribe.focus();
+            expect(component.usePlaceholder).to.be.false;
+          });
+
+          it('shouldn\'t be there if not in edit mode', function() {
+            scribe.value = '';
+            component.editable = false;
+            expect(component.usePlaceholder).to.be.false;
+          });
+
+          it('should affect the placeholder element show / hide', function() {
+            component.usePlaceholder = false;
+            expect(component.$.placeholder.show).to.be.false;
+
+            component.usePlaceholder = true;
+            expect(component.$.placeholder.show).to.be.true;
+          });
+
+          it('should affect the placeholder element value', function() {
+            component.placeholder = 'foo bar';
+            expect(component.$.placeholder.innerText).to.equal('foo bar');
+          });
+        });
+      });
+
     </script>
   </body>
 </html>
