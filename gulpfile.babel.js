@@ -101,5 +101,5 @@ gulp.task('refresh', () => bs.reload);
 
 gulp.task('test', ['run', 'test:local']);
 
-gulp.task('watch', () => gulp.watch(['src/**/*'], gulprun('run', 'refresh')));
+gulp.task('watch', () => gulp.watch(['src/**/*'], () => gulprun('run', 'refresh')));
 gulp.task('default', ['run', 'demo', 'watch']);

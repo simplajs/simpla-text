@@ -21,7 +21,8 @@ class SimplaText {
 
   get behaviors() {
     return [
-      simpla.behaviors.editable()
+      simpla.behaviors.editable(),
+      simpla.behaviors.placeholder()
     ];
   }
 }

@@ -40,6 +40,10 @@
           expect(component.editable).to.not.be.undefined;
         });
 
+        it('should have editable behavior', function() {
+          expect(component.placeholder).to.not.be.undefined;
+        });
+
         describe('scribe', function() {
           it('should follow editable status of simpla-text', function() {
             component.editable = false;
