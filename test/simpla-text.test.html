@@ -113,7 +113,7 @@
 
           it('shouldn\'t be there when in focus', function() {
             scribe.value = '';
-            scribe.focus();
+            scribe.fire('focus');
             expect(component.usePlaceholder).to.be.false;
           });
 
