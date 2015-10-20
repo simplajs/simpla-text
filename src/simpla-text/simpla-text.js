@@ -17,6 +17,10 @@ class SimplaText {
         observer: '_valueChanged'
       }
     };
+
+    this.listeners = {
+      'tap': '_tapHandler'
+    };
   }
 
   _parseCommands(commands) {
@@ -41,12 +45,20 @@ class SimplaText {
     this.usePlaceholder = false;
   }
 
+  _isEmpty() {
+    return this.value === '' || this.value === '<p><br></p>';
+  }
+
   _checkPlaceholder() {
-    if (this.value === '' && this.editable) {
+    if (this._isEmpty() && this.editable) {
       this.usePlaceholder = true;
     } else {
       this.usePlaceholder = false;
     }
+  }
+
+  _tapHandler() {
+    this.editable && this.$.scribe.focus();
   }
 }
 
