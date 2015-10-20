@@ -1,0 +1,23 @@
+export const TYPOGRAPHY_PROPS = [
+  'color',
+  'font',
+  'fontFamily',
+  'fontKerning',
+  'fontSize',
+  'fontStretch',
+  'fontStyle',
+  'fontVariant',
+  'fontVariantLigatures',
+  'fontWeight',
+  'textAlign',
+  'textAnchor',
+  'textDecoration',
+  'textIndent',
+  'textOverflow',
+  'textRendering',
+  'textShadow',
+  'textTransform',
+  'letterSpacing',
+  'direction',
+  'lineHeight'
+];

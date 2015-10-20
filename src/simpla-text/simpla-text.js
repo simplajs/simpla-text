@@ -1,3 +1,6 @@
+import { TYPOGRAPHY_PROPS } from './constants/typography';
+import camelToKebab from './utils/camelToKebab';
+
 class SimplaText {
   beforeRegister() {
     this.is = 'simpla-text';
@@ -21,6 +24,10 @@ class SimplaText {
     this.listeners = {
       'tap': '_tapHandler'
     };
+  }
+
+  attached() {
+    this._passthroughTextStyles();
   }
 
   _parseCommands(commands) {
@@ -59,6 +66,21 @@ class SimplaText {
 
   _tapHandler() {
     this.editable && this.$.scribe.focus();
+  }
+
+  _passthroughTextStyles() {
+    // Add mixin values
+    const styles = window.getComputedStyle(this);
+
+    let passthroughTypography = '';
+    TYPOGRAPHY_PROPS.forEach(prop => {
+      let style = styles[prop],
+          kebabProp = camelToKebab(prop);
+      passthroughTypography += `${kebabProp}: ${style};`;
+    });
+
+    this.customStyle['--passthrough-typography'] = passthroughTypography;
+    this.updateStyles();
   }
 }
 
