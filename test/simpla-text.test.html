@@ -94,6 +94,9 @@
           it('should be there without', function() {
             scribe.value = '';
             expect(component.usePlaceholder).to.be.true;
+
+            scribe.value = '<p><br></p>';
+            expect(component.usePlaceholder).to.be.true;
           });
 
           it('shouldn\'t be there when in focus', function() {
@@ -120,6 +123,24 @@
             component.placeholder = 'foo bar';
             expect(component.$.placeholder.innerText).to.equal('foo bar');
           });
+        });
+
+        it('should focus on scribe if clicked and editable', function() {
+          var listen = sinon.stub(scribe, 'focus');
+
+          component.editable = true;
+          component.click();
+
+          expect(listen.called).to.be.true;
+        });
+
+        it('should focus on scribe if clicked and editable', function() {
+          var listen = sinon.stub(scribe, 'focus');
+
+          component.editable = false;
+          component.click();
+
+          expect(listen.called).to.be.false;
         });
       });
     </script>
