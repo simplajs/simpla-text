@@ -1,3 +1,5 @@
+import defaultBehavior from './behaviors/default';
+
 class SimplaText {
   beforeRegister() {
     this.is = 'simpla-text';
@@ -36,7 +38,7 @@ class SimplaText {
       simpla.behaviors.placeholder({
         value: 'Enter your text'
       })
-    ];
+    ].concat(defaultBehavior);
   }
 
   _valueChanged() {

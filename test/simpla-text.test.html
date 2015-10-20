@@ -18,6 +18,17 @@
         <simpla-text></simpla-text>
       </template>
     </test-fixture>
+
+    <test-fixture id="defaultFromAttribute">
+      <template>
+        <simpla-text default="foo bar"></simpla-text>
+      </template>
+    </test-fixture>
+    <test-fixture id="defaultFromElement">
+      <template>
+        <simpla-text><default-content><p>foo bar</p></default-content></simpla-text>
+      </template>
+    </test-fixture>
     <script>
       describe('<simpla-text>', function() {
 
@@ -177,6 +188,44 @@
           component.click();
 
           expect(listen.called).to.be.false;
+        });
+
+        describe('default behavior', function() {
+          var attributeText = 'foo bar',
+              elementText = '<p>foo bar</p>',
+              asAttribute,
+              asElement;
+
+          beforeEach(function() {
+            asAttribute = fixture('defaultFromAttribute');
+            asElement = fixture('defaultFromElement');
+          });
+
+          it('should set default based on attribute', function() {
+            expect(asAttribute._default).to.equal(attributeText);
+          });
+
+          it('should set default based on element', function() {
+            expect(asElement._default).to.equal(elementText);
+          });
+
+          describe('useDefault', function() {
+            it('should trigger the value to become default from default element', function() {
+              expect(asElement.value).to.not.equal(elementText);
+
+              asElement.useDefault = true;
+
+              expect(asElement.value).to.equal(elementText);
+            });
+
+            it('should only set it on the value on useDefault', function() {
+              expect(asAttribute.value).to.not.equal(attributeText);
+
+              asAttribute.useDefault = true;
+
+              expect(asAttribute.value).to.equal(attributeText);
+            });
+          });
         });
       });
 
