@@ -1,3 +1,5 @@
-:host {
-  border: none;
+.placeholder {
+  position: absolute;
+  opacity: 0.25;
+  pointer-events: none;
 }
