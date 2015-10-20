@@ -14,7 +14,7 @@ var r=e[0];i&&-1===i.indexOf(r)||document._execCommand.apply(this,e)}}]);</scrip
 </div><dom-module id="simpla-text">
   <template>
     <style include="sm-css"></style>
-    <style>:host{font:inherit}.placeholder{position:absolute;opacity:.25;pointer-events:none}</style>
+    <style>.placeholder{position:absolute;opacity:.25;pointer-events:none}</style>
     <sm-meta-placeholder id="placeholder" class="placeholder" show="[[usePlaceholder]]">[[placeholder]]</sm-meta-placeholder>
     <sm-text-scribe id="scribe" editable="[[editable]]" commands="[[_commands]]" value="{{value}}" on-focus="_disablePlaceholder" on-blur="_checkPlaceholder">
         <content></content>
