@@ -40,7 +40,9 @@ class SimplaText {
       simpla.behaviors.editable({
         observer: '_checkPlaceholder'
       }),
-      simpla.behaviors.placeholder()
+      simpla.behaviors.placeholder({
+        value: 'Enter your text'
+      })
     ];
   }
 
