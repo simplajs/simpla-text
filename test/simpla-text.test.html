@@ -123,6 +123,49 @@
             component.placeholder = 'foo bar';
             expect(component.$.placeholder.innerText).to.equal('foo bar');
           });
+
+          describe('inheriting styles', function() {
+            var placeholder,
+                checkStyle = function(prop) {
+                  var oldDisplay = placeholder.style.display,
+                      styles,
+                      value;
+
+                  placeholder.style.display = 'none';
+                  styles = window.getComputedStyle(placeholder);
+                  value = styles[prop];
+                  placeholder.style.display = oldDisplay;
+
+                  return value;
+                },
+                cases = [
+                  { prop: 'color', value: 'rgb(0, 0, 100)' },
+                  { prop: 'fontFamily', value: '\'some font\'' },
+                  { prop: 'fontSize', value: '16px' },
+                  { prop: 'letterSpacing', value: '2px' }
+                ];
+
+            beforeEach(function() {
+              placeholder = component.$.placeholder;
+            });
+
+            cases.forEach(function(caseObject) {
+              var prop = caseObject.prop,
+                  value = caseObject.value;
+
+              it('should inherit ' + prop, function() {
+                component.style[prop] = value;
+                component._passthroughTextStyles();
+                expect(checkStyle(prop)).to.equal(value);
+              });
+            });
+
+            it('should call _passthroughTextStyles on attached', function() {
+              sinon.spy(component, '_passthroughTextStyles');
+              component.attached();
+              expect(component._passthroughTextStyles.called).to.be.true;
+            });
+          });
         });
 
         it('should focus on scribe if clicked and editable', function() {
