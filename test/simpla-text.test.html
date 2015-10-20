@@ -124,6 +124,12 @@
             expect(component.$.placeholder.innerText).to.equal('foo bar');
           });
 
+          it('should have a default placeholder', function() {
+            expect(component.placeholder).to.be.ok;
+            expect(typeof component.placeholder).to.equal('string');
+            expect(component.placeholder).to.not.equal('');
+          });
+
           describe('inheriting styles', function() {
             var placeholder,
                 checkStyle = function(prop) {
