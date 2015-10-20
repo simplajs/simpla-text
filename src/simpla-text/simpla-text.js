@@ -1,6 +1,3 @@
-import { TYPOGRAPHY_PROPS } from './constants/typography';
-import camelToKebab from './utils/camelToKebab';
-
 class SimplaText {
   beforeRegister() {
     this.is = 'simpla-text';

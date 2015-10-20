@@ -134,16 +134,9 @@
           describe('inheriting styles', function() {
             var placeholder,
                 checkStyle = function(prop) {
-                  var oldDisplay = placeholder.style.display,
-                      styles,
-                      value;
+                  var styles = window.getComputedStyle(placeholder);
 
-                  placeholder.style.display = 'none';
-                  styles = window.getComputedStyle(placeholder);
-                  value = styles[prop];
-                  placeholder.style.display = oldDisplay;
-
-                  return value;
+                  return styles[prop];
                 },
                 cases = [
                   { prop: 'color', value: 'rgb(0, 0, 100)' },
@@ -162,15 +155,8 @@
 
               it('should inherit ' + prop, function() {
                 component.style[prop] = value;
-                component._passthroughTextStyles();
                 expect(checkStyle(prop)).to.equal(value);
               });
-            });
-
-            it('should call _passthroughTextStyles on attached', function() {
-              sinon.spy(component, '_passthroughTextStyles');
-              component.attached();
-              expect(component._passthroughTextStyles.called).to.be.true;
             });
           });
         });
