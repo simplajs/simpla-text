@@ -22,7 +22,8 @@
   "dependencies": {
     "webcomponentsjs": "^0.7.14",
     "polymer": "^1.1.4",
-    "simpla": "git@github.com:simplaio/simpla.git"
+    "simpla": "git@github.com:simplaio/simpla.git",
+    "sm-meta-placeholder": "git@github.com:simplaio/sm-meta-placeholder.git"
   },
   "devDependencies": {
     "web-component-tester": "^3.3.22",
