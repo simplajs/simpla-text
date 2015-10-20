@@ -1,6 +1,9 @@
+:host {
+  font: inherit;
+}
+
 .placeholder {
   position: absolute;
   opacity: 0.25;
   pointer-events: none;
-  @apply(--passthrough-typography);
 }

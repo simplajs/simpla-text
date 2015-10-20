@@ -26,10 +26,6 @@ class SimplaText {
     };
   }
 
-  attached() {
-    this._passthroughTextStyles();
-  }
-
   _parseCommands(commands) {
     const trimmed = commands ? commands.trim() : '';
     return trimmed === '' ? null : trimmed.split(/\s+/);
@@ -70,20 +66,6 @@ class SimplaText {
     this.editable && this.$.scribe.focus();
   }
 
-  _passthroughTextStyles() {
-    // Add mixin values
-    const styles = window.getComputedStyle(this);
-
-    let passthroughTypography = '';
-    TYPOGRAPHY_PROPS.forEach(prop => {
-      let style = styles[prop],
-          kebabProp = camelToKebab(prop);
-      passthroughTypography += `${kebabProp}: ${style};`;
-    });
-
-    this.customStyle['--passthrough-typography'] = passthroughTypography;
-    this.updateStyles();
-  }
 }
 
 Polymer(SimplaText);
