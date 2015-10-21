@@ -227,6 +227,52 @@
             });
           });
         });
+
+        describe('persists', function() {
+          it('should have _equal that compares two strings', function() {
+            var first = { text: 'foo bar' },
+                second = { text: ' ' },
+                third = { text: '' },
+                fourth = { text: 'foo bar' };
+
+            expect(component._equal(first, second)).to.be.false;
+            expect(component._equal(second, third)).to.be.false;
+
+            expect(component._equal(first, fourth)).to.be.true;
+          });
+
+          it('should have _toObject', function() {
+            var value = 'foo bar',
+                expected = { text: value };
+
+            component.value = value;
+            expect(component._toObject()).to.deep.equal(expected);
+          });
+
+          it('should have _fromObject', function() {
+            var expected = 'foo bar',
+                given = { text: expected };
+
+            component.value = 'not foo bar';
+            component._fromObject(given);
+
+            expect(component.value).to.equal(expected);
+          });
+
+          it('should update its value when api loaded', function() {
+            component.$.api.fire('loaded', { value: { text: 'foo' } });
+
+            expect(component.value).to.equal('foo');
+          });
+
+          it('should have loading / saving follow the api', function() {
+            component.$.api.loading = true;
+            expect(component.loading).to.be.true;
+
+            component.$.api.saving = true;
+            expect(component.saving).to.be.true;
+          });
+        });
       });
 
     </script>
