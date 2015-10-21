@@ -99,6 +99,7 @@ class SmHelperScribe {
 
   _commandsObserver(value) {
     bindCommands(value);
+    this._scribe._smEnabled = value;
   }
 }
 

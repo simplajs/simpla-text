@@ -104,6 +104,18 @@
               .map(function(command) { return scribe.getCommand(command); })
               .forEach(function(command) { expect(command.queryEnabled()).to.be.false });
           });
+
+          it('should have enabled and disabled placed on scribe', function() {
+            enabled
+              .forEach(function(command) {
+                expect(scribe._smEnabled.indexOf(command)).to.not.equal(-1);
+              });
+
+            disabled
+              .forEach(function(command) {
+                expect(scribe._smEnabled.indexOf(command)).to.equal(-1);
+              });
+          });
         });
 
         describe('scribe', function() {
