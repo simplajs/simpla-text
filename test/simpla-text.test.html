@@ -29,18 +29,26 @@
         <simpla-text><default-content><p>foo bar</p></default-content></simpla-text>
       </template>
     </test-fixture>
+    <test-fixture id="shared">
+      <template>
+        <sm-helper-share type="state" key="editable"></sm-helper-share>
+      </template>
+    </test-fixture>
     <script>
       describe('<simpla-text>', function() {
 
         var component,
             componentFixtures,
-            scribe;
+            scribe,
+            sharedEditable;
 
         componentFixtures = window.fixtures;
 
         beforeEach(function() {
           component = fixture('default');
           scribe = component.$.scribe;
+
+          sharedEditable = fixture('shared');
         });
 
         it('is okay', function() {
@@ -51,8 +59,18 @@
           expect(component.editable).to.not.be.undefined;
         });
 
-        it('should have editable behavior', function() {
+        it('should have placeholder behavior', function() {
           expect(component.placeholder).to.not.be.undefined;
+        });
+
+        it('editable should be bound to shared data', function() {
+          component.editable = true;
+
+          sharedEditable.value = false;
+          expect(component.editable).to.be.false;
+
+          component.editable = true;
+          expect(sharedEditable.value).to.be.true;
         });
 
         describe('scribe', function() {
