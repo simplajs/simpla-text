@@ -29,6 +29,11 @@
         <simpla-text><default-content><p>foo bar</p></default-content></simpla-text>
       </template>
     </test-fixture>
+    <test-fixture id="useDefault">
+      <template>
+        <simpla-text use-default default="foo bar"></simpla-text>
+      </template>
+    </test-fixture>
     <test-fixture id="shared">
       <template>
         <sm-helper-share type="state" key="editable"></sm-helper-share>
@@ -242,6 +247,12 @@
               asAttribute.useDefault = true;
 
               expect(asAttribute.value).to.equal(attributeText);
+            });
+
+            it('should be able to be set via attribute', function() {
+              useDefaultFixture = fixture('useDefault');
+
+              expect(useDefaultFixture.value).to.equal(attributeText);
             });
           });
         });

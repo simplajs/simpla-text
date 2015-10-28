@@ -11,6 +11,16 @@ customDefault = {
     }
   },
 
+  observers: [
+    '_updateDefault(useDefault, _default)'
+  ],
+
+  _updateDefault(useDefault, _default) {
+    if (useDefault) {
+      this.value = this._default;
+    }
+  },
+
   _useDefaultChanged(value) {
     if (value) {
       this.value = this._default;
