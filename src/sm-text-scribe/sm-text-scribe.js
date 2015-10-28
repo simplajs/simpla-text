@@ -26,9 +26,7 @@ class SmHelperScribe {
 
   get behaviors() {
     return [
-      simpla.behaviors.editable({
-        observer: '_editableChanged'
-      })
+      simpla.behaviors.editable()
     ];
   }
 
