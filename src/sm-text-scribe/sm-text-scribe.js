@@ -26,7 +26,9 @@ class SmHelperScribe {
 
   get behaviors() {
     return [
-      simpla.behaviors.editable()
+      simpla.behaviors.editable({
+        observer: '_editableChanged'
+      })
     ];
   }
 
@@ -82,6 +84,14 @@ class SmHelperScribe {
       // Use getHTML instead of getContent so as not to apply 'for export'
       //  formatting. See https://github.com/guardian/scribe/blob/master/src/scribe.js#L147
       this.value = this._scribe.getHTML();
+    });
+
+    this._scribe.el.addEventListener('focus', () => {
+      // Temporary to stop bug where returns keep getting input,
+      //  and cursor returns to start
+      if (this._scribe.getHTML().indexOf('<content></content>') !== -1 && !this.inline) {
+        this._scribe.setHTML('<p></p>');
+      }
     });
 
     // Make sure the contenteditable attribute is reset as it may have been
