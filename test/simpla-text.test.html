@@ -288,6 +288,11 @@
             expect(component.value).to.equal(expected);
           });
 
+          it('should not try set undefined when loading _fromObject', function() {
+            component._fromObject({ text: undefined });
+            expect(component.value).to.equal('');
+          });
+
           it('should update its value when api loaded', function() {
             component.$.api.fire('loaded', { value: { text: 'foo' } });
 

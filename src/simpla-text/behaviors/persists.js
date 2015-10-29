@@ -16,7 +16,7 @@ customPersists = {
   },
 
   _fromObject(value) {
-    this.value = value.text;
+    this.value = value.text || '';
   },
 
   _equal(textA, textB) {
