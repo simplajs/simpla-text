@@ -301,6 +301,14 @@
             component.$.api.saving = true;
             expect(component.saving).to.be.true;
           });
+
+          it('should call load when uid changes', function() {
+              sinon.stub(component, 'load');
+
+              component.uid = 'a';
+              component.uid = 'b';
+              expect(component.load.called).to.be.true;
+            });
         });
       });
 
