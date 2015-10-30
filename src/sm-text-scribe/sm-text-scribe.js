@@ -109,7 +109,7 @@ class SmHelperScribe {
     this.toggleAttribute('contenteditable', this.editable, target);
 
     // Initialise content
-    scribe.setHTML(this.value || '');
+    scribe.setHTML(this.value || (inline ? '' : '<p></p>'));
 
     return scribe;
   }
