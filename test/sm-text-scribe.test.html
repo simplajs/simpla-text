@@ -69,40 +69,6 @@
 
           beforeEach(function() {
             component.commands = enabled;
-
-            // To be able to do this, we override the queryEnabled on command,
-            //  so in these tests, we need to stub the internal method to return
-            //  true so we can test it gets overriden when we have disabled commands
-            queryStub = sinon.stub(document, '_queryCommandEnabled').returns(true);
-            execStub = sinon.stub(document, '_execCommand');
-          });
-
-          afterEach(function() {
-            queryStub.restore();
-            execStub.restore();
-          });
-
-          it('should have enabled, enabled', function() {
-            enabled
-              .map(function(command) { return scribe.getCommand(command); })
-              .forEach(function(command) { expect(command.queryEnabled()).to.be.true });
-          });
-
-          it('enabled can execute', function() {
-            enabled
-              .map(function(command) { return scribe.getCommand(command); })
-              .forEach(function(command) { command.execute() });
-
-            enabled
-              .forEach(function(command) {
-                expect(execStub.calledWith(command)).to.be.true;
-              });
-          });
-
-          it('should have disabled, disabled', function() {
-            disabled
-              .map(function(command) { return scribe.getCommand(command); })
-              .forEach(function(command) { expect(command.queryEnabled()).to.be.false });
           });
 
           it('should have enabled and disabled placed on scribe', function() {

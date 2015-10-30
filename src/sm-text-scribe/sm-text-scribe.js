@@ -1,6 +1,5 @@
 import Scribe from 'scribe-editor';
 import { INLINE_ELEMENTS } from './constants';
-import { bindCommands } from './utils/command-control';
 
 class SmHelperScribe {
   beforeRegister() {
@@ -106,7 +105,6 @@ class SmHelperScribe {
   }
 
   _commandsObserver(value) {
-    bindCommands(value);
     this._scribe._smEnabled = value;
   }
 }
