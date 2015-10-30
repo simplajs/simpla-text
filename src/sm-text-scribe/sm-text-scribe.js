@@ -19,13 +19,16 @@ class SmHelperScribe {
       placeholder: String,
       container: Object,
       toolbar: Object,
-      _scribe: Object
+      scribe: {
+        type: Object,
+        notify: true
+      }
     };
 
     this.observers = [
-      '_linkScribeWithToolbar(_scribe, toolbar)',
+      '_linkScribeWithToolbar(scribe, toolbar)',
       '_bootScribe(container)',
-      '_commandsReady(commands, _scribe)'
+      '_commandsReady(commands, scribe)'
     ];
   }
 
@@ -64,7 +67,12 @@ class SmHelperScribe {
   }
 
   focus(...args) {
-    this._scribe.el.focus(...args);
+    this.scribe.el.focus(...args);
+  }
+
+  get _scribe() {
+    // This is for backwards compatibility and will be deprecated in future
+    return this.scribe;
   }
 
   _fireFocus() {
@@ -109,13 +117,13 @@ class SmHelperScribe {
   _valueChanged(value) {
     // Note we use setHTML as setContent will trigger a content-changed event
     //  which will set off an infinite loop
-    if (this._scribe && this._scribe.setHTML) {
-      this._scribe.setHTML(value);
+    if (this.scribe && this.scribe.setHTML) {
+      this.scribe.setHTML(value);
     }
   }
 
   _commandsReady(commands) {
-    this._scribe._smEnabled = commands;
+    this.scribe._smEnabled = commands;
   }
 
   _linkScribeWithToolbar(scribe, toolbar) {
@@ -123,9 +131,9 @@ class SmHelperScribe {
   }
 
   _bootScribe() {
-    if (!this._scribe) {
+    if (!this.scribe) {
       let target = this.$['container'];
-      this._scribe = this._setupScribe(target);
+      this.scribe = this._setupScribe(target);
     }
   }
 }

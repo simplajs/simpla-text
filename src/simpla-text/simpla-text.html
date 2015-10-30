@@ -7,9 +7,10 @@
     <sm-meta-placeholder id="placeholder" class="placeholder" show="[[usePlaceholder]]">[[placeholder]]</sm-meta-placeholder>
     <sm-text-scribe
       id="scribe"
+      value="{{value}}"
+      scribe="{{scribe}}"
       editable="[[editable]]"
       commands="[[_commands]]"
-      value="{{value}}"
       on-focus="_disablePlaceholder"
       on-blur="_checkPlaceholder"
       toolbar="[[_toolbar]]"

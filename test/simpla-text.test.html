@@ -97,6 +97,22 @@
             component.editable = true;
             expect(scribe.editable).to.be.true;
           });
+
+          it('should have property, which on change, should reflect inline / block', function() {
+            component.scribe = {
+              options: { allowBlockElements: true }
+            };
+
+            expect(component.hasAttribute('block')).to.be.true;
+            expect(component.hasAttribute('inline')).to.be.false;
+
+            component.scribe = {
+              options: { allowBlockElements: false }
+            };
+
+            expect(component.hasAttribute('inline')).to.be.true;
+            expect(component.hasAttribute('block')).to.be.false;
+          });
         });
 
         describe('commands', function() {
