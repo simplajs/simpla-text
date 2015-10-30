@@ -1,3 +1,11 @@
+:host([inline]) {
+  display: inline;
+}
+
+:host([block]) {
+  display: block;
+}
+
 .placeholder {
   position: absolute;
   opacity: 0.25;

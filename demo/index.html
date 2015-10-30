@@ -14,9 +14,13 @@
   </head>
   <body>
     <h1>Regular Usage</h1>
-    <simpla-text editable></simpla-text>
+    <simpla-text editable placeholder="foo"></simpla-text>
     <h1>With Default</h1>
-    <simpla-text use-default default="Hello World"></simpla-text>
+    <simpla-text use-default editable default="Hello World"></simpla-text>
     <simpla-text><default-content><p>Hello World</p></default-content></simpla-text>
+
+    <h1>Inline</h1>
+    <span><simpla-text placeholder="I should be inline!"></simpla-text></span>
+    <div><simpla-text inline placeholder="I should be inline!"></simpla-text></div>
   </body>
 </html>

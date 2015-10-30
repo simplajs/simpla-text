@@ -19,12 +19,23 @@ class SimplaText {
         value: '',
         observer: '_valueChanged'
       },
-      _toolbar: Object
+      _toolbar: Object,
+      _container: Object,
+      inline: Boolean,
+      block: Boolean,
+      scribe: {
+        type: Object,
+        observer: '_scribeChanged'
+      }
     };
 
     this.listeners = {
       'tap': '_tapHandler'
     };
+  }
+
+  attached() {
+    this._container = this.parentElement;
   }
 
   _parseCommands(commands) {
@@ -67,6 +78,13 @@ class SimplaText {
 
   _tapHandler() {
     this.editable && this.$.scribe.focus();
+  }
+
+  _scribeChanged(scribe) {
+    const inline = !scribe.options.allowBlockElements;
+
+    this.toggleAttribute('inline', inline);
+    this.toggleAttribute('block', !inline);
   }
 
 }

@@ -12,20 +12,23 @@ class SmHelperScribe {
         observer: '_valueChanged',
         notify: true
       },
-      commands: {
-        type: Array,
-        observer: '_commandsObserver'
-      },
+      commands: Array,
       inline: Boolean,
       block: Boolean,
       readonly: Boolean,
       placeholder: String,
-      _scribe: Object,
-      toolbar: Object
+      container: Object,
+      toolbar: Object,
+      scribe: {
+        type: Object,
+        notify: true
+      }
     };
 
     this.observers = [
-      '_linkScribeWithToolbar(_scribe, toolbar)'
+      '_linkScribeWithToolbar(scribe, toolbar)',
+      '_bootScribe(container)',
+      '_commandsReady(commands, scribe)'
     ];
   }
 
@@ -33,11 +36,6 @@ class SmHelperScribe {
     return [
       simpla.behaviors.editable()
     ];
-  }
-
-  ready() {
-    let target = this.$['container'];
-    this._setupScribe(target);
   }
 
   parseCommands(commands) {
@@ -61,7 +59,7 @@ class SmHelperScribe {
       return false;
     }
 
-    parent = this.parentNode;
+    parent = this.container;
     name = parent.nodeName.toLowerCase();
     shouldBeInline = INLINE_ELEMENTS.indexOf(name) !== -1;
 
@@ -69,7 +67,12 @@ class SmHelperScribe {
   }
 
   focus(...args) {
-    this._scribe.el.focus(...args);
+    this.scribe.el.focus(...args);
+  }
+
+  get _scribe() {
+    // This is for backwards compatibility and will be deprecated in future
+    return this.scribe;
   }
 
   _fireFocus() {
@@ -81,41 +84,57 @@ class SmHelperScribe {
   }
 
   _setupScribe(target) {
-    this._scribe = new Scribe(target);
+    const inline = this.shouldInline();
 
-    this._scribe.on('content-changed', () => {
-      // Use getHTML instead of getContent so as not to apply 'for export'
-      //  formatting. See https://github.com/guardian/scribe/blob/master/src/scribe.js#L147
-      this.value = this._scribe.getHTML();
+    let scribe = new Scribe(target, {
+      allowBlockElements: !inline
     });
 
-    this._scribe.el.addEventListener('focus', () => {
+    scribe.on('content-changed', () => {
+      // Use getHTML instead of getContent so as not to apply 'for export'
+      //  formatting. See https://github.com/guardian/scribe/blob/master/src/scribe.js#L147
+      this.value = scribe.getHTML();
+    });
+
+    scribe.el.addEventListener('focus', () => {
       // Temporary to stop bug where returns keep getting input,
       //  and cursor returns to start
-      if (this._scribe.getHTML().indexOf('<content></content>') !== -1 && !this.inline) {
-        this._scribe.setHTML('<p></p>');
+      if (scribe.getHTML().indexOf('<content></content>') !== -1 && !inline) {
+        scribe.setHTML('<p></p>');
       }
     });
 
     // Make sure the contenteditable attribute is reset as it may have been
     //  override by scribe during setup
     this.toggleAttribute('contenteditable', this.editable, target);
+
+    // Initialise content
+    scribe.setHTML(this.value || '');
+
+    return scribe;
   }
 
   _valueChanged(value) {
     // Note we use setHTML as setContent will trigger a content-changed event
     //  which will set off an infinite loop
-    if (this._scribe && this._scribe.setHTML) {
-      this._scribe.setHTML(value);
+    if (this.scribe && this.scribe.setHTML) {
+      this.scribe.setHTML(value);
     }
   }
 
-  _commandsObserver(value) {
-    this._scribe._smEnabled = value;
+  _commandsReady(commands) {
+    this.scribe._smEnabled = commands;
   }
 
   _linkScribeWithToolbar(scribe, toolbar) {
     toolbar.use(scribe);
+  }
+
+  _bootScribe() {
+    if (!this.scribe) {
+      let target = this.$['container'];
+      this.scribe = this._setupScribe(target);
+    }
   }
 }
 
