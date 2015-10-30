@@ -6,13 +6,13 @@ class SimplaText {
     this.is = 'simpla-text';
 
     this.properties = {
-      commands: {
+      tools: {
         type: String,
         value: ''
       },
       _commands: {
         type: Array,
-        computed: '_parseCommands(commands)'
+        computed: '_parseCommands(tools)'
       },
       value: {
         type: String,

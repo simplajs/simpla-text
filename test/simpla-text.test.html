@@ -90,22 +90,22 @@
 
         describe('commands', function() {
           it('should compute an array version of the commands', function() {
-            component.commands = ' floo   foo   bar    foo-bar';
+            component.tools = ' floo   foo   bar    foo-bar';
 
             expect(component._commands).to.deep.equal(['floo', 'foo', 'bar', 'foo-bar']);
 
           });
 
           it('should bind down to sm-text-scribe', function() {
-            component.commands = 'foo bar';
+            component.tools = 'foo bar';
             expect(scribe.commands).to.deep.equal(['foo', 'bar']);
           });
 
           it('should set _commands to null if commands is empty string', function() {
-            component.commands = '';
+            component.tools = '';
             expect(component._commands).to.equal(null);
 
-            component.commands = '   ';
+            component.tools = '   ';
             expect(component._commands).to.equal(null);
           });
         });
