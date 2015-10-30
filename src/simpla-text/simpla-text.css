@@ -1,13 +1,15 @@
-:host([inline]) {
-  display: inline;
-}
-
-:host([block]) {
-  display: block;
-}
-
 .placeholder {
   position: absolute;
   opacity: 0.25;
   pointer-events: none;
+}
+
+:host([inline]) {
+  display: inline-block;
+  cursor: text;
+  min-width: var(--placeholder-width);
+}
+
+:host([block]) {
+  display: block;
 }
