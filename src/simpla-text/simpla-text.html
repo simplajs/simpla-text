@@ -12,6 +12,7 @@
       value="{{value}}"
       on-focus="_disablePlaceholder"
       on-blur="_checkPlaceholder"
+      toolbar="[[_toolbar]]"
     >
         <content></content>
     </sm-text-scribe>
@@ -27,6 +28,13 @@
       key="editable"
       value="{{editable}}">
     </sm-helper-share>
+
+    <sm-helper-share
+      type="singletons"
+      key="toolbar"
+      value="{{_toolbar}}">
+    </sm-helper-share>
+
   </template>
   <script src="./simpla-text.js"></script>
 </dom-module>

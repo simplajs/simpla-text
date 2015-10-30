@@ -18,7 +18,8 @@ class SimplaText {
         type: String,
         value: '',
         observer: '_valueChanged'
-      }
+      },
+      _toolbar: Object
     };
 
     this.listeners = {

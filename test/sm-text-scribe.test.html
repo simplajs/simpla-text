@@ -184,6 +184,23 @@
             expect(listen.called).to.be.true;
           });
         });
+
+        describe('toolbar', function() {
+          var mockToolbar;
+
+          beforeEach(function() {
+            mockToolbar = {
+              _mock: true,
+              use: sinon.stub()
+            };
+          });
+
+          it('should call use on update', function() {
+            component.toolbar = mockToolbar;
+
+            expect(component.toolbar.use.called).to.be.true;
+          });
+        });
       });
     </script>
   </body>

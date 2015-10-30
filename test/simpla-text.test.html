@@ -39,13 +39,23 @@
         <sm-helper-share type="state" key="editable"></sm-helper-share>
       </template>
     </test-fixture>
+    <test-fixture id="toolbarShare">
+      <template>
+        <sm-helper-share
+          type="singletons"
+          key="toolbar"
+          >
+        </sm-helper-share>
+      </template>
+    </test-fixture>
     <script>
       describe('<simpla-text>', function() {
 
         var component,
             componentFixtures,
             scribe,
-            sharedEditable;
+            sharedEditable,
+            toolbarShare;
 
         componentFixtures = window.fixtures;
 
@@ -54,6 +64,7 @@
           scribe = component.$.scribe;
 
           sharedEditable = fixture('shared');
+          toolbarShare = fixture('toolbarShare');
         });
 
         it('is okay', function() {
@@ -314,6 +325,24 @@
               component.uid = 'b';
               expect(component.load.called).to.be.true;
             });
+        });
+
+        describe('toolbar', function() {
+          var mockToolbar;
+
+          beforeEach(function() {
+            mockToolbar = {
+              _mock: true,
+              use: sinon.stub()
+            };
+          });
+
+          it('should be bound to shared instance', function() {
+            toolbarShare.value = mockToolbar;
+
+            expect(component._toolbar).to.be.ok;
+            expect(component._toolbar._mock).to.be.true;
+          });
         });
       });
 

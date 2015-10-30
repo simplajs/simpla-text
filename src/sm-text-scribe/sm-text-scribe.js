@@ -19,8 +19,14 @@ class SmHelperScribe {
       inline: Boolean,
       block: Boolean,
       readonly: Boolean,
-      placeholder: String
+      placeholder: String,
+      _scribe: Object,
+      toolbar: Object
     };
+
+    this.observers = [
+      '_linkScribeWithToolbar(_scribe, toolbar)'
+    ];
   }
 
   get behaviors() {
@@ -106,6 +112,10 @@ class SmHelperScribe {
 
   _commandsObserver(value) {
     this._scribe._smEnabled = value;
+  }
+
+  _linkScribeWithToolbar(scribe, toolbar) {
+    toolbar.use(scribe);
   }
 }
 
