@@ -4,7 +4,7 @@ let corePersists,
 corePersists = simpla.behaviors.persists('api');
 customPersists = {
   listeners: {
-    'loaded': '_updateFromLoad'
+    'api.loaded': '_updateFromLoad'
   },
 
   observers: [
