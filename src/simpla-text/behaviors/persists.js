@@ -16,7 +16,11 @@ customPersists = {
   },
 
   _fromObject(value) {
-    this.value = value.text || '';
+    if (!value || Object.keys(value).length === 0) {
+      this.useDefault = true;
+    } else {
+      this.value = value.text || '';
+    }
   },
 
   _equal(textA, textB) {

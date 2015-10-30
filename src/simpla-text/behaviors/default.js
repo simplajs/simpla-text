@@ -22,7 +22,7 @@ customDefault = {
   },
 
   _useDefaultChanged(value) {
-    if (value) {
+    if (value && this._default) {
       this.value = this._default;
     }
   },

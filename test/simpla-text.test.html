@@ -260,6 +260,14 @@
           });
 
           describe('useDefault', function() {
+
+            it('should not set default value if _default is undefined', function() {
+              component.value = 'foo';
+              component._default = undefined;
+              component.useDefault = true;
+              expect(component.value).to.equal('foo');
+            });
+
             it('should trigger the value to become default from default element', function() {
               expect(asElement.value).to.not.equal(elementText);
 
@@ -280,6 +288,14 @@
               useDefaultFixture = fixture('useDefault');
 
               expect(useDefaultFixture.value).to.equal(attributeText);
+            });
+
+            it('should be set when persist sets _fromObject an empty / falsey object', function() {
+              component._fromObject({});
+              expect(component.useDefault).to.be.true;
+              component.useDefault = false;
+              component._fromObject(null);
+              expect(component.useDefault).to.be.true;
             });
           });
         });
