@@ -1,6 +1,6 @@
 <html><head><meta charset="UTF-8"><link rel="import" href="../sm-helper-share/sm-helper-share.html"><link rel="import" href="../sm-connect-api/sm-connect-api.html"><link rel="import" href="../default-content/default-content.html"><link rel="import" href="../sm-meta-placeholder/sm-meta-placeholder.html"><link rel="import" href="../simpla/simpla.html"><link rel="import" href="../polymer/polymer.html"></head><body><div hidden by-vulcanize=""><dom-module id="sm-text-scribe" assetpath="../sm-text-scribe/">
   <template>
-    <style>.container{outline:0}</style>
+    <style>:host{display:inherit}.container{display:inherit;outline:0}</style>
 
     <div id="container" on-focus="_fireFocus" on-blur="_fireBlur" class="container" contenteditable$="[[editable]]">
       <content></content>
@@ -13,7 +13,7 @@ var i=t._tail,o=t._root,a=e(dn);return n>=Se(t._capacity)?i=me(i,t.__ownerID,0,n
 </div><dom-module id="simpla-text">
   <template>
     <style include="sm-css"></style>
-    <style>.placeholder{position:absolute;opacity:.25;pointer-events:none}</style>
+    <style>:host([inline]){display:inline}:host([block]){display:block}.placeholder{position:absolute;opacity:.25;pointer-events:none}</style>
     <sm-meta-placeholder id="placeholder" class="placeholder" show="[[usePlaceholder]]">[[placeholder]]</sm-meta-placeholder>
     <sm-text-scribe id="scribe" value="{{value}}" scribe="{{scribe}}" editable="[[editable]]" commands="[[_commands]]" on-focus="_disablePlaceholder" on-blur="_checkPlaceholder" toolbar="[[_toolbar]]" container="[[_container]]" inline="[[inline]]" block="[[block]]">
         <content></content>
