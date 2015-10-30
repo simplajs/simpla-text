@@ -33,16 +33,6 @@
         <sm-text-scribe block></sm-text-scribe>
       </template>
     </test-fixture>
-    <test-fixture id="implicit-inline">
-      <template>
-        <span><sm-text-scribe></sm-text-scribe></span>
-      </template>
-    </test-fixture>
-    <test-fixture id="implicit-block">
-      <template>
-        <div><sm-text-scribe></sm-text-scribe></div>
-      </template>
-    </test-fixture>
     <script>
       describe('<sm-text-scribe>', function() {
 
@@ -54,6 +44,7 @@
 
         beforeEach(function() {
           component = fixture('default');
+          component.container = document.createElement('div');
           scribe = component._scribe;
         });
 
@@ -119,15 +110,15 @@
           });
 
           it('should be inline when nesting inside inline', function() {
-            var wrapper = fixture('implicit-inline');
-            component = wrapper.children[0];
+            component = fixture('default');
+            component.container = document.createElement('h1');
 
             expect(component.shouldInline()).to.be.true;
           });
 
           it('should be block when nesting inside block', function() {
-            var wrapper = fixture('implicit-block');
-            component = wrapper.children[0];
+            component = fixture('default');
+            component.container = document.createElement('div');
 
             expect(component.shouldInline()).to.be.false;
           });

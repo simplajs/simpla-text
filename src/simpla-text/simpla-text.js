@@ -19,12 +19,19 @@ class SimplaText {
         value: '',
         observer: '_valueChanged'
       },
-      _toolbar: Object
+      _toolbar: Object,
+      _container: Object,
+      inline: Boolean,
+      block: Boolean
     };
 
     this.listeners = {
       'tap': '_tapHandler'
     };
+  }
+
+  attached() {
+    this._container = this.parentElement;
   }
 
   _parseCommands(commands) {
