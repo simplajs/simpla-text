@@ -5,6 +5,11 @@
     <title>simpla-text</title>
     <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
+    <script>
+      window.Polymer = window.Polymer || {};
+      window.Polymer.dom = 'shadow';
+    </script>
+
     <link rel="import" href="../simpla-text.html" />
     <style>
       body {
@@ -12,15 +17,21 @@
       }
     </style>
   </head>
+
   <body>
-    <h1>Regular Usage</h1>
-    <simpla-text editable placeholder="foo"></simpla-text>
-    <h1>With Default</h1>
+    <h1>Standard</h1>
+    <simpla-text editable></simpla-text>
+
+    <h1>Custom placeholder</h1>
+    <simpla-text editable placeholder="Start typing..."></simpla-text>
+
+    <h1>Default Content</h1>
     <simpla-text use-default editable default="Hello World"></simpla-text>
     <simpla-text><default-content><p>Hello World</p></default-content></simpla-text>
 
-    <h1>Inline</h1>
-    <span><simpla-text placeholder="I should be inline!"></simpla-text></span>
-    <div><simpla-text inline placeholder="I should be inline!"></simpla-text></div>
+    <h1>Inline Mode</h1>
+    <span><simpla-text editable></simpla-text></span>
+    <div><simpla-text editable inline></simpla-text></div>
+
   </body>
 </html>
