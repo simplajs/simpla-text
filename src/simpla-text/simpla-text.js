@@ -49,7 +49,7 @@ class SimplaText {
         observer: '_checkPlaceholder'
       }),
       simpla.behaviors.placeholder({
-        value: 'Enter your text'
+        value: 'Enter your text...'
       })
     ]
     .concat(defaultBehavior)
