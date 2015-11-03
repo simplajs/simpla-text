@@ -18,6 +18,10 @@ class SmHelperScribe {
       readonly: Boolean,
       placeholder: String,
       container: Object,
+      target: {
+        type: Object,
+        observer: '_targetChanged'
+      },
       toolbar: Object,
       scribe: {
         type: Object,
@@ -27,14 +31,16 @@ class SmHelperScribe {
 
     this.observers = [
       '_linkScribeWithToolbar(scribe, toolbar)',
-      '_bootScribe(container)',
+      '_bootScribe(target, container)',
       '_commandsReady(commands, scribe)'
     ];
   }
 
   get behaviors() {
     return [
-      simpla.behaviors.editable()
+      simpla.behaviors.editable({
+        observer: '_editableChanged'
+      })
     ];
   }
 
@@ -130,10 +136,18 @@ class SmHelperScribe {
     toolbar.use(scribe);
   }
 
-  _bootScribe() {
-    if (!this.scribe) {
-      let target = this.$['container'];
-      this.scribe = this._setupScribe(target);
+  _bootScribe(target) {
+    this.scribe = this._setupScribe(target);
+  }
+
+  _targetChanged(target) {
+    target.addEventListener('focus', this._fireFocus.bind(this));
+    target.addEventListener('blur', this._fireBlur.bind(this));
+  }
+
+  _editableChanged(editable) {
+    if (this.target) {
+      this.toggleAttribute('contentEditable', editable, this.target);
     }
   }
 }
