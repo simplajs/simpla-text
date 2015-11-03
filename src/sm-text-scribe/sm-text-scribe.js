@@ -102,14 +102,6 @@ class SmHelperScribe {
       this.value = scribe.getHTML();
     });
 
-    scribe.el.addEventListener('focus', () => {
-      // Temporary to stop bug where returns keep getting input,
-      //  and cursor returns to start
-      if (scribe.getHTML().indexOf('<content></content>') !== -1 && !inline) {
-        scribe.setHTML('<p></p>');
-      }
-    });
-
     // Make sure the contenteditable attribute is reset as it may have been
     //  override by scribe during setup
     this.toggleAttribute('contenteditable', this.editable, target);

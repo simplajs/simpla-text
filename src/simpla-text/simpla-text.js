@@ -1,5 +1,6 @@
 import defaultBehavior from './behaviors/default';
 import persists from './behaviors/persists';
+import scribeTarget from './behaviors/scribeTarget';
 
 class SimplaText {
   beforeRegister() {
@@ -50,7 +51,8 @@ class SimplaText {
       }),
       simpla.behaviors.placeholder({
         value: 'Enter your text'
-      })
+      }),
+      scribeTarget
     ]
     .concat(defaultBehavior)
     .concat(persists);

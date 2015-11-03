@@ -54,6 +54,7 @@
         var component,
             componentFixtures,
             scribe,
+            scribObject,
             sharedEditable,
             toolbarShare;
 
@@ -62,6 +63,7 @@
         beforeEach(function() {
           component = fixture('default');
           scribe = component.$.scribe;
+          scribeObject = scribe.scribe;
 
           sharedEditable = fixture('shared');
           toolbarShare = fixture('toolbarShare');
@@ -374,6 +376,20 @@
 
             expect(component._toolbar).to.be.ok;
             expect(component._toolbar._mock).to.be.true;
+          });
+        });
+
+        describe('inner html', function() {
+          it('should be bound to scribe\'s content', function() {
+            var outerDOM = Polymer.dom(component),
+                innerDOM = Polymer.Settings.useNativeShadow ? outerDOM :
+                              outerDOM.querySelector('.simpla-text__wrapper');
+
+            component.value = 'foo bar';
+            expect(innerDOM.innerHTML).to.equal(scribeObject.getHTML());
+
+            scribeObject.setHTML('<span>foo bar</span>');
+            expect(innerDOM.innerHTML).to.equal(scribeObject.getHTML());
           });
         });
       });
