@@ -158,24 +158,6 @@
             expect(scribe.el.focus.called).to.be.true;
             scribe.el.focus.restore();
           });
-
-          it('should fire focus on inner element focus', function() {
-            var listen = sinon.stub();
-            component.addEventListener('focus', listen);
-
-            component.fire('focus', null, { node: scribe.el });
-
-            expect(listen.called).to.be.true;
-          });
-
-          it('should fire blur on inner element blur', function() {
-            var listen = sinon.stub();
-            component.addEventListener('blur', listen);
-
-            component.fire('blur', null, { node: scribe.el });
-
-            expect(listen.called).to.be.true;
-          });
         });
 
         describe('toolbar', function() {

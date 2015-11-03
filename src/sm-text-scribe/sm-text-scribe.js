@@ -18,10 +18,7 @@ class SmHelperScribe {
       readonly: Boolean,
       placeholder: String,
       container: Object,
-      target: {
-        type: Object,
-        observer: '_targetChanged'
-      },
+      target: Object,
       toolbar: Object,
       scribe: {
         type: Object,
@@ -81,14 +78,6 @@ class SmHelperScribe {
     return this.scribe;
   }
 
-  _fireFocus() {
-    this.fire('focus');
-  }
-
-  _fireBlur() {
-    this.fire('blur');
-  }
-
   _setupScribe(target) {
     const inline = this.shouldInline();
 
@@ -130,11 +119,6 @@ class SmHelperScribe {
 
   _bootScribe(target) {
     this.scribe = this._setupScribe(target);
-  }
-
-  _targetChanged(target) {
-    target.addEventListener('focus', this._fireFocus.bind(this));
-    target.addEventListener('blur', this._fireBlur.bind(this));
   }
 
   _editableChanged(editable) {
