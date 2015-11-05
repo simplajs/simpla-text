@@ -27,7 +27,11 @@
 
     <h1>Default Content</h1>
     <simpla-text use-default editable default="Hello World"></simpla-text>
-    <simpla-text><default-content><p>Hello World</p></default-content></simpla-text>
+    <simpla-text use-default><default-content><p>Hello World</p></default-content></simpla-text>
+
+    <h1>Inline Mode</h1>
+    <span><simpla-text editable></simpla-text></span>
+    <div><simpla-text editable inline></simpla-text></div>
 
     <h1>Inline Mode</h1>
     <span><simpla-text editable></simpla-text></span>
@@ -37,6 +41,5 @@
     <simpla-text editable>This content should be void</simpla-text>
     <simpla-text editable use-default default="This should be output">But this shouldn't</simpla-text>
     <simpla-text editable use-default><default-content>This should be output</default-content> but this shouldn't</simpla-text>
-
   </body>
 </html>
