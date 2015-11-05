@@ -33,6 +33,26 @@
         <simpla-text><default-content><p>foo bar</p></default-content></simpla-text>
       </template>
     </test-fixture>
+    <test-fixture id="void">
+      <template>
+        <simpla-text><p>foo bar</p></simpla-text>
+      </template>
+    </test-fixture>
+    <!--
+      Just a note that the below fixture isn't being tested at the moment,
+        because we know it WILL break, but its a large edge case. In the future
+        this should be tested and resolved
+    -->
+    <test-fixture id="voidWithDefaultElement">
+      <template>
+        <simpla-text><default-content>This should be output</default-content> but this shouldn't</simpla-text>
+      </template>
+    </test-fixture>
+    <test-fixture id="voidWithDefaultAttr">
+      <template>
+        <simpla-text default="Lorem Ipsum"><p>foo bar</p></simpla-text>
+      </template>
+    </test-fixture>
     <test-fixture id="useDefault">
       <template>
         <simpla-text use-default default="foo bar"></simpla-text>
@@ -414,6 +434,17 @@
 
             expect(innerDOM.innerHTML).to.equal('<br>');
           });
+        });
+
+        describe('void', function() {
+          it('should not have any content from initial children', function() {
+            var withChildren = fixture('void'),
+                withChildrenAndDefault = fixture('voidWithDefaultAttr')
+
+            expect(Polymer.dom(withChildren).textContent).to.equal('');
+            expect(Polymer.dom(withChildrenAndDefault).textContent).to.equal('');
+          });
+
         });
       });
 
