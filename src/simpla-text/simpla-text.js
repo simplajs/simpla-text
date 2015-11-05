@@ -1,5 +1,6 @@
 import defaultBehavior from './behaviors/default';
 import persists from './behaviors/persists';
+import scribeTarget from './behaviors/scribeTarget';
 
 class SimplaText {
   beforeRegister() {
@@ -50,7 +51,8 @@ class SimplaText {
       }),
       simpla.behaviors.placeholder({
         value: 'Enter your text...'
-      })
+      }),
+      scribeTarget
     ]
     .concat(defaultBehavior)
     .concat(persists);
@@ -65,7 +67,10 @@ class SimplaText {
   }
 
   _isEmpty() {
-    return this.value === '' || this.value === '<p><br></p>';
+    let dummy = document.createElement('div');
+    dummy.innerHTML = this.value;
+
+    return dummy.textContent === '';
   }
 
   _checkPlaceholder() {

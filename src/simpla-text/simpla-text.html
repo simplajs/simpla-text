@@ -15,10 +15,10 @@
       on-blur="_checkPlaceholder"
       toolbar="[[_toolbar]]"
       container="[[_container]]"
+      target="[[_scribeTarget]]"
       inline="[[inline]]"
       block="[[block]]"
     >
-        <content></content>
     </sm-text-scribe>
 
     <sm-connect-api id="api"
@@ -38,6 +38,8 @@
       key="toolbar"
       value="{{_toolbar}}">
     </sm-helper-share>
+
+    <content></content>
 
   </template>
   <script src="./simpla-text.js"></script>

@@ -1,7 +1,5 @@
-.placeholder {
-  position: absolute;
-  opacity: 0.25;
-  pointer-events: none;
+:host, :host > ::content [contenteditable] {
+  outline: none;
 }
 
 :host([inline]) {
@@ -12,4 +10,10 @@
 
 :host([block]) {
   display: block;
+}
+
+.placeholder {
+  position: absolute;
+  opacity: 0.25;
+  pointer-events: none;
 }

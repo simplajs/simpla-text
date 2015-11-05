@@ -18,6 +18,7 @@ class SmHelperScribe {
       readonly: Boolean,
       placeholder: String,
       container: Object,
+      target: Object,
       toolbar: Object,
       scribe: {
         type: Object,
@@ -27,14 +28,16 @@ class SmHelperScribe {
 
     this.observers = [
       '_linkScribeWithToolbar(scribe, toolbar)',
-      '_bootScribe(container)',
+      '_bootScribe(target, container)',
       '_commandsReady(commands, scribe)'
     ];
   }
 
   get behaviors() {
     return [
-      simpla.behaviors.editable()
+      simpla.behaviors.editable({
+        observer: '_editableChanged'
+      })
     ];
   }
 
@@ -75,14 +78,6 @@ class SmHelperScribe {
     return this.scribe;
   }
 
-  _fireFocus() {
-    this.fire('focus');
-  }
-
-  _fireBlur() {
-    this.fire('blur');
-  }
-
   _setupScribe(target) {
     const inline = this.shouldInline();
 
@@ -96,20 +91,17 @@ class SmHelperScribe {
       this.value = scribe.getHTML();
     });
 
-    scribe.el.addEventListener('focus', () => {
-      // Temporary to stop bug where returns keep getting input,
-      //  and cursor returns to start
-      if (scribe.getHTML().indexOf('<content></content>') !== -1 && !inline) {
-        scribe.setHTML('<p></p>');
-      }
-    });
-
     // Make sure the contenteditable attribute is reset as it may have been
     //  override by scribe during setup
     this.toggleAttribute('contenteditable', this.editable, target);
 
     // Initialise content
-    scribe.setHTML(this.value || (inline ? '' : '<p></p>'));
+    if (this.value) {
+      scribe.setHTML(this.value);
+    } else {
+      // Use setContent so that formatters are applied
+      scribe.setContent(inline ? '' : '<p></p>');
+    }
 
     return scribe;
   }
@@ -130,10 +122,13 @@ class SmHelperScribe {
     toolbar.use(scribe);
   }
 
-  _bootScribe() {
-    if (!this.scribe) {
-      let target = this.$['container'];
-      this.scribe = this._setupScribe(target);
+  _bootScribe(target) {
+    this.scribe = this._setupScribe(target);
+  }
+
+  _editableChanged(editable) {
+    if (this.target) {
+      this.toggleAttribute('contentEditable', editable, this.target);
     }
   }
 }

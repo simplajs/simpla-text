@@ -18,7 +18,11 @@
         <simpla-text></simpla-text>
       </template>
     </test-fixture>
-
+    <test-fixture id="inline">
+      <template>
+        <simpla-text inline></simpla-text>
+      </template>
+    </test-fixture>
     <test-fixture id="defaultFromAttribute">
       <template>
         <simpla-text default="foo bar"></simpla-text>
@@ -27,6 +31,26 @@
     <test-fixture id="defaultFromElement">
       <template>
         <simpla-text><default-content><p>foo bar</p></default-content></simpla-text>
+      </template>
+    </test-fixture>
+    <test-fixture id="void">
+      <template>
+        <simpla-text><p>foo bar</p></simpla-text>
+      </template>
+    </test-fixture>
+    <!--
+      Just a note that the below fixture isn't being tested at the moment,
+        because we know it WILL break, but its a large edge case. In the future
+        this should be tested and resolved
+    -->
+    <test-fixture id="voidWithDefaultElement">
+      <template>
+        <simpla-text><default-content>This should be output</default-content> but this shouldn't</simpla-text>
+      </template>
+    </test-fixture>
+    <test-fixture id="voidWithDefaultAttr">
+      <template>
+        <simpla-text default="Lorem Ipsum"><p>foo bar</p></simpla-text>
       </template>
     </test-fixture>
     <test-fixture id="useDefault">
@@ -54,6 +78,7 @@
         var component,
             componentFixtures,
             scribe,
+            scribObject,
             sharedEditable,
             toolbarShare;
 
@@ -62,6 +87,7 @@
         beforeEach(function() {
           component = fixture('default');
           scribe = component.$.scribe;
+          scribeObject = scribe.scribe;
 
           sharedEditable = fixture('shared');
           toolbarShare = fixture('toolbarShare');
@@ -153,11 +179,18 @@
             expect(component.usePlaceholder).to.be.false;
           });
 
-          it('should be there without', function() {
+          it('should be there without content', function() {
             scribe.value = '';
             expect(component.usePlaceholder).to.be.true;
+          });
 
+          it('should be there with empty p', function() {
             scribe.value = '<p><br></p>';
+            expect(component.usePlaceholder).to.be.true;
+          });
+
+          it('should be there with empty br', function() {
+            scribe.value = '<br>';
             expect(component.usePlaceholder).to.be.true;
           });
 
@@ -375,6 +408,43 @@
             expect(component._toolbar).to.be.ok;
             expect(component._toolbar._mock).to.be.true;
           });
+        });
+
+        describe('inner html', function() {
+          function fetchInnerDom(fromComponent) {
+            var outerDOM = Polymer.dom(fromComponent),
+                innerDOM = Polymer.Settings.useNativeShadow ? outerDOM :
+                              outerDOM.querySelector('.simpla-text__wrapper');
+            return innerDOM;
+          }
+
+          it('should be bound to scribe\'s content', function() {
+            var innerDOM = fetchInnerDom(component);
+
+            component.value = 'foo bar';
+            expect(innerDOM.innerHTML).to.equal(scribeObject.getHTML());
+
+            scribeObject.setHTML('<span>foo bar</span>');
+            expect(innerDOM.innerHTML).to.equal(scribeObject.getHTML());
+          });
+
+          it('empty inline elements should have innerHTML of <br>', function() {
+            var inlineComponent = fixture('inline'),
+                innerDOM = fetchInnerDom(inlineComponent);
+
+            expect(innerDOM.innerHTML).to.equal('<br>');
+          });
+        });
+
+        describe('void', function() {
+          it('should not have any content from initial children', function() {
+            var withChildren = fixture('void'),
+                withChildrenAndDefault = fixture('voidWithDefaultAttr')
+
+            expect(Polymer.dom(withChildren).textContent).to.equal('');
+            expect(Polymer.dom(withChildrenAndDefault).textContent).to.equal('');
+          });
+
         });
       });
 

@@ -38,6 +38,7 @@
 
         var component,
             componentFixtures,
+            target,
             scribe;
 
         componentFixtures = window.fixtures['sm-text-scribe'];
@@ -45,6 +46,7 @@
         beforeEach(function() {
           component = fixture('default');
           component.container = document.createElement('div');
+          component.target = target = document.createElement('div');
           scribe = component._scribe;
         });
 
@@ -130,17 +132,17 @@
           });
 
           it('if not there, contenteditable should be false', function() {
-            var container = component.$.container;
+            var target = component.target;
 
             component.editable = false;
-            expect(container.hasAttribute('contenteditable')).to.be.false;
+            expect(target.hasAttribute('contenteditable')).to.be.false;
           });
 
           it('if there, should have contenteditable', function() {
-            var container = component.$.container;
+            var target = component.target;
 
             component.editable = true;
-            expect(container.hasAttribute('contenteditable')).to.be.true;
+            expect(target.hasAttribute('contenteditable')).to.be.true;
           });
         });
 
@@ -155,24 +157,6 @@
             component.focus();
             expect(scribe.el.focus.called).to.be.true;
             scribe.el.focus.restore();
-          });
-
-          it('should fire focus on inner element focus', function() {
-            var listen = sinon.stub();
-            component.addEventListener('focus', listen);
-
-            component.fire('focus', null, { node: scribe.el });
-
-            expect(listen.called).to.be.true;
-          });
-
-          it('should fire blur on inner element blur', function() {
-            var listen = sinon.stub();
-            component.addEventListener('blur', listen);
-
-            component.fire('blur', null, { node: scribe.el });
-
-            expect(listen.called).to.be.true;
           });
         });
 
@@ -190,6 +174,12 @@
             component.toolbar = mockToolbar;
 
             expect(component.toolbar.use.called).to.be.true;
+          });
+        });
+
+        describe('targeting', function() {
+          it('should set contenteditable on target', function() {
+            expect(scribe.el).to.equal(target);
           });
         });
       });
