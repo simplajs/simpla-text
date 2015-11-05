@@ -67,7 +67,10 @@ class SimplaText {
   }
 
   _isEmpty() {
-    return this.value === '' || this.value === '<p><br></p>';
+    let dummy = document.createElement('div');
+    dummy.innerHTML = this.value;
+
+    return dummy.textContent === '';
   }
 
   _checkPlaceholder() {

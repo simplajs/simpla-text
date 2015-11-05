@@ -96,7 +96,12 @@ class SmHelperScribe {
     this.toggleAttribute('contenteditable', this.editable, target);
 
     // Initialise content
-    scribe.setHTML(this.value || (inline ? '' : '<p></p>'));
+    if (this.value) {
+      scribe.setHTML(this.value);
+    } else {
+      // Use setContent so that formatters are applied
+      scribe.setContent(inline ? '' : '<p></p>');
+    }
 
     return scribe;
   }

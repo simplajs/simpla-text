@@ -18,7 +18,11 @@
         <simpla-text></simpla-text>
       </template>
     </test-fixture>
-
+    <test-fixture id="inline">
+      <template>
+        <simpla-text inline></simpla-text>
+      </template>
+    </test-fixture>
     <test-fixture id="defaultFromAttribute">
       <template>
         <simpla-text default="foo bar"></simpla-text>
@@ -155,11 +159,18 @@
             expect(component.usePlaceholder).to.be.false;
           });
 
-          it('should be there without', function() {
+          it('should be there without content', function() {
             scribe.value = '';
             expect(component.usePlaceholder).to.be.true;
+          });
 
+          it('should be there with empty p', function() {
             scribe.value = '<p><br></p>';
+            expect(component.usePlaceholder).to.be.true;
+          });
+
+          it('should be there with empty br', function() {
+            scribe.value = '<br>';
             expect(component.usePlaceholder).to.be.true;
           });
 
@@ -380,16 +391,28 @@
         });
 
         describe('inner html', function() {
-          it('should be bound to scribe\'s content', function() {
-            var outerDOM = Polymer.dom(component),
+          function fetchInnerDom(fromComponent) {
+            var outerDOM = Polymer.dom(fromComponent),
                 innerDOM = Polymer.Settings.useNativeShadow ? outerDOM :
                               outerDOM.querySelector('.simpla-text__wrapper');
+            return innerDOM;
+          }
+
+          it('should be bound to scribe\'s content', function() {
+            var innerDOM = fetchInnerDom(component);
 
             component.value = 'foo bar';
             expect(innerDOM.innerHTML).to.equal(scribeObject.getHTML());
 
             scribeObject.setHTML('<span>foo bar</span>');
             expect(innerDOM.innerHTML).to.equal(scribeObject.getHTML());
+          });
+
+          it('empty inline elements should have innerHTML of <br>', function() {
+            var inlineComponent = fixture('inline'),
+                innerDOM = fetchInnerDom(inlineComponent);
+
+            expect(innerDOM.innerHTML).to.equal('<br>');
           });
         });
       });
