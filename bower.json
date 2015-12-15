@@ -26,7 +26,8 @@
     "sm-meta-placeholder": "git@github.com:simplaio/sm-meta-placeholder.git",
     "default-content": "git@github.com:simplaio/default-content.git",
     "sm-connect-api": "git@github.com:simplaio/sm-connect-api.git",
-    "sm-helper-share": "git@github.com:simplaio/sm-helper-share.git"
+    "sm-helper-share": "git@github.com:simplaio/sm-helper-share.git",
+    "sm-meta-data": "git@github.com:simplaio/sm-meta-data.git"
   },
   "devDependencies": {
     "web-component-tester": "^3.3.22",
@@ -38,6 +39,7 @@
     "sm-meta-placeholder/sm-meta-placeholder.html",
     "default-content/default-content.html",
     "sm-connect-api/sm-connect-api.html",
-    "sm-helper-share/sm-helper-share.html"
+    "sm-helper-share/sm-helper-share.html",
+    "sm-meta-data/sm-meta-data.html"
   ]
 }

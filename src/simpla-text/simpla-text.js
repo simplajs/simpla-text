@@ -45,17 +45,18 @@ class SimplaText {
   }
 
   get behaviors() {
-    return [
+    return [].concat(
       simpla.behaviors.editable({
         observer: '_checkPlaceholder'
       }),
       simpla.behaviors.placeholder({
         value: 'Enter your text...'
       }),
-      scribeTarget
-    ]
-    .concat(defaultBehavior)
-    .concat(persists);
+      simpla.behaviors.metaData,
+      scribeTarget,
+      defaultBehavior,
+      persists
+    );
   }
 
   _valueChanged() {
