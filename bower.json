@@ -23,11 +23,11 @@
     "webcomponentsjs": "^0.7.14",
     "polymer": "^1.1.4",
     "simpla-core": "git@github.com:simplaio/simpla-core.git",
-    "sm-meta-placeholder": "git@github.com:simplaio/sm-meta-placeholder.git",
+    "sm-utility-placeholder": "git@github.com:simplaio/sm-utility-placeholder.git",
     "default-content": "git@github.com:simplaio/default-content.git",
-    "sm-connect-api": "git@github.com:simplaio/sm-connect-api.git",
-    "sm-helper-share": "git@github.com:simplaio/sm-helper-share.git",
-    "sm-meta-data": "git@github.com:simplaio/sm-meta-data.git"
+    "sm-utility-connect": "git@github.com:simplaio/sm-utility-connect.git",
+    "sm-utility-share": "git@github.com:simplaio/sm-utility-share.git",
+    "sm-utility-assign": "git@github.com:simplaio/sm-utility-assign.git"
   },
   "devDependencies": {
     "web-component-tester": "^3.3.22",
@@ -36,10 +36,11 @@
   "componentImports": [
     "polymer/polymer.html",
     "simpla-core/simpla-core.html",
-    "sm-meta-placeholder/sm-meta-placeholder.html",
+    "sm-utility-placeholder/sm-utility-placeholder.html",
     "default-content/default-content.html",
-    "sm-connect-api/sm-connect-api.html",
-    "sm-helper-share/sm-helper-share.html",
-    "sm-meta-data/sm-meta-data.html"
+    "sm-utility-connect/sm-utility-connect.html",
+    "sm-utility-share/sm-utility-share.html",
+    "sm-utility-assign/sm-utility-assign.html"
+
   ]
 }

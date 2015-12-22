@@ -4,7 +4,7 @@
   <template>
     <style include="sm-css"></style>
     <link rel="stylesheet" href="./simpla-text.css" />
-    <sm-meta-placeholder id="placeholder" class="placeholder" show="[[usePlaceholder]]">[[placeholder]]</sm-meta-placeholder>
+    <sm-utility-placeholder id="placeholder" class="placeholder" show="[[usePlaceholder]]">[[placeholder]]</sm-utility-placeholder>
     <sm-text-scribe
       id="scribe"
       value="{{value}}"
@@ -21,23 +21,23 @@
     >
     </sm-text-scribe>
 
-    <sm-connect-api id="api"
+    <sm-utility-connect id="api"
       key="[[uid]]"
       saving="{{saving}}"
       loading="{{loading}}">
-    </sm-connect-api>
+    </sm-utility-connect>
 
-    <sm-helper-share
+    <sm-utility-share
       type="state"
       key="editable"
       value="{{editable}}">
-    </sm-helper-share>
+    </sm-utility-share>
 
-    <sm-helper-share
+    <sm-utility-share
       type="singletons"
       key="toolbar"
       value="{{_toolbar}}">
-    </sm-helper-share>
+    </sm-utility-share>
 
     <content></content>
 
