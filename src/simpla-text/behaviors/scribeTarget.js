@@ -1,20 +1,37 @@
+/**
+ * Generates a behavior to set the scribeTarget of the element. The behavior is
+ * 	different depending on if using Shadow DOM or Shady DOM.
+ */
+
 const isShadow = window.Polymer.Settings.useNativeShadow;
 let common,
     shadow,
     shady;
 
+/**
+ * Common behavior to be used by both shadow and shady
+ */
 common = {
   properties: {
     _scribeTarget: Object
   }
 };
 
+/**
+ * Behavior to use when using native shadow DOM. In this case, _scribeTarget is
+ * 	set to this node directly, as the Shadow DOM is protected by the Shadow boundary
+ */
 shadow = {
   attached() {
     this._scribeTarget = this;
   }
 };
 
+/**
+ * Behavior to use when using Shady DOM. In this case, the _scribeTarget is a new
+ * 	wrapper element that protects the text contents. This stops the
+ * 	local DOM from being deleted while in edit mode.
+ */
 shady = {
   attached() {
     let target = document.createElement('div');
@@ -24,6 +41,12 @@ shady = {
     this._targetWrap();
   },
 
+  /**
+   * Wrap the contents of this node with the scribeTarget. Enforces all direct
+   * 	children to be moved into the target. Does nothing if child nodes are already
+   * 	wrapped
+   * @return {undefined}
+   */
   _targetWrap() {
     let dom = Polymer.dom(this),
         children = dom.childNodes,
