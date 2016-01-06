@@ -1,3 +1,7 @@
+/**
+ * Array of elements that should contain only inline element children
+ * @type {Array}
+ */
 export const INLINE_ELEMENTS = [
   'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
   'p', 'li', 'dd', 'figcaption', 'mark', 'q', 's', 'time','u', 'legend', 'option',

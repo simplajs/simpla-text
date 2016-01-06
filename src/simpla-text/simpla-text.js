@@ -7,23 +7,63 @@ class SimplaText {
     this.is = 'simpla-text';
 
     this.properties = {
+      /**
+       * String of tools to use. None means all available
+       * @type {Object}
+       */
       tools: {
         type: String,
         value: ''
       },
+
+      /**
+       * Computed command property, Array version of commands from tools
+       * @type {Array}
+       */
       _commands: {
         type: Array,
         computed: '_parseCommands(tools)'
       },
+
+      /**
+       * Value of simpla-text, equivalent to a regular div's innerHTML value
+       * @type {String}
+       */
       value: {
         type: String,
         value: '',
         observer: '_valueChanged'
       },
+
+      /**
+       * Instance of toolbar object
+       * @type {Object}
+       */
       _toolbar: Object,
+
+      /**
+       * Parent element of current element. Used to check if should be inline or
+       * 	block formatted text
+       * @type {HTMLElement}
+       */
       _container: Object,
+
+      /**
+       * Whether to force inline mode or not
+       * @type {Boolean}
+       */
       inline: Boolean,
+
+      /**
+       * Whether to force block mode or not
+       * @type {Boolean}
+       */
       block: Boolean,
+
+      /**
+       * Current scribe instance being used
+       * @type {Scribe}
+       */
       scribe: {
         type: Object,
         observer: '_scribeChanged'
@@ -35,15 +75,28 @@ class SimplaText {
     };
   }
 
+  /**
+   * Called on attached, set _container to parent element
+   * @return {undefined}
+   */
   attached() {
     this._container = this.parentElement;
   }
 
+  /**
+   * Compute function which generates commands array from tools string
+   * @param  {String} commands  Space separated string of command names
+   * @return {Array}            Array of command names
+   */
   _parseCommands(commands) {
     const trimmed = commands ? commands.trim() : '';
     return trimmed === '' ? null : trimmed.split(/\s+/);
   }
 
+  /**
+   * Element behaviors
+   * @type {Array}
+   */
   get behaviors() {
     return [].concat(
       simpla.behaviors.editable({
@@ -59,14 +112,27 @@ class SimplaText {
     );
   }
 
+  /**
+   * Observer for value property. Checks if the placeholder should be used
+   * @return {undefined}
+   */
   _valueChanged() {
     this._checkPlaceholder();
   }
 
+  /**
+   * Disables using the placeholder. Simply sets usePlaceholder to false
+   * @return {undefined}
+   */
   _disablePlaceholder() {
     this.usePlaceholder = false;
   }
 
+  /**
+   * Checks if the current value is empty i.e. if it's equivalent to an empty
+   * 	text string
+   * @return {Boolean} True is value is empty, false otherwise
+   */
   _isEmpty() {
     let dummy = document.createElement('div');
     dummy.innerHTML = this.value;
@@ -74,7 +140,13 @@ class SimplaText {
     return dummy.textContent === '';
   }
 
+  /**
+   * Check if placeholder should be used or not, and sets usePlaceholder
+   * 	accordingly.
+   * @return {undefined}
+   */
   _checkPlaceholder() {
+    // Placeholder should only be used if in edit mode and value is empty
     if (this._isEmpty() && this.editable) {
       this.usePlaceholder = true;
     } else {
@@ -82,10 +154,21 @@ class SimplaText {
     }
   }
 
+  /**
+   * Handle tap events. If this is currently editable, focuses on the scribe
+   * 	element
+   * @return {undefined}
+   */
   _tapHandler() {
     this.editable && this.$.scribe.focus();
   }
 
+  /**
+   * Observer for scribe property, updates the current inline / block
+   *  attributes and updates the size of the placeholder if inline
+   * @param  {Scribe} scribe Instance of scribe to check against
+   * @return {undefined}
+   */
   _scribeChanged(scribe) {
     const inline = !scribe.options.allowBlockElements;
 
