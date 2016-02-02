@@ -1,6 +1,13 @@
-# simpla text
+# Simpla Text
+![][bower-badge] [![][travis-badge]][travis-url] [![][bowerdeps-badge]][bowerdeps-url] [![][npmdevdeps-badge]][npmdevdeps-url]
 
-adds editable dynamic text
+Provides editable rich text
+
+--
+
+### License
+
+MIT © [Simpla](admin@simpla.io)
 
 [bower-badge]: https://img.shields.io/bower/v/simpla-text.svg
 [bowerlicense-badge]: https://img.shields.io/bower/l/simpla-text.svg

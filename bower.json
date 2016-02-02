@@ -22,12 +22,12 @@
   "dependencies": {
     "webcomponentsjs": "^0.7.14",
     "polymer": "^1.1.4",
-    "simpla-core": "git@github.com:simplaio/simpla-core.git",
-    "sm-utility-placeholder": "git@github.com:simplaio/sm-utility-placeholder.git",
-    "default-content": "git@github.com:simplaio/default-content.git",
-    "sm-utility-connect": "git@github.com:simplaio/sm-utility-connect.git",
-    "sm-utility-share": "git@github.com:simplaio/sm-utility-share.git",
-    "sm-utility-assign": "git@github.com:simplaio/sm-utility-assign.git"
+    "simpla-core": "https://github.com/simplaio/simpla-core.git",
+    "sm-utility-placeholder": "https://github.com/simplaio/sm-utility-placeholder.git",
+    "default-content": "https://github.com/simplaio/default-content.git",
+    "sm-utility-connect": "https://github.com/simplaio/sm-utility-connect.git",
+    "sm-utility-share": "https://github.com/simplaio/sm-utility-share.git",
+    "sm-utility-assign": "https://github.com/simplaio/sm-utility-assign.git"
   },
   "devDependencies": {
     "web-component-tester": "^3.3.22",
