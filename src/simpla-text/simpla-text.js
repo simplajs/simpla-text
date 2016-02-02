@@ -105,7 +105,6 @@ class SimplaText {
       simpla.behaviors.placeholder({
         value: 'Enter your text...'
       }),
-      simpla.behaviors.utilityAssign,
       scribeTarget,
       defaultBehavior,
       persists
