@@ -115,6 +115,10 @@
           expect(sharedEditable.value).to.be.true;
         });
 
+        it('should have sid behavior', function() {
+          expect(component.sid).to.not.be.undefined;
+        });
+
         describe('scribe', function() {
           it('should follow editable status of simpla-text', function() {
             component.editable = false;

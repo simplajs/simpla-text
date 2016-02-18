@@ -26,7 +26,8 @@
     "sm-utility-placeholder": "https://github.com/simplaio/sm-utility-placeholder.git",
     "default-content": "https://github.com/simplaio/default-content.git",
     "sm-utility-connect": "https://github.com/simplaio/sm-utility-connect.git",
-    "sm-utility-share": "https://github.com/simplaio/sm-utility-share.git"
+    "sm-utility-share": "https://github.com/simplaio/sm-utility-share.git",
+    "simpla-block": "https://github.com/simplaio/simpla-block.git"
   },
   "devDependencies": {
     "web-component-tester": "^3.3.22",
@@ -38,6 +39,7 @@
     "sm-utility-placeholder/sm-utility-placeholder.html",
     "default-content/default-content.html",
     "sm-utility-connect/sm-utility-connect.html",
-    "sm-utility-share/sm-utility-share.html"
+    "sm-utility-share/sm-utility-share.html",
+    "simpla-block/simpla-block.html"
   ]
 }
