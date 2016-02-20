@@ -1,3 +1,7 @@
+:host {
+  position: relative;
+}
+
 :host, :host > ::content [contenteditable] {
   outline: none;
 }
@@ -16,4 +20,5 @@
   position: absolute;
   opacity: 0.25;
   pointer-events: none;
+  width: 100%;
 }

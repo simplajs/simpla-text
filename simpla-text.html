@@ -6,7 +6,7 @@ a.value?t.__ownerID?(t._root=o,t._tail=i,t.__hash=void 0,t.__altered=!0,t):de(t.
 </div><dom-module id="simpla-text">
   <template>
     <style include="sm-css"></style>
-    <style>:host,:host>::content [contenteditable]{outline:0}:host([inline]){display:inherit;cursor:text;min-width:var(--placeholder-width)}:host([block]){display:block}.placeholder{position:absolute;opacity:.25;pointer-events:none}</style>
+    <style>:host{position:relative}:host,:host>::content [contenteditable]{outline:0}:host([inline]){display:inherit;cursor:text;min-width:var(--placeholder-width)}:host([block]){display:block}.placeholder{position:absolute;opacity:.25;pointer-events:none;width:100%}</style>
     <sm-utility-placeholder id="placeholder" class="placeholder" show="[[usePlaceholder]]">[[placeholder]]</sm-utility-placeholder>
     <sm-text-scribe id="scribe" value="{{value}}" scribe="{{scribe}}" editable="[[editable]]" commands="[[_commands]]" on-focus="_disablePlaceholder" on-blur="_checkPlaceholder" toolbar="[[_toolbar]]" container="[[_container]]" target="[[_scribeTarget]]" inline="[[inline]]" block="[[block]]">
     </sm-text-scribe>
