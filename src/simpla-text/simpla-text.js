@@ -174,11 +174,6 @@ class SimplaText {
 
     this.toggleAttribute('inline', inline);
     this.toggleAttribute('block', !inline);
-
-    if (inline) {
-      this.customStyle['--placeholder-width'] = this.$.placeholder.offsetWidth + 'px';
-      this.updateStyles();
-    }
   }
 
 }
