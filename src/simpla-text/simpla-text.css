@@ -20,4 +20,5 @@
   opacity: 0.25;
   pointer-events: none;
   white-space: nowrap;
+  min-width: 100%;
 }
