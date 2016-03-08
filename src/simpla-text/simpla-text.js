@@ -149,9 +149,21 @@ class SimplaText {
     // Placeholder should only be used if in edit mode and value is empty
     if (this._isEmpty() && this.editable) {
       this.usePlaceholder = true;
+      this._togglePlaceholderWidth(true)
     } else {
       this.usePlaceholder = false;
+      this._togglePlaceholderWidth(false)
     }
+  }
+
+  /**
+   * Set min-width of text element to width of placeholder when in edit mode
+   * @param  {Boolean} set Set or unset min-width of text element
+   * @return {undefined}
+   */
+  _togglePlaceholderWidth(set) {
+    let width = this.$.placeholder.getBoundingClientRect().width;
+    this.style.minWidth = set ? `${width}px` : '';
   }
 
   /**
