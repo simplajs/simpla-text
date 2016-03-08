@@ -163,7 +163,6 @@ class SimplaText {
     }
 
     if (this.__minWidth && this.__minWidth === '0px') {
-      console.log(usePlaceholder)
       this.style.minWidth = usePlaceholder ? `${placeholderWidth}px` : '';
     }
   }
