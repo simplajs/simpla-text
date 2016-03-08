@@ -73,24 +73,10 @@ class SimplaText {
     this.listeners = {
       'tap': '_tapHandler'
     };
-  }
 
-  /**
-   * Called on attached, set _container to parent element
-   * @return {undefined}
-   */
-  attached() {
-    this._container = this.parentElement;
-  }
-
-  /**
-   * Compute function which generates commands array from tools string
-   * @param  {String} commands  Space separated string of command names
-   * @return {Array}            Array of command names
-   */
-  _parseCommands(commands) {
-    const trimmed = commands ? commands.trim() : '';
-    return trimmed === '' ? null : trimmed.split(/\s+/);
+    this.observers = [
+      '_usePlaceholderChanged(usePlaceholder)'
+    ]
   }
 
   /**
@@ -111,6 +97,17 @@ class SimplaText {
       persists
     );
   }
+
+  /**
+   * Compute function which generates commands array from tools string
+   * @param  {String} commands  Space separated string of command names
+   * @return {Array}            Array of command names
+   */
+  _parseCommands(commands) {
+    const trimmed = commands ? commands.trim() : '';
+    return trimmed === '' ? null : trimmed.split(/\s+/);
+  }
+
 
   /**
    * Observer for value property. Checks if the placeholder should be used
@@ -153,6 +150,22 @@ class SimplaText {
       this.usePlaceholder = false;
     }
   }
+  /**
+   * Set min-width of text element to width of placeholder when in edit mode
+   * @param  {Boolean} usePlaceholder Set or unset min-width of text element
+   * @return {undefined}
+   */
+  _usePlaceholderChanged(usePlaceholder) {
+    let placeholderWidth = this.$.placeholder.getBoundingClientRect().width;
+
+    if (!this.__minWidth) {
+      this.__minWidth = getComputedStyle(this).minWidth;
+    }
+
+    if (this.__minWidth && this.__minWidth === '0px') {
+      this.style.minWidth = usePlaceholder ? `${placeholderWidth}px` : '';
+    }
+  }
 
   /**
    * Handle tap events. If this is currently editable, focuses on the scribe
@@ -175,6 +188,15 @@ class SimplaText {
     this.toggleAttribute('inline', inline);
     this.toggleAttribute('block', !inline);
   }
+
+  /**
+   * Called on attached, set _container to parent element
+   * @return {undefined}
+   */
+  attached() {
+    this._container = this.parentElement;
+  }
+
 
 }
 

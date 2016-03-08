@@ -171,7 +171,6 @@
           /**
            * The placeholder should be visible if the following three conditions are met:
            * 	- there is no content in text
-           * 	- text is not in focus
            * 	- in edit mode (should be handled by sm-meta-placeholder)
            */
           beforeEach(function() {
@@ -227,6 +226,14 @@
             expect(component.placeholder).to.be.ok;
             expect(typeof component.placeholder).to.equal('string');
             expect(component.placeholder).to.not.equal('');
+          });
+
+          it('should set min-width when placeholder is active', function() {
+            component.usePlaceholder = false;
+            expect(component.style.minWidth).to.equal('');
+
+            component.usePlaceholder = true;
+            expect(component.style.minWidth).to.not.equal('');
           });
 
           describe('inheriting styles', function() {
