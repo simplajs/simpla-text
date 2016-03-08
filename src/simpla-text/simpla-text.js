@@ -73,24 +73,10 @@ class SimplaText {
     this.listeners = {
       'tap': '_tapHandler'
     };
-  }
 
-  /**
-   * Called on attached, set _container to parent element
-   * @return {undefined}
-   */
-  attached() {
-    this._container = this.parentElement;
-  }
-
-  /**
-   * Compute function which generates commands array from tools string
-   * @param  {String} commands  Space separated string of command names
-   * @return {Array}            Array of command names
-   */
-  _parseCommands(commands) {
-    const trimmed = commands ? commands.trim() : '';
-    return trimmed === '' ? null : trimmed.split(/\s+/);
+    this.observers = [
+      '_usePlaceholderChanged(usePlaceholder)'
+    ]
   }
 
   /**
@@ -111,6 +97,17 @@ class SimplaText {
       persists
     );
   }
+
+  /**
+   * Compute function which generates commands array from tools string
+   * @param  {String} commands  Space separated string of command names
+   * @return {Array}            Array of command names
+   */
+  _parseCommands(commands) {
+    const trimmed = commands ? commands.trim() : '';
+    return trimmed === '' ? null : trimmed.split(/\s+/);
+  }
+
 
   /**
    * Observer for value property. Checks if the placeholder should be used
@@ -149,21 +146,26 @@ class SimplaText {
     // Placeholder should only be used if in edit mode and value is empty
     if (this._isEmpty() && this.editable) {
       this.usePlaceholder = true;
-      this._togglePlaceholderWidth(true)
     } else {
       this.usePlaceholder = false;
-      this._togglePlaceholderWidth(false)
     }
   }
-
   /**
    * Set min-width of text element to width of placeholder when in edit mode
-   * @param  {Boolean} set Set or unset min-width of text element
+   * @param  {Boolean} usePlaceholder Set or unset min-width of text element
    * @return {undefined}
    */
-  _togglePlaceholderWidth(set) {
-    let width = this.$.placeholder.getBoundingClientRect().width;
-    this.style.minWidth = set ? `${width}px` : '';
+  _usePlaceholderChanged(usePlaceholder) {
+    let placeholderWidth = this.$.placeholder.getBoundingClientRect().width;
+
+    if (!this.__minWidth) {
+      this.__minWidth = getComputedStyle(this).minWidth;
+    }
+
+    if (this.__minWidth && this.__minWidth === '0px') {
+      console.log(usePlaceholder)
+      this.style.minWidth = usePlaceholder ? `${placeholderWidth}px` : '';
+    }
   }
 
   /**
@@ -187,6 +189,15 @@ class SimplaText {
     this.toggleAttribute('inline', inline);
     this.toggleAttribute('block', !inline);
   }
+
+  /**
+   * Called on attached, set _container to parent element
+   * @return {undefined}
+   */
+  attached() {
+    this._container = this.parentElement;
+  }
+
 
 }
 
