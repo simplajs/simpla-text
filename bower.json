@@ -16,7 +16,7 @@
   "ignore": [
     "*",
     "!src",
-    "!simpla-text.html",
+    "!*.html",
     "!LICENSE"
   ],
   "dependencies": {
