@@ -35,6 +35,7 @@
   },
   "componentImports": [
     "polymer/polymer.html",
+    "sm-ui-core/sm-ui-core.html",
     "sm-utility-placeholder/sm-utility-placeholder.html",
     "default-content/default-content.html",
     "sm-utility-connect/sm-utility-connect.html",
