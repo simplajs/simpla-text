@@ -65,6 +65,17 @@ class SmHelperScribe {
       scribe: {
         type: Object,
         notify: true
+      },
+
+      /**
+       * Whether scribe instance is editable or not
+       * @type {Boolean}
+       */
+      editable: {
+        type: Boolean,
+        notify: true,
+        value: false,
+        observer: '_editableChanged'
       }
     };
 
@@ -72,18 +83,6 @@ class SmHelperScribe {
       '_linkScribeWithToolbar(scribe, toolbar)',
       '_bootScribe(target, container)',
       '_commandsReady(commands, scribe)'
-    ];
-  }
-
-  /**
-   * Behaviors for element
-   * @type {Array}
-   */
-  get behaviors() {
-    return [
-      simpla.behaviors.editable({
-        observer: '_editableChanged'
-      })
     ];
   }
 
