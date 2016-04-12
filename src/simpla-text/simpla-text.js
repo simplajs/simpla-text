@@ -67,6 +67,18 @@ class SimplaText {
       scribe: {
         type: Object,
         observer: '_scribeChanged'
+      },
+
+      /**
+       * Whether currently editable or not. If true, text is editable, if false
+       * 	text is currently read only
+       * @type {Boolean}
+       */
+      editable: {
+        type: Boolean,
+        notify: true,
+        value: false,
+        observer: '_checkPlaceholder'
       }
     };
 
@@ -85,9 +97,6 @@ class SimplaText {
    */
   get behaviors() {
     return [].concat(
-      simpla.behaviors.editable({
-        observer: '_checkPlaceholder'
-      }),
       simpla.behaviors.placeholder({
         value: 'Enter your text...'
       }),
