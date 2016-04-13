@@ -16,10 +16,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/simplaio/simpla-text.git"
+    "url": "https://github.com/SimplaElements/simpla-text.git"
   },
   "bugs": {
-    "url": "https://github.com/simplaio/simpla-text/issues"
+    "url": "https://github.com/SimplaElements/simpla-text/issues"
   },
   "devDependencies": {
     "autoprefixer": "^6.0.3",
