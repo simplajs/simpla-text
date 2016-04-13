@@ -45,7 +45,6 @@
     "postcss-easings": "^0.3.0",
     "run-sequence": "^1.1.4",
     "scribe-editor": "^2.0.2",
-    "scribe-plugin-toolbar": "^0.2.2",
     "vinyl-named": "^1.1.0",
     "web-component-tester": "^3.3.22",
     "webpack": "^1.12.2",
