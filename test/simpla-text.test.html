@@ -245,8 +245,9 @@
 
           describe('inheriting styles', function() {
             var placeholder,
-                checkStyle = function(prop) {
-                  var styles = window.getComputedStyle(placeholder);
+                checkStyle = function(prop, element) {
+                  element = element || placeholder;
+                  var styles = window.getComputedStyle(element);
 
                   return styles[prop];
                 },
@@ -267,7 +268,7 @@
 
               it('should inherit ' + prop, function() {
                 component.style[prop] = value;
-                expect(checkStyle(prop)).to.equal(value);
+                expect(checkStyle(prop, placeholder)).to.equal(checkStyle(prop, component));
               });
             });
           });
@@ -420,11 +421,14 @@
             };
           });
 
-          it('should be bound to shared instance', function() {
+          it('should be bound to shared instance', function(done) {
             toolbarShare.value = mockToolbar;
 
-            expect(component._toolbar).to.be.ok;
-            expect(component._toolbar._mock).to.be.true;
+            component.async(function() {
+              expect(component._toolbar).to.be.ok;
+              expect(component._toolbar._mock).to.be.true;
+              done();
+            });
           });
         });
 
