@@ -8,6 +8,13 @@
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
     <link rel="import" href="../../test-fixture/test-fixture.html">
 
+    <script>
+      window.simpla = window.simpla || {};
+      window.simpla.config = {
+        server: 'https://api.simpla.io'
+      };
+    </script>
+
     <!-- Import the element to test -->
     <link rel="import" href="../simpla-text.html">
     <script src="./simpla-text.fixtures.js"></script>
@@ -219,7 +226,7 @@
 
           it('should affect the placeholder element value', function() {
             component.placeholder = 'foo bar';
-            expect(component.$.placeholder.innerText).to.equal('foo bar');
+            expect(component.$.placeholder.innerHTML.trim()).to.equal('foo bar');
           });
 
           it('should have a default placeholder', function() {
@@ -238,14 +245,15 @@
 
           describe('inheriting styles', function() {
             var placeholder,
-                checkStyle = function(prop) {
-                  var styles = window.getComputedStyle(placeholder);
+                checkStyle = function(prop, element) {
+                  element = element || placeholder;
+                  var styles = window.getComputedStyle(element);
 
                   return styles[prop];
                 },
                 cases = [
                   { prop: 'color', value: 'rgb(0, 0, 100)' },
-                  { prop: 'fontFamily', value: '\'some font\'' },
+                  { prop: 'fontFamily', value: '"some font"' },
                   { prop: 'fontSize', value: '16px' },
                   { prop: 'letterSpacing', value: '2px' }
                 ];
@@ -260,7 +268,7 @@
 
               it('should inherit ' + prop, function() {
                 component.style[prop] = value;
-                expect(checkStyle(prop)).to.equal(value);
+                expect(checkStyle(prop, placeholder)).to.equal(checkStyle(prop, component));
               });
             });
           });
@@ -377,7 +385,7 @@
 
           it('should not try set undefined when loading _fromObject', function() {
             component._fromObject({ text: undefined });
-            expect(component.value).to.equal('');
+            expect(component.scribe.getTextContent()).to.equal('');
           });
 
           it('should update its value when api loaded', function() {
@@ -413,11 +421,14 @@
             };
           });
 
-          it('should be bound to shared instance', function() {
+          it('should be bound to shared instance', function(done) {
             toolbarShare.value = mockToolbar;
 
-            expect(component._toolbar).to.be.ok;
-            expect(component._toolbar._mock).to.be.true;
+            component.async(function() {
+              expect(component._toolbar).to.be.ok;
+              expect(component._toolbar._mock).to.be.true;
+              done();
+            });
           });
         });
 

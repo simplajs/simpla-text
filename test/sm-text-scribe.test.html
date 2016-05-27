@@ -96,6 +96,37 @@
 
             expect(component._scribe.getContent()).to.equal(value);
           });
+
+          it('should call clear on an empty value', function() {
+            sinon.spy(component, 'clear');
+            component.value = '';
+            expect(component.clear.called).to.be.true;
+            component.clear.restore();
+          });
+        });
+
+        describe('clear', function() {
+          beforeEach(function() {
+            sinon.spy(component.scribe, 'setContent')
+          });
+
+          afterEach(function() {
+            component.scribe.setContent.restore();
+          });
+
+          describe('calling setContent', function() {
+            it('should call with empty string if inline', function() {
+              sinon.stub(component, 'shouldInline').returns(true);
+              component.clear();
+              expect(component.scribe.setContent.calledWith('')).to.be.true;
+            });
+
+            it('should call with empty p if block', function() {
+              sinon.stub(component, 'shouldInline').returns(false);
+              component.clear();
+              expect(component.scribe.setContent.calledWith('<p></p>')).to.be.true;
+            });
+          });
         });
 
         describe('inline / block', function() {
