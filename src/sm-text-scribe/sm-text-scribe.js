@@ -129,6 +129,16 @@ class SmHelperScribe {
     this.scribe.el.focus(...args);
   }
 
+  /**
+   * Clear the value - sets to '' if inline, '<p></p>' otherwise
+   * @return {undefined}
+   */
+  clear() {
+    const inline = this.shouldInline();
+    // Use set content so formatters are applied
+    this.scribe.setContent(inline ? '' : '<p></p>');
+  }
+
   get _scribe() {
     // This is for backwards compatibility and will be deprecated in future
     return this.scribe;
@@ -161,7 +171,7 @@ class SmHelperScribe {
     if (this.value) {
       scribe.setHTML(this.value);
     } else {
-      // Use setContent so that formatters are applied
+      // Clear if empty value
       scribe.setContent(inline ? '' : '<p></p>');
     }
 

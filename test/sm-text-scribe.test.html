@@ -8,6 +8,14 @@
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
     <link rel="import" href="../../test-fixture/test-fixture.html">
 
+    <script>
+      window.simpla = window.simpla || {
+        config: {
+          server: 'https://api.simpla.io'
+        }
+      };
+    </script>
+
     <!-- Import the element to test -->
     <link rel="import" href="../simpla-text.html">
     <script src="./sm-text-scribe.fixtures.js"></script>
@@ -95,6 +103,30 @@
             component.value = value;
 
             expect(component._scribe.getContent()).to.equal(value);
+          });
+        });
+
+        describe('clear', function() {
+          beforeEach(function() {
+            sinon.spy(component.scribe, 'setContent')
+          });
+
+          afterEach(function() {
+            component.scribe.setContent.restore();
+          });
+
+          describe('calling setContent', function() {
+            it('should call with empty string if inline', function() {
+              sinon.stub(component, 'shouldInline').returns(true);
+              component.clear();
+              expect(component.scribe.setContent.calledWith('')).to.be.true;
+            });
+
+            it('should call with empty p if block', function() {
+              sinon.stub(component, 'shouldInline').returns(false);
+              component.clear();
+              expect(component.scribe.setContent.calledWith('<p></p>')).to.be.true;
+            });
           });
         });
 
