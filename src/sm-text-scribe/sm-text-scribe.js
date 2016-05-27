@@ -188,7 +188,11 @@ class SmHelperScribe {
     // Note we use setHTML as setContent will trigger a content-changed event
     //  which will set off an infinite loop
     if (this.scribe && this.scribe.setHTML) {
-      this.scribe.setHTML(value);
+      if (value) {
+        this.scribe.setHTML(value);
+      } else {
+        this.clear();
+      }
     }
   }
 
