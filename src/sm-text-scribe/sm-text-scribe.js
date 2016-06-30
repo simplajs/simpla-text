@@ -1,3 +1,4 @@
+import './utils/contains-patch';
 import Scribe from 'scribe-editor';
 import { INLINE_ELEMENTS } from './constants';
 
