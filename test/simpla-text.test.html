@@ -6,6 +6,7 @@
     <script src="../../webcomponentsjs/webcomponents.min.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
+    <script src="../../simpla/simpla.js"></script>
     <link rel="import" href="../../test-fixture/test-fixture.html">
 
     <script>
@@ -23,6 +24,11 @@
     <test-fixture id="default">
       <template>
         <simpla-text sid=""></simpla-text>
+      </template>
+    </test-fixture>
+    <test-fixture id="editableComponent">
+      <template>
+        <simpla-text sid="" editable></simpla-text>
       </template>
     </test-fixture>
     <test-fixture id="inline">
@@ -65,11 +71,6 @@
         <simpla-text use-default default="foo bar"></simpla-text>
       </template>
     </test-fixture>
-    <test-fixture id="shared">
-      <template>
-        <sm-utility-share type="state" key="editable"></sm-utility-share>
-      </template>
-    </test-fixture>
     <test-fixture id="toolbarShare">
       <template>
         <sm-utility-share
@@ -86,7 +87,6 @@
             componentFixtures,
             scribe,
             scribObject,
-            sharedEditable,
             toolbarShare;
 
         componentFixtures = window.fixtures;
@@ -96,7 +96,6 @@
           scribe = component.$.scribe;
           scribeObject = scribe.scribe;
 
-          sharedEditable = fixture('shared');
           toolbarShare = fixture('toolbarShare');
         });
 
@@ -104,26 +103,44 @@
           expect(component).to.be.ok;
         });
 
-        it('should have editable behavior', function() {
-          expect(component.editable).to.not.be.undefined;
-        });
-
         it('should have placeholder behavior', function() {
           expect(component.placeholder).to.not.be.undefined;
         });
 
-        it('editable should be bound to shared data', function() {
-          component.editable = true;
-
-          sharedEditable.value = false;
-          expect(component.editable).to.be.false;
-
-          component.editable = true;
-          expect(sharedEditable.value).to.be.true;
-        });
-
         it('should have sid behavior', function() {
           expect(component.sid).to.not.be.undefined;
+        });
+
+        describe('editable', function() {
+          it('should have editable behavior', function() {
+            expect(component.properties.editable).to.not.be.undefined;
+          });
+
+          it('should fetch value from Simpla', function() {
+            Simpla.toggleEditing(true);
+            component = fixture('default');
+            expect(component.editable).to.be.true;
+
+            Simpla.toggleEditing(false);
+            component = fixture('default');
+            expect(component.editable).to.be.false;
+          });
+
+          it('should take attribute over value from Simpla', function() {
+            var editableComponent;
+
+            Simpla.toggleEditing(false);
+            editableComponent = fixture('editableComponent');
+            expect(editableComponent.editable).to.be.true;
+          });
+
+          it('editable should be bound to Simplas state', function() {
+            Simpla.toggleEditing(true);
+            expect(component.editable).to.be.true;
+
+            Simpla.toggleEditing(true);
+            expect(component.editable).to.be.true;
+          });
         });
 
         describe('scribe', function() {
