@@ -144,6 +144,14 @@
         });
 
         describe('scribe', function() {
+          function makeMockScribe(allowBlockElements) {
+            return {
+              options: { allowBlockElements: allowBlockElements },
+              on: function() {},
+              use: function() {}
+            };
+          }
+
           it('should follow editable status of simpla-text', function() {
             component.editable = false;
             expect(scribe.editable).to.be.false;
@@ -153,16 +161,12 @@
           });
 
           it('should have property, which on change, should reflect inline / block', function() {
-            component.scribe = {
-              options: { allowBlockElements: true }
-            };
+            component.scribe = makeMockScribe(true);
 
             expect(component.hasAttribute('block')).to.be.true;
             expect(component.hasAttribute('inline')).to.be.false;
 
-            component.scribe = {
-              options: { allowBlockElements: false }
-            };
+            component.scribe = makeMockScribe(false);
 
             expect(component.hasAttribute('inline')).to.be.true;
             expect(component.hasAttribute('block')).to.be.false;
