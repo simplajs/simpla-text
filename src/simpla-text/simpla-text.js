@@ -39,7 +39,9 @@ class SimplaText {
        * Instance of toolbar object
        * @type {Object}
        */
-      _toolbar: Object,
+      _toolbar: {
+        value: window.SmUiToolbar.singleton
+      },
 
       /**
        * Parent element of current element. Used to check if should be inline or

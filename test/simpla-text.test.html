@@ -71,23 +71,13 @@
         <simpla-text use-default default="foo bar"></simpla-text>
       </template>
     </test-fixture>
-    <test-fixture id="toolbarShare">
-      <template>
-        <sm-utility-share
-          type="singletons"
-          key="toolbar"
-          >
-        </sm-utility-share>
-      </template>
-    </test-fixture>
     <script>
       describe('<simpla-text>', function() {
 
         var component,
             componentFixtures,
             scribe,
-            scribObject,
-            toolbarShare;
+            scribObject;
 
         componentFixtures = window.fixtures;
 
@@ -95,8 +85,6 @@
           component = fixture('default');
           scribe = component.$.scribe;
           scribeObject = scribe.scribe;
-
-          toolbarShare = fixture('toolbarShare');
         });
 
         it('is okay', function() {
@@ -430,27 +418,6 @@
               component.uid = 'b';
               expect(component.load.called).to.be.true;
             });
-        });
-
-        describe('toolbar', function() {
-          var mockToolbar;
-
-          beforeEach(function() {
-            mockToolbar = {
-              _mock: true,
-              use: sinon.stub()
-            };
-          });
-
-          it('should be bound to shared instance', function(done) {
-            toolbarShare.value = mockToolbar;
-
-            component.async(function() {
-              expect(component._toolbar).to.be.ok;
-              expect(component._toolbar._mock).to.be.true;
-              done();
-            });
-          });
         });
 
         describe('inner html', function() {
