@@ -26,12 +26,13 @@
     "sm-utility-placeholder": "SimplaElements/sm-utility-placeholder#^0.1.0",
     "default-content": "SimplaElements/default-content#^0.1.0",
     "sm-utility-connect": "SimplaElements/sm-utility-connect#^0.1.0",
-    "sm-utility-share": "SimplaElements/sm-utility-share#^0.1.0",
-    "simpla-block": "SimplaElements/simpla-block#^0.1.0"
+    "simpla-block": "SimplaElements/simpla-block#^0.1.0",
+    "sm-ui-toolbar": "SimplaElements/sm-ui-toolbar#^0.1.0"
   },
   "devDependencies": {
     "web-component-tester": "^3.3.22",
-    "test-fixture": "PolymerElements/test-fixture#~1.0.0"
+    "test-fixture": "PolymerElements/test-fixture#~1.0.0",
+    "simpla": "^1.0.0"
   },
   "componentImports": [
     "polymer/polymer.html",
@@ -39,7 +40,7 @@
     "sm-utility-placeholder/sm-utility-placeholder.html",
     "default-content/default-content.html",
     "sm-utility-connect/sm-utility-connect.html",
-    "sm-utility-share/sm-utility-share.html",
-    "simpla-block/simpla-block.html"
+    "simpla-block/simpla-block.html",
+    "sm-ui-toolbar/sm-ui-toolbar.html"
   ]
 }
