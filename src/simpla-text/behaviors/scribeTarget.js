@@ -37,20 +37,20 @@ shady = {
     let target = document.createElement('div');
     target.className = 'simpla-text simpla-text__wrapper';
 
+    this._targetWrap(target);
     this._scribeTarget = target;
-    this._targetWrap();
   },
 
   /**
-   * Wrap the contents of this node with the scribeTarget. Enforces all direct
+   * Wrap the contents of this node with the given target. Enforces all direct
    * 	children to be moved into the target. Does nothing if child nodes are already
    * 	wrapped
+   * @param {HTMLElement} target Target element
    * @return {undefined}
    */
-  _targetWrap() {
+  _targetWrap(target) {
     let dom = Polymer.dom(this),
-        children = dom.childNodes,
-        target = this._scribeTarget;
+        children = dom.childNodes;
 
     // Check if already wrapped
     if (children.indexOf(target) !== -1) {
