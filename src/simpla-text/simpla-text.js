@@ -79,7 +79,7 @@ class SimplaText {
       editable: {
         type: Boolean,
         notify: true,
-        value: () => Simpla.getState().editing,
+        value: () => Simpla._v1.getState().editing,
         observer: '_checkPlaceholder'
       }
     };
@@ -95,7 +95,7 @@ class SimplaText {
 
   ready() {
     // Bind editable to Simpla's editing state
-    Simpla.observe('editing', (editing) => this.editable = editing);
+    Simpla._v1.observe('editing', (editing) => this.editable = editing);
   }
 
   /**

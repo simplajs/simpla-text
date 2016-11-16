@@ -27,7 +27,8 @@
     "default-content": "SimplaElements/default-content#^0.1.0",
     "sm-utility-connect": "SimplaElements/sm-utility-connect#^0.1.0",
     "simpla-block": "SimplaElements/simpla-block#^0.1.0",
-    "sm-ui-toolbar": "SimplaElements/sm-ui-toolbar#^0.1.0"
+    "sm-ui-toolbar": "SimplaElements/sm-ui-toolbar#^0.1.0",
+    "simpla-v2-compat": "simplaio/simpla-v2-compat#^0.1.0"
   },
   "devDependencies": {
     "web-component-tester": "^3.3.22",
@@ -36,6 +37,7 @@
   },
   "componentImports": [
     "polymer/polymer.html",
+    "simpla-v2-compat/simpla-v2-compat.html",
     "sm-ui-core/sm-ui-core.html",
     "sm-utility-placeholder/sm-utility-placeholder.html",
     "default-content/default-content.html",
