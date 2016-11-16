@@ -1,6 +1,6 @@
 {
   "name": "simpla-text",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "adds editable dynamic text",
   "main": "simpla-text.html",
   "scripts": {
