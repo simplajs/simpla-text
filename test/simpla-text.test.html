@@ -104,29 +104,29 @@
             expect(component.properties.editable).to.not.be.undefined;
           });
 
-          it('should fetch value from Simpla', function() {
-            Simpla.toggleEditing(true);
+          it('should fetch value from Simpla._v1', function() {
+            Simpla._v1.toggleEditing(true);
             component = fixture('default');
             expect(component.editable).to.be.true;
 
-            Simpla.toggleEditing(false);
+            Simpla._v1.toggleEditing(false);
             component = fixture('default');
             expect(component.editable).to.be.false;
           });
 
-          it('should take attribute over value from Simpla', function() {
+          it('should take attribute over value from Simpla._v1', function() {
             var editableComponent;
 
-            Simpla.toggleEditing(false);
+            Simpla._v1.toggleEditing(false);
             editableComponent = fixture('editableComponent');
             expect(editableComponent.editable).to.be.true;
           });
 
-          it('editable should be bound to Simplas state', function() {
-            Simpla.toggleEditing(true);
+          it('editable should be bound to Simpla._v1s state', function() {
+            Simpla._v1.toggleEditing(true);
             expect(component.editable).to.be.true;
 
-            Simpla.toggleEditing(true);
+            Simpla._v1.toggleEditing(true);
             expect(component.editable).to.be.true;
           });
         });
