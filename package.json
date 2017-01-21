@@ -9,9 +9,8 @@
   "author": "Simpla <admin@simpla.io>",
   "license": "MIT",
   "keywords": [
-    "simpla",
-    "web component",
-    "polymer",
+    "simpla-element",
+    "web-components",
     "text"
   ],
   "repository": {

@@ -8,9 +8,8 @@
   "license": "MIT",
   "main": "simpla-text.html",
   "keywords": [
-    "simpla",
-    "web component",
-    "polymer",
+    "simpla-element",
+    "web-components",
     "text"
   ],
   "ignore": [
