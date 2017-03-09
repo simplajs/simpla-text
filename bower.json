@@ -1,48 +1,31 @@
 {
   "name": "simpla-text",
-  "description": "adds editable dynamic text",
-  "version": "0.1.6",
+  "version": "0.0.0",
   "authors": [
-    "Simpla <admin@simpla.io>"
+    "Simpla &lt;admin@simpla.io&gt;"
   ],
-  "license": "MIT",
-  "main": "simpla-text.html",
+  "description": "Simpla editable text",
   "keywords": [
-    "simpla",
-    "web component",
+    "web-component",
     "polymer",
-    "text"
+    "simpla-text"
   ],
+  "main": "simpla-text.html",
+  "license": "MIT",
+  "homepage": "https://github.com/SimplaElements/simpla-text/simpla-text/",
   "ignore": [
     "*",
-    "!src",
     "!*.html",
     "!LICENSE"
   ],
   "dependencies": {
-    "webcomponentsjs": "^0.7.14",
-    "polymer": "^1.1.4",
-    "sm-ui-core": "SimplaElements/sm-ui-core#^0.1.0",
-    "sm-utility-placeholder": "SimplaElements/sm-utility-placeholder#^0.1.0",
-    "default-content": "SimplaElements/default-content#^0.1.0",
-    "sm-utility-connect": "SimplaElements/sm-utility-connect#^0.1.0",
-    "simpla-block": "SimplaElements/simpla-block#^0.1.0",
-    "sm-ui-toolbar": "SimplaElements/sm-ui-toolbar#^0.1.0",
-    "simpla-v2-compat": "simplaio/simpla-v2-compat#^0.1.0"
+    "polymer": "^1.6.0",
+    "simpla": "simplaio/simpla#2.0-preview"
   },
   "devDependencies": {
-    "web-component-tester": "^3.3.22",
-    "test-fixture": "PolymerElements/test-fixture#~1.0.0",
-    "simpla": "^1.0.0"
-  },
-  "componentImports": [
-    "polymer/polymer.html",
-    "simpla-v2-compat/simpla-v2-compat.html",
-    "sm-ui-core/sm-ui-core.html",
-    "sm-utility-placeholder/sm-utility-placeholder.html",
-    "default-content/default-content.html",
-    "sm-utility-connect/sm-utility-connect.html",
-    "simpla-block/simpla-block.html",
-    "sm-ui-toolbar/sm-ui-toolbar.html"
-  ]
+    "webcomponentsjs": "^0.7.14",
+    "web-component-tester": "^4.0.0",
+    "iron-test-helpers": "PolymerElements/iron-test-helpers#^1.4.1",
+    "rangy": "^1.3.0"
+  }
 }

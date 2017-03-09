@@ -1,0 +1,26 @@
+<!-- Test Helpers -->
+<script>
+  function flushEditor(component, callback = () => {}) {
+    return Promise.resolve()
+      .then(() => component.getEditor())
+      .then((editor) => {
+        if (editor._view.inDOMChange) {
+          editor._view.inDOMChange.finish();
+        }
+
+        callback();
+      });
+  }
+
+  function wait(time = 25) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
+  Object.assign(window, { flushEditor, wait });
+</script>
+
+<!-- Setup Simpla -->
+<script src="../bower_components/simpla/simpla.js"></script>
+<script>
+  Simpla.init('local');
+</script>

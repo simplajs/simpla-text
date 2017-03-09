@@ -5,10 +5,22 @@
     "node": true,
     "es6": true
   },
-  "globals": {
-    "Polymer": true
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module"
   },
+  "globals": {
+    "Polymer": true,
+    "Simpla": true
+  },
+  "plugins": [
+    "html"
+  ],
   "rules": {
+    "no-undef": 2,
+    "no-redeclare": 2,
+    "no-unused-vars": 2,
+
     "no-cond-assign": 0,
     "no-console": 0,
     "no-extra-parens": 2,
@@ -22,16 +34,16 @@
 
     "brace-style": 2,
     "camelcase": 2,
-    "new-cap": 0,
     "no-lonely-if": 2,
-    "space-after-keywords": 2,
+    "keyword-spacing": 2,
     "space-in-brackets": 0,
     "space-infix-ops": 2,
-    "valid-jsdoc": 2,
 
     "strict": [2, "never"],
     "indent": [2, 2, {"VariableDeclarator": { "var": 2, "let": 2, "const": 3 }}],
-    "quotes": [2, "single"],
-    "one-var": [2, "always"]
+    "quotes": [2, "single", { "allowTemplateLiterals": true }],
+    "one-var": [2, {
+      "let": "always"
+    }]
   }
 }

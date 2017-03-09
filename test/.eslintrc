@@ -1,0 +1,17 @@
+{
+  "env": {
+    "mocha": true
+  },
+
+  "globals": {
+    "expect": true,
+    "sinon": true,
+    "Simpla": true,
+    "flushEditor": true,
+    "wait": true,
+    "fixture": true,
+    "WCT": true,
+    "rangy": true,
+    "MockInteractions": true
+  }
+}

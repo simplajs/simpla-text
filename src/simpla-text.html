@@ -1,0 +1,83 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="simpla-text">
+  <template>
+    <style>
+      :host, *, *::before, *::after {
+        box-sizing: border-box;
+      }
+
+      :host {
+        -moz-osx-font-smoothing: grayscale;
+         -webkit-font-smoothing: antialiased;
+                 font-smoothing: antialiased;
+
+        outline: none;
+      }
+    </style>
+    <slot></slot>
+  </template>
+
+  <script>
+    import editor from './behaviors/editor-connector';
+    import inlineBlock from './behaviors/inline-block';
+    import simpla from './behaviors/simpla-connector';
+
+    class SimplaText {
+      beforeRegister() {
+        this.properties = {
+          editing: {
+            type: Boolean,
+            readOnly: true,
+            value: false
+          },
+
+          editable: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false
+          },
+
+          plaintext: {
+            type: Boolean,
+            value: false
+          }
+        };
+
+        this.listeners = {
+          'tap': '_handleTap',
+          'blur': '_handleBlur',
+          'focus': '_handleFocus'
+        };
+      }
+
+      get behaviors() {
+        return [ editor, inlineBlock, simpla ];
+      }
+
+      _handleBlur() {
+        this._setEditing(false);
+      }
+
+      _handleFocus() {
+        if (this.editable) {
+          this._setEditing(true);
+        }
+      }
+
+      _handleTap() {
+        if (this.editable) {
+          this._setEditing(true);
+        }
+      }
+
+      _editableObserver(editable) {
+        if (!editable) {
+          this._setEditing(false);
+        }
+      }
+    };
+
+    Polymer(SimplaText)
+  </script>
+</dom-module>

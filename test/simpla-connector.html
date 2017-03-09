@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>simpla-text</title>
+    <script src="../../webcomponentsjs/webcomponents.min.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <!-- Test Helpers -->
+    <link rel="import" href="../../iron-test-helpers/iron-test-helpers.html">
+    <link rel="import" href="./test-setup.html">
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../simpla-text.html">
+
+  </head>
+  <body>
+    <test-fixture id="simple">
+      <template>
+        <simpla-text></simpla-text>
+      </template>
+    </test-fixture>
+    <script>
+      describe('simpla connector', () => {
+        let uid = 'test-uid',
+            component;
+
+        beforeEach(function() {
+          component = fixture('simple');
+          component.uid = uid;
+        });
+
+        afterEach(function() {
+          // return Simpla.remove(uid);
+        });
+
+        describe('editable', () => {
+          it('should be bound to Simplas editable state', () => {
+            Simpla.editable(true);
+            expect(component.editable).to.be.true;
+
+            Simpla.editable(false);
+            expect(component.editable).to.be.false;
+          });
+        });
+
+        describe('data', () => {
+          it('should observe data thats stored in the state on attach', () => {
+            return Simpla.set(uid, {
+              type: 'Text',
+              data: {
+                html: 'Hello World'
+              }
+            })
+            .then(wait())
+            .then(function() {
+              expect(component.innerHTML).to.match(/>?Hello World<?/);
+
+              return Simpla.set(uid, {
+                type: 'Text',
+                data: {
+                  html: 'Hello World, again'
+                }
+              });
+            })
+            .then(wait())
+            .then(function() {
+              expect(component.innerHTML).to.match(/>?Hello World, again<?/);
+            });
+          });
+
+          it('while editing, it should update data in the state', () => {
+            component.editable = true;
+
+            return flushEditor(component)
+              .then(() => {
+                component.innerHTML = 'Hello World';
+              })
+              .then(wait)
+              .then(() => Simpla.get(uid))
+              .then((response) => {
+                expect(response).to.be.ok;
+                expect(response.data.html).to.match(/Hello World/);
+              });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

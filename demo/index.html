@@ -1,53 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>simpla-text</title>
-    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>simpla-text Demo</title>
 
+    <!-- Import Web Components polyfill -->
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+
+    <!-- Use shadow DOM if available -->
     <script>
-      window.Polymer = window.Polymer || {};
-      window.Polymer.dom = 'shadow';
+      window.Polymer = { dom: 'shadow' };
     </script>
 
+    <!-- Setup Simpla -->
+    <script src="../simpla/simpla.js"></script>
     <script>
-      window.simpla = window.simpla || {
-        config: {
-          server: 'https://api.simpla.io'
-        }
-      };
+      Simpla.init('local');
     </script>
 
-    <link rel="import" href="../simpla-text.html" />
-    <style>
-      body {
-        font-family: sans-serif;
-      }
-    </style>
+    <!-- Import component -->
+    <link rel="import" href="../simpla-text.html">
+    <link rel="import" href="../iron-test-helpers/iron-test-helpers.html">
+
+    <link rel="import" href="../iron-test-helpers/iron-test-helpers.html">
+
+    <script src="../rangy/rangy-core.js"></script>
+    <script src="../rangy/rangy-textrange.js"></script>
+
+
   </head>
-
-  <body>
-    <h1>Standard</h1>
+  <body unresolved>
+    <h1>Basic Editor</h1>
     <simpla-text editable></simpla-text>
 
-    <h1>Custom placeholder</h1>
-    <simpla-text editable placeholder="Start typing..."></simpla-text>
+    <h1>Inline Editor</h1>
+    <simpla-text editable inline></simpla-text>
 
-    <h1>Default Content</h1>
-    <simpla-text use-default editable default="Hello World"></simpla-text>
-    <simpla-text use-default><default-content><p>Hello World</p></default-content></simpla-text>
-
-    <h1>Inline Mode</h1>
+    <h1>Auto Inline</h1>
     <span><simpla-text editable></simpla-text></span>
-    <div><simpla-text editable inline></simpla-text></div>
 
-    <h1>Inline Mode</h1>
-    <span><simpla-text editable></simpla-text></span>
-    <div><simpla-text editable inline></simpla-text></div>
+    <h1>Auto Block</h1>
+    <div><simpla-text editable></simpla-text></div>
 
-    <h1>Void Content</h1>
-    <simpla-text editable>This content should be void</simpla-text>
-    <simpla-text editable use-default default="This should be output">But this shouldn't</simpla-text>
-    <simpla-text editable use-default><default-content>This should be output</default-content> but this shouldn't</simpla-text>
+    <h1>Plaintext Editor</h1>
+    <simpla-text plaintext editable></simpla-text>
+
+    <h1>Synced Editors</h1>
+    <simpla-text uid="text-0" plaintext editable>Hello World</simpla-text>
+    <simpla-text uid="text-0" plaintext editable>Hello World</simpla-text>
+
   </body>
 </html>
