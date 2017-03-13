@@ -6,18 +6,6 @@ export default {
     '_updateEditorWithProps(editable, inline, plaintext)'
   ],
 
-  _createEditor() {
-    if (!this.__waitForEditor) {
-      this.__waitForEditor = new Promise((resolve, reject) => {
-        let editorUrl = this.resolveUrl(EDITOR_COMPONENT);
-        this.importHref(editorUrl, resolve, reject);
-      })
-      .then(() => window.SimplaText.Editor.fromElement(this));
-    }
-
-    return this.__waitForEditor;
-  },
-
   getEditor() {
     return Promise.resolve(this._editor || this._createEditor())
       .then((editor) => {
@@ -28,6 +16,25 @@ export default {
 
   editorReady() {
     return !!this._editor;
+  },
+
+  runCommand(commandName) {
+    return this.getEditor()
+      .then(editor => {
+        return editor.runCommand(commandName);
+      });
+  },
+
+  _createEditor() {
+    if (!this.__waitForEditor) {
+      this.__waitForEditor = new Promise((resolve, reject) => {
+        let editorUrl = this.resolveUrl(EDITOR_COMPONENT);
+        this.importHref(editorUrl, resolve, reject);
+      })
+      .then(() => window.SimplaText.Editor.fromElement(this));
+    }
+
+    return this.__waitForEditor;
   },
 
   _checkEditorPrepped(editable) {

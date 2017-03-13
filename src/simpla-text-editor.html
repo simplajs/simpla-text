@@ -1,6 +1,44 @@
+<link rel="import" href="../polymer/polymer.html">
+
 <script>
   import Editor from './editor';
 
   window.SimplaText = window.SimplaText || {};
   window.SimplaText.Editor = Editor;
 </script>
+
+<dom-module id="simpla-text-toolbar">
+  <template>
+    <style>
+      :host, *, *::before, *::after {
+        box-sizing: border-box;
+      }
+
+      :host {
+        -moz-osx-font-smoothing: grayscale;
+         -webkit-font-smoothing: antialiased;
+                 font-smoothing: antialiased;
+      }
+    </style>
+    <div class="controls">
+      <button class="control" on-tap="_runCommand" data-command="bold">b</button>
+      <button class="control" on-tap="_runCommand" data-command="italic">i</button>
+      <button class="control" on-tap="_runCommand" data-command="underline">u</button>
+    </div>
+  </template>
+  <script>
+    class SimplaTextToolbar extends HTMLElement {
+      beforeRegister() {
+        this.is = 'simpla-text-toolbar';
+      }
+
+      _runCommand(event) {
+        let { command } = event.target.dataset;
+
+        this.fire('command', { name: command });
+      }
+    }
+
+    Polymer(SimplaTextToolbar)
+  </script>
+</dom-module>

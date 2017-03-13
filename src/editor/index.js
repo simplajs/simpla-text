@@ -1,8 +1,9 @@
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { DOMParser } from 'prosemirror-model';
-import { getKeymapPluginFor, getSimplaPluginFor } from './plugins';
+import { getKeymapPluginFor, getInputPluginFor, getSelectPluginFor } from './plugins';
 import getSchemaFor from './schemas';
+import * as commands from './commands';
 
 export default class Editor {
   constructor(dom, { plaintext, inline, editable }) {
@@ -58,8 +59,15 @@ export default class Editor {
    * Public instance methods
    */
 
+  runCommand(commandName) {
+    let command = commands[commandName],
+        view = this._view,
+        schema = view.state.schema;
+
+    return command({ schema })(view.state, view.dispatch);
+  }
+
   refresh() {
-    this._
     this._view.updateState(this._getState());
   }
 
@@ -72,9 +80,11 @@ export default class Editor {
   }
 
   _getPlugins() {
+    let editor = this;
     return [
-      getSimplaPluginFor(this),
-      getKeymapPluginFor(this)
+      getInputPluginFor({ editor }),
+      getSelectPluginFor({ editor }),
+      getKeymapPluginFor({ editor })
     ];
   }
 

@@ -14,7 +14,23 @@
 
         outline: none;
       }
+
+      .toolbar-wrapper {
+        position: relative;
+      }
+
+      .toolbar {
+        position: absolute;
+      }
     </style>
+    <div class="toolbar-wrapper">
+      <simpla-text-toolbar
+        id="toolbar"
+        class="toolbar"
+        on-command="_handleToolbarCommand"
+        hidden>
+      </simpla-text-toolbar>
+    </div>
     <slot></slot>
   </template>
 
@@ -22,6 +38,7 @@
     import editor from './behaviors/editor-connector';
     import inlineBlock from './behaviors/inline-block';
     import simpla from './behaviors/simpla-connector';
+    import toolbar from './behaviors/toolbar';
 
     class SimplaText {
       beforeRegister() {
@@ -52,7 +69,7 @@
       }
 
       get behaviors() {
-        return [ editor, inlineBlock, simpla ];
+        return [ editor, inlineBlock, simpla, toolbar ];
       }
 
       _handleBlur() {
