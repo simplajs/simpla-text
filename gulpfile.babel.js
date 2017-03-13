@@ -31,6 +31,7 @@ const autoprefixer = require('autoprefixer');
 const cssImport = require('postcss-import');
 
 const bs = browserSync.create(),
+      nightwatchServer = browserSync.create(),
       argv = yargs.boolean(['debug']).argv,
       errorNotifier = () => plumber({ errorHandler: notify.onError('Error: <%= error.message %>') }),
       OPTIONS = {
@@ -74,6 +75,25 @@ const bs = browserSync.create(),
           },
           open: false,
           notify: false
+        },
+        nightwatchServer: {
+          server: {
+            baseDir: './',
+            index: 'nightwatch/server/index.html',
+            routes: {
+              '/components': './bower_components',
+              '/components/simpla-text/simpla-text.html': './simpla-text.html',
+              '/components/simpla-text/simpla-text-editor.html': './simpla-text-editor.html',
+              '/': 'nightwatch/server'
+            }
+          },
+          open: false,
+          notify: false,
+          port: 3333,
+          ui: { port: false }
+        },
+        nightwatch: {
+          configFile: 'nightwatch.conf.js'
         }
       };
 
@@ -136,7 +156,9 @@ gulp.task('build:tests:js', () => {
 
 wct.gulp.init(gulp);
 
-gulp.task('serve', () => bs.init(OPTIONS.browserSync));
+gulp.task('serve:nightwatch', () => nightwatchServer.init(OPTIONS.nightwatchServer));
+gulp.task('serve:demo', () => bs.init(OPTIONS.browserSync));
+gulp.task('serve', ['serve:demo', 'serve:nightwatch']);
 gulp.task('refresh', () => bs.reload());
 
 gulp.task('build:tests', ['build:tests:html', 'build:tests:js']);

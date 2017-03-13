@@ -93,6 +93,14 @@
           this._setEditing(false);
         }
       }
+
+      get value() {
+        return this.innerHTML;
+      }
+
+      set value(value) {
+        this.innerHTML = value;
+      }
     };
 
     Polymer(SimplaText)

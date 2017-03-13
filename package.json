@@ -4,7 +4,9 @@
   "description": "Simpla editable text",
   "main": "simpla-text.html",
   "scripts": {
-    "test": "gulp test:local"
+    "test": "gulp test:local",
+    "postinstall": "node nightwatch.conf.js",
+    "test:e2e": "node_modules/.bin/nightwatch --config nightwatch.conf.js"
   },
   "author": "Simpla &lt;admin@simpla.io&gt;",
   "license": "MIT",
@@ -33,18 +35,22 @@
     "gulp-htmlmin": "^3.0.0",
     "gulp-if": "^2.0.0",
     "gulp-inline-source": "^3.0.0",
+    "gulp-nightwatch": "^0.3.2",
     "gulp-notify": "^3.0.0",
     "gulp-plumber": "^1.0.0",
     "gulp-postcss": "^6.1.0",
     "gulp-process-inline": "^0.1.1",
     "gulp-rollup-file": "^0.1.0",
     "gulp-size": "^2.0.0",
+    "http-server": "^0.9.0",
+    "nightwatch": "^0.9.13",
     "postcss-import": "^9.1.0",
     "rollup-plugin-babel": "^2.6.0",
     "rollup-plugin-commonjs": "^7.0.0",
     "rollup-plugin-json": "^2.1.0",
     "rollup-plugin-node-resolve": "^2.0.0",
     "run-sequence": "^1.1.5",
+    "selenium-download": "^2.0.9",
     "web-component-tester": "^4.0.0",
     "yargs": "^6.6.0"
   },
