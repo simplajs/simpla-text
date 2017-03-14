@@ -17,6 +17,13 @@ export default {
   _updateToolbarFromSelect(event) {
     let { selection } = event.detail;
 
+    if (this.plaintext) {
+      this.$.toolbar.hidden = true;
+      return;
+    }
+
+    this.$.toolbar.hidden = !selection;
+
     this.$.toolbar.hoverOverSelection(selection);
     this.$.toolbar.filterActiveControls(commandName => {
       return this.runCommand(commandName, { dry: true })
