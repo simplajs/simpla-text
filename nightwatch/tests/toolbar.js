@@ -1,29 +1,26 @@
-const tagExp = (tag) => new RegExp(`<${tag}(.+)?>(.+)?<\/${tag}>`);
-
 const init = () => (browser) => {
   browser
-    .url(`http://localhost:3333/toolbar.html`)
+    .url('http://localhost:3333/')
     .setProperty('simpla-text', 'editable', true)
     .pause(500) // Wait for async loads to occur
     .click('simpla-text')
     .keys('Hello World')
-    .saveScreenshot('./screenshots/toolbar-init.png');
+    .saveScreenshot('./screenshots/toolbar/init.png');
 }
 
 const highlight = () => (browser) => {
   browser
     .highlight(1, 'left', 'word')
-    .saveScreenshot('./screenshots/toolbar-highlight.png');
+    .saveScreenshot('./screenshots/toolbar/highlight.png');
 }
 
 const checkCommand = ({ name, tag }) => (browser) => {
   browser
     .clickOnCommand(name)
-    .saveScreenshot(`./screenshots/toolbar-${name}.png`)
-    .perform(function() {
-      browser.expect.element('simpla-text').to.have.value.which.matches(tagExp(tag))
-    })
-    .clickOnCommand(name);
+    .saveScreenshot(`./screenshots/toolbar/${name}.png`)
+    .verify.containsTag('simpla-text', tag)
+    .clickOnCommand(name)
+    .verify.doesNotContainTag('simpla-text', tag);
 }
 
 module.exports = {

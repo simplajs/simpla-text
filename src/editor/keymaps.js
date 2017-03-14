@@ -1,11 +1,11 @@
 import { baseKeymap as base } from 'prosemirror-commands';
-import { insertBr, bold, italic, underline } from './commands';
+import { insertBr, toggleBold, toggleItalic, toggleUnderline } from './commands';
 
 export function makeRichtextMaps({ schema }) {
   return {
-    'Mod-b': bold({ schema }),
-    'Mod-i': italic({ schema }),
-    'Mod-u': underline({ schema })
+    'Mod-b': toggleBold({ schema }),
+    'Mod-i': toggleItalic({ schema }),
+    'Mod-u': toggleUnderline({ schema })
   };
 }
 
