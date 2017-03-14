@@ -25,7 +25,7 @@ export default {
     this.$.toolbar.hidden = !selection;
 
     this.$.toolbar.hoverOverSelection(selection);
-    this.$.toolbar.filterActiveControls(commandName => {
+    this.$.toolbar.filterActiveTools(commandName => {
       return this.runCommand(commandName, { dry: true })
         .then(willChangeState => !willChangeState);
     });

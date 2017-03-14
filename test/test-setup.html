@@ -4,8 +4,8 @@
     return Promise.resolve()
       .then(() => component.getEditor())
       .then((editor) => {
-        if (editor._view.inDOMChange) {
-          editor._view.inDOMChange.finish();
+        if (editor.view.inDOMChange) {
+          editor.view.inDOMChange.finish();
         }
 
         callback();

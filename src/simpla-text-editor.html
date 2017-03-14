@@ -18,74 +18,78 @@
         -moz-osx-font-smoothing: grayscale;
          -webkit-font-smoothing: antialiased;
                  font-smoothing: antialiased;
+
+        --tool-size: 25px;
+
+        display: flex;
       }
 
-      .control {
-        width: 25px;
-        height: 25px;
+      :host([hidden]) {
+        display: none;
+      }
+
+      .tool {
+        width: var(--tool-size);
+        height: var(--tool-size);
         border: solid thin blue;
+        flex-shrink: 0;
       }
 
-      .control[active] {
+      .tool[active] {
         border-bottom: 4px solid blue;
       }
     </style>
-    <div class="controls">
-      <button
-        class="control"
-        on-tap="_runCommand"
-        active$="[[_checkControlIsActive('bold', activeControls)]]"
-        data-command="toggle-bold">b</button>
-      <button
-        class="control"
-        on-tap="_runCommand"
-        active$="[[_checkControlIsActive('italic', activeControls)]]"
-        data-command="toggle-italic">i</button>
-      <button
-        class="control"
-        on-tap="_runCommand"
-        active$="[[_checkControlIsActive('underline', activeControls)]]"
-        data-command="toggle-underline">u</button>
-      <button
-        class="control"
-        on-tap="_toggleLinkInput">l<input id="link-input" type="text" hidden /></button>
-    </div>
+    <button
+      class="tool"
+      on-tap="_runCommand"
+      active$="[[_checkToolIsActive('bold', activeTools)]]"
+      data-command="toggle-bold">b</button>
+    <button
+      class="tool"
+      on-tap="_runCommand"
+      active$="[[_checkToolIsActive('italic', activeTools)]]"
+      data-command="toggle-italic">i</button>
+    <button
+      class="tool"
+      on-tap="_runCommand"
+      active$="[[_checkToolIsActive('underline', activeTools)]]"
+      data-command="toggle-underline">u</button>
+    <button
+      class="tool"
+      on-tap="_toggleLinkInput">l<input id="link-input" type="text" hidden /></button>
   </template>
   <script>
+    const GUTTER = 5;
+
+    function addPadding(rect, padding) {
+      return {
+        top: rect.top - padding,
+        right: rect.right + padding,
+        bottom: rect.bottom + padding,
+        left: rect.left - padding,
+        width: rect.width + 2 * padding,
+        height: rect.height + 2 * padding
+      };
+    }
+
     class SimplaTextToolbar extends HTMLElement {
       beforeRegister() {
         this.is = 'simpla-text-toolbar';
 
         this.properties = {
-          controls: {
+          tools: {
             type: Array,
             value: () => [ 'bold', 'italic', 'underline' ]
           },
 
-          activeControls: {
+          activeTools: {
             type: Array,
             value: () => []
           }
         }
       }
 
-      hoverOverSelection(selection) {
-        let left,
-            top;
-            
-        if (!selection) {
-          return;
-        }
-
-        ({ left, top } = this._getToolbarPositionFromRange(selection.getRangeAt(0)));
-
-        Object.assign(this.style, {
-          left: `${left}px`,
-          top: `${top}px`
-        });
-      }
-
-      filterActiveControls(isActive) {
+      filterActiveTools(isActive) {
         const byActive = ({ active }) => !!active,
               toControl = ({ name }) => name,
               getStatus = (name) => {
@@ -93,36 +97,88 @@
                   .then(active => ({ name, active }));
               };
 
-        return Promise.all(this.controls.map(getStatus))
+        return Promise.all(this.tools.map(getStatus))
           .then(status => status.filter(byActive))
           .then(status => status.map(toControl))
-          .then(activeControls => this.activeControls = activeControls);
+          .then(commands => this.activeTools = commands);
       }
 
-      _getToolbarPositionFromRange(range) {
-        let relativeRangeTop,
-            relativeRangeLeft,
-            centerOffset,
-            toolbarBounds,
-            rangeBounds,
-            hostBounds;
+      hoverOverSelection(selection) {
+        let rangeBounds,
+            ownBounds,
+            parentOffsets,
+            boundaries,
+            offsetLeft,
+            offsetTop;
 
-        if (!range) {
+        if (!selection) {
           return;
         }
 
-        toolbarBounds = this.getBoundingClientRect();
-        hostBounds = this.parentElement.getBoundingClientRect();
-        rangeBounds = range.getBoundingClientRect();
+        rangeBounds = selection.getRangeAt(0).getBoundingClientRect();
+        ownBounds = this.getBoundingClientRect();
+        parentOffsets = this.parentElement.getBoundingClientRect();
+        boundaries = {
+          top: window.scrollY,
+          left: window.scrollX,
+          right: window.innerWidth + window.scrollX,
+          bottom: window.innerHeight + window.scrollY
+        };
 
-        relativeRangeLeft = rangeBounds.left - hostBounds.left;
-        relativeRangeTop = rangeBounds.top - hostBounds.top;
+        parentOffsets = {
+          top: parentOffsets.top + window.scrollY,
+          left: parentOffsets.left + window.scrollX
+        };
 
-        centerOffset = rangeBounds.width - toolbarBounds.width / 2;
+        ({ offsetLeft, offsetTop } = this._getOffsetsFromBounds({
+          rangeBounds,
+          parentOffsets,
+          ownBounds,
+          boundaries
+        }));
+
+        Object.assign(this.style, {
+          left: `${offsetLeft}px`,
+          top: `${offsetTop}px`
+        });
+      }
+
+      /**
+       * TODO: Read window from arg and update offsets to keep inside the window
+       */
+      _getOffsetsFromBounds({ rangeBounds, parentOffsets, ownBounds, boundaries, gutter = GUTTER }) {
+        let { left, top } = rangeBounds,
+            centerOffset = (rangeBounds.width - ownBounds.width) / 2;
+
+        boundaries = addPadding(boundaries, -gutter);
+
+        left += centerOffset;
+        top -= ownBounds.height + gutter;
+
+        // Fit to within boundaries
+        if (left < boundaries.left) {
+          left = boundaries.left;
+        }
+
+        if (top < boundaries.top) {
+          top = boundaries.top;
+
+          if (top < rangeBounds.top && top > rangeBounds.bottom || top + ownBounds.height < rangeBounds.bottom && top + ownBounds.height > rangeBounds.top) {
+            top = rangeBounds.bottom + gutter;
+          }
+        }
+
+        if (left + ownBounds.width > boundaries.right) {
+          left = boundaries.right - ownBounds.width;
+        }
+
+        if (top + ownBounds.height > boundaries.bottom) {
+          top = boundaries.bottom - ownBounds.height;
+        }
 
         return {
-          left: relativeRangeLeft + centerOffset,
-          top: relativeRangeTop - toolbarBounds.height
+          offsetLeft: left - parentOffsets.left,
+          offsetTop: top - parentOffsets.top
         };
       }
 
@@ -136,8 +192,8 @@
         this.$['link-input'].hidden = !this.$['link-input'].hidden;
       }
 
-      _checkControlIsActive(control, activeControls) {
-        return activeControls.indexOf(control) !== -1;
+      _checkToolIsActive(tool, activeTools) {
+        return activeTools.indexOf(tool) !== -1;
       }
     }
 
