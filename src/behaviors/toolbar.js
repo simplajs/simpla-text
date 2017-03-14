@@ -1,6 +1,6 @@
 export default {
   listeners: {
-    'select': '_updateToolbarPosition',
+    'select': '_updateToolbarFromSelect',
     'blur': '_hideToolbar'
   },
 
@@ -14,32 +14,13 @@ export default {
     this.runCommand(name, config);
   },
 
-  _updateToolbarPosition(event) {
-    let toolbar = this.$.toolbar,
-        host = toolbar.parentElement,
-        selection = event.detail.selection,
-        toolbarBounds,
-        rangeBounds,
-        hostBounds,
-        left,
-        top;
+  _updateToolbarFromSelect(event) {
+    let { selection } = event.detail;
 
-    toolbar.hidden = !selection;
-
-    if (!selection) {
-      return;
-    }
-
-    rangeBounds = selection.getRangeAt(0).getBoundingClientRect();
-    hostBounds = host.getBoundingClientRect();
-    toolbarBounds = toolbar.getBoundingClientRect();
-
-    left = rangeBounds.left - hostBounds.left + (rangeBounds.width - toolbarBounds.width) / 2;
-    top = rangeBounds.top - hostBounds.top - toolbarBounds.height;
-
-    Object.assign(toolbar.style, {
-      left: `${left}px`,
-      top: `${top}px`
+    this.$.toolbar.hoverOverSelection(selection);
+    this.$.toolbar.filterActiveControls(commandName => {
+      return this.runCommand(commandName, { dry: true })
+        .then(willChangeState => !willChangeState);
     });
   }
 }

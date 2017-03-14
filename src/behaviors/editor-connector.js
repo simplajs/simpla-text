@@ -18,10 +18,10 @@ export default {
     return !!this._editor;
   },
 
-  runCommand(commandName) {
+  runCommand(commandName, options = {}) {
     return this.getEditor()
       .then(editor => {
-        return editor.runCommand(commandName);
+        return editor.runCommand(commandName, options);
       });
   },
 

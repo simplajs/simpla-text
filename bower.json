@@ -20,7 +20,8 @@
   ],
   "dependencies": {
     "polymer": "^1.6.0",
-    "simpla": "simplaio/simpla#2.0-preview"
+    "simpla": "simplaio/simpla#2.0-preview",
+    "simple-button": "SimpleElements/simple-button#^0.2.3"
   },
   "devDependencies": {
     "webcomponentsjs": "^0.7.14",

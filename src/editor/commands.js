@@ -1,5 +1,25 @@
 import { chainCommands, exitCode, toggleMark } from 'prosemirror-commands'
 
+function addMark(markType, attrs) {
+  return (state, dispatch) => {
+    let { empty, from, to } = state.selection,
+        hasMark = () => state.doc.rangeHasMark(from, to, markType);
+
+    if (empty || hasMark()) {
+      return false;
+    }
+
+    if (dispatch) {
+      let mark = markType.create(attrs),
+          transaction = state.tr.addMark(from, to, mark).scrollIntoView();
+
+      dispatch(transaction);
+    }
+
+    return true;
+  }
+}
+
 export function insertBr({ schema }) {
   return chainCommands(
     exitCode,
@@ -14,13 +34,38 @@ export function insertBr({ schema }) {
 }
 
 export function bold({ schema }) {
+  return addMark(schema.marks.strong);
+}
+
+export function toggleBold({ schema }) {
   return toggleMark(schema.marks.strong);
 }
 
 export function italic({ schema }) {
+  return addMark(schema.marks.em);
+}
+
+export function toggleItalic({ schema }) {
   return toggleMark(schema.marks.em);
 }
 
 export function underline({ schema }) {
+  return addMark(schema.marks.u);
+}
+
+export function toggleUnderline({ schema }) {
   return toggleMark(schema.marks.u);
+}
+
+export default {
+  'insert-br': insertBr,
+
+  'bold': bold,
+  'toggle-bold': toggleBold,
+
+  'italic': italic,
+  'toggle-italic': toggleItalic,
+
+  'underline': underline,
+  'toggle-underline': toggleUnderline
 }

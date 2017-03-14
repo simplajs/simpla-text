@@ -3,7 +3,7 @@ import { EditorView } from 'prosemirror-view';
 import { DOMParser } from 'prosemirror-model';
 import { getKeymapPluginFor, getInputPluginFor, getSelectPluginFor } from './plugins';
 import getSchemaFor from './schemas';
-import * as commands from './commands';
+import commands from './commands';
 
 export default class Editor {
   constructor(dom, { plaintext, inline, editable }) {
@@ -59,12 +59,12 @@ export default class Editor {
    * Public instance methods
    */
 
-  runCommand(commandName) {
+  runCommand(commandName, options = {}) {
     let command = commands[commandName],
         view = this._view,
         schema = view.state.schema;
 
-    return command({ schema })(view.state, view.dispatch);
+    return command({ schema })(view.state, options.dry ? null : view.dispatch);
   }
 
   refresh() {

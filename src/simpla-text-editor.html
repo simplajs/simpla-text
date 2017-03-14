@@ -19,23 +19,127 @@
          -webkit-font-smoothing: antialiased;
                  font-smoothing: antialiased;
       }
+
+      .control {
+        width: 25px;
+        height: 25px;
+        border: solid thin blue;
+      }
+
+      .control[active] {
+        border-bottom: 4px solid blue;
+      }
     </style>
     <div class="controls">
-      <button class="control" on-tap="_runCommand" data-command="bold">b</button>
-      <button class="control" on-tap="_runCommand" data-command="italic">i</button>
-      <button class="control" on-tap="_runCommand" data-command="underline">u</button>
+      <button
+        class="control"
+        on-tap="_runCommand"
+        active$="[[_checkControlIsActive('bold', activeControls)]]"
+        data-command="toggle-bold">b</button>
+      <button
+        class="control"
+        on-tap="_runCommand"
+        active$="[[_checkControlIsActive('italic', activeControls)]]"
+        data-command="toggle-italic">i</button>
+      <button
+        class="control"
+        on-tap="_runCommand"
+        active$="[[_checkControlIsActive('underline', activeControls)]]"
+        data-command="toggle-underline">u</button>
+      <button
+        class="control"
+        on-tap="_toggleLinkInput">l<input id="link-input" type="text" hidden /></button>
     </div>
   </template>
   <script>
     class SimplaTextToolbar extends HTMLElement {
       beforeRegister() {
         this.is = 'simpla-text-toolbar';
+
+        this.properties = {
+          controls: {
+            type: Array,
+            value: () => [ 'bold', 'italic', 'underline' ]
+          },
+
+          activeControls: {
+            type: Array,
+            value: () => []
+          }
+        }
+      }
+
+      hoverOverSelection(selection) {
+        let left,
+            top;
+
+        if (!selection) {
+          return;
+        }
+
+        this.hidden = false;
+
+        ({ left, top } = this._getToolbarPositionFromRange(selection.getRangeAt(0)));
+
+        Object.assign(this.style, {
+          left: `${left}px`,
+          top: `${top}px`
+        });
+      }
+
+      filterActiveControls(isActive) {
+        const byActive = ({ active }) => !!active,
+              toControl = ({ name }) => name,
+              getStatus = (name) => {
+                return isActive(name)
+                  .then(active => ({ name, active }));
+              };
+
+        return Promise.all(this.controls.map(getStatus))
+          .then(status => status.filter(byActive))
+          .then(status => status.map(toControl))
+          .then(activeControls => this.activeControls = activeControls);
+      }
+
+      _getToolbarPositionFromRange(range) {
+        let relativeRangeTop,
+            relativeRangeLeft,
+            centerOffset,
+            toolbarBounds,
+            rangeBounds,
+            hostBounds;
+
+        if (!range) {
+          return;
+        }
+
+        toolbarBounds = this.getBoundingClientRect();
+        hostBounds = this.parentElement.getBoundingClientRect();
+        rangeBounds = range.getBoundingClientRect();
+
+        relativeRangeLeft = rangeBounds.left - hostBounds.left;
+        relativeRangeTop = rangeBounds.top - hostBounds.top;
+
+        centerOffset = rangeBounds.width - toolbarBounds.width / 2;
+
+        return {
+          left: relativeRangeLeft + centerOffset,
+          top: relativeRangeTop - toolbarBounds.height
+        };
       }
 
       _runCommand(event) {
         let { command } = event.target.dataset;
 
         this.fire('command', { name: command });
+      }
+
+      _toggleLinkInput() {
+        this.$['link-input'].hidden = !this.$['link-input'].hidden;
+      }
+
+      _checkControlIsActive(control, activeControls) {
+        return activeControls.indexOf(control) !== -1;
       }
     }
 
