@@ -73,11 +73,11 @@
         let left,
             top;
 
+        this.hidden = !selection;
+
         if (!selection) {
           return;
         }
-
-        this.hidden = false;
 
         ({ left, top } = this._getToolbarPositionFromRange(selection.getRangeAt(0)));
 

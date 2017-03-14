@@ -2,10 +2,12 @@ import { Plugin } from 'prosemirror-state';
 import { keymap as makeKeymapPlugin } from 'prosemirror-keymap';
 import { makeRichtextMaps, makeInlineMaps, makeBlockMaps, base as baseKeymap } from './keymaps';
 
-export function getKeymapPluginFor({ editor }) {
-  let { plaintext, inline } = editor,
-      schema = editor._getSchema(),
-      mappings;
+export function getKeymapPlugin({ plaintext, inline, schema }) {
+  let mappings;
+
+  if (!schema) {
+    throw new Error('Editor must have schema for keymap');
+  }
 
   mappings = Object.assign(
     {},
@@ -17,20 +19,20 @@ export function getKeymapPluginFor({ editor }) {
   return makeKeymapPlugin(mappings);
 }
 
-export function getInputPluginFor({ editor }) {
+export function getInputPlugin({ dom }) {
   return new Plugin({
     state: {
       init: () => {},
       apply: (tr) => {
         if (tr.docChanged) {
-          editor.dom.fire('input');
+          dom.fire('input');
         }
       }
     }
   });
 }
 
-export function getSelectPluginFor({ editor }) {
+export function getSelectPlugin({ dom }) {
   return new Plugin({
     state: {
       init: () => {
@@ -43,7 +45,7 @@ export function getSelectPluginFor({ editor }) {
 
         if (currentSelection !== selection) {
           nativeSelection = selection && window.getSelection();
-          editor.dom.fire('select', { selection: nativeSelection });
+          dom.fire('select', { selection: nativeSelection });
         }
 
         return selection;
