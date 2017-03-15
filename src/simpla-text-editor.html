@@ -2,9 +2,10 @@
 
 <script>
   import Editor from './editor';
+  import * as formatters from './editor/formatters';
 
   window.SimplaText = window.SimplaText || {};
-  window.SimplaText.Editor = Editor;
+  Object.assign(window.SimplaText, { Editor, formatters });
 </script>
 
 <dom-module id="simpla-text-toolbar">

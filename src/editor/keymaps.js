@@ -1,5 +1,5 @@
 import { baseKeymap as base } from 'prosemirror-commands';
-import { insertBr, toggleBold, toggleItalic, toggleUnderline } from './commands';
+import { insertBr } from './commands';
 
 export function makeInlineMaps({ schema }) {
   return {

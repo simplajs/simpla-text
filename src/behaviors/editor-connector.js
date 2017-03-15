@@ -34,19 +34,15 @@ export default {
         this.importHref(editorUrl, resolve, reject);
       })
       .then(() => {
-        const Editor = window.SimplaText.Editor,
-              toFormatter = (command) => Editor.formatters[command];
+        const { Editor, formatters } = window.SimplaText,
+              toFormatter = (command) => formatters[command];
 
         return new Editor({
           dom: this,
           inline: this.inline,
           formatters: this.commands.map(toFormatter),
-          formatterChangedCallback: (formatter, state) => {
-            this.fire('command-changed', {
-              name: formatter.name,
-              applied: state.applied,
-              meta: state.meta
-            });
+          formatterChangedCallback: ({ name }, { applied, meta }) => {
+            this.fire('command-changed', { name, applied, meta });
           },
           selectCallback: (selection) => this.fire('select', { selection }),
           inputCallback: () => this.fire('input'),

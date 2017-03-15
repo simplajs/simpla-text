@@ -3,7 +3,6 @@ import { EditorView } from 'prosemirror-view';
 import { DOMParser } from 'prosemirror-model';
 import { getInputPlugin, getKeymapPlugin, getSelectPlugin, getFormatterStatePlugin, getFormatterKeymapPlugin } from './plugins';
 import getSchema from './schemas';
-import * as formatters from './formatters';
 
 const noop = () => {};
 
@@ -62,10 +61,6 @@ export default class Editor {
       let command = formatter.getCommand({ schema });
       return Object.assign({}, commands, { [formatter.name] : command });
     }, {})
-  }
-
-  static get formatters() {
-    return formatters;
   }
 
   /**
