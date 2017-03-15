@@ -18,9 +18,9 @@ const checkCommand = ({ name, tag }) => (browser) => {
   browser
     .clickOnCommand(name)
     .saveScreenshot(`./screenshots/toolbar/${name}.png`)
-    .verify.containsTag('simpla-text', tag)
+    .verify.elementPresent(`simpla-text ${tag}`, `Added ${tag} tag`)
     .clickOnCommand(name)
-    .verify.doesNotContainTag('simpla-text', tag);
+    .verify.elementNotPresent(`simpla-text ${tag}`, `Removed ${tag} tag`)
 }
 
 module.exports = {
@@ -37,7 +37,7 @@ module.exports = {
       .clickOnCommand('link')
       .saveScreenshot('./screenshots/toolbar/link-open.png')
       .keys([ 'http://xkcd.com/', browser.Keys.ENTER ])
-      .verify.containsTag('simpla-text', 'a')
+      .verify.elementPresent('simpla-text a')
       // Note we're using contains here as an anchor tag will normalize the URL
       .verify.attributeEquals('simpla-text a', 'href', 'http://xkcd.com/')
       .saveScreenshot('./screenshots/toolbar/added-link.png')
@@ -54,7 +54,7 @@ module.exports = {
       .highlight(10, 'words', 'left')
       .keys(browser.Keys.BACK_SPACE)
       .keys([ 'http://google.com/', browser.Keys.ENTER ])
-      .verify.containsTag('simpla-text', 'a')
+      .verify.elementPresent('simpla-text a')
       .verify.attributeEquals('simpla-text a', 'href', 'http://google.com/')
   },
 
@@ -68,7 +68,7 @@ module.exports = {
       .highlight(10, 'words', 'left')
 
       .keys([ browser.Keys.BACK_SPACE, browser.Keys.ENTER ])
-      .verify.doesNotContainTag('simpla-text', 'a')
+      .verify.elementNotPresent('simpla-text a');
   },
 
   'finish': (browser) => browser.end()

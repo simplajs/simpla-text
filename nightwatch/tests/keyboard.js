@@ -19,11 +19,11 @@ const checkCommand = ({ name, key, tag, mod }) => (browser) => {
 
   browser
     .pressKeys()
-    .verify.containsTag('simpla-text', tag)
+    .verify.elementPresent(`simpla-text ${tag}`, `Added ${tag} tag`)
     .saveScreenshot(`./screenshots/keyboard/${name}.png`)
     // Now just check it can toggle it back off
     .pressKeys()
-    .verify.doesNotContainTag('simpla-text', tag)
+    .verify.elementNotPresent(`simpla-text ${tag}`, `Removed ${tag} tag`)
 }
 
 module.exports = {
