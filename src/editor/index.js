@@ -3,24 +3,45 @@ import { EditorView } from 'prosemirror-view';
 import { DOMParser } from 'prosemirror-model';
 import { getInputPlugin, getKeymapPlugin, getSelectPlugin, getFormatterStatePlugin, getFormatterKeymapPlugin } from './plugins';
 import getSchema from './schemas';
-import commands from './commands';
 import * as formatters from './formatters';
 
+const noop = () => {};
+
 export default class Editor {
-  constructor({ dom, inline, editableCallback, formatters }) {
-    let plugins,
+  constructor(options = {}) {
+    let {
+          dom,
+          inline = false,
+          formatters = [],
+          editableCallback = noop,
+          selectCallback = noop,
+          inputCallback = noop,
+          formatterChangedCallback = noop
+        } = options,
+        toStatePlugin,
+        toKeymapPlugin,
+        plugins,
         schema,
         state,
         doc;
 
-    const toStatePlugin = (formatter) => getFormatterStatePlugin({ schema, dom, formatter }),
-          toKeymapPlugin = (formatter) => getFormatterKeymapPlugin({ schema, dom, formatter });
+    toStatePlugin = (formatter) => {
+      return getFormatterStatePlugin({
+        schema,
+        formatter,
+        callback: formatterChangedCallback
+      });
+    };
 
-    schema = getSchema({ dom, inline, formatters });
+    toKeymapPlugin = (formatter) => {
+      return getFormatterKeymapPlugin({ schema, formatter });
+    }
+
+    schema = getSchema({ inline, formatters });
 
     plugins = [
-      getInputPlugin({ dom }),
-      getSelectPlugin({ dom }),
+      getInputPlugin({ callback: inputCallback }),
+      getSelectPlugin({ callback: selectCallback }),
       getKeymapPlugin({ inline, schema }),
       ...formatters.map(toStatePlugin),
       ...formatters.map(toKeymapPlugin)
@@ -38,10 +59,7 @@ export default class Editor {
     });
 
     this.commands = formatters.reduce((commands, formatter) => {
-      let command = (state, dispatch) => {
-        return formatter.getCommand(state)(state, dispatch);
-      };
-
+      let command = formatter.getCommand({ schema });
       return Object.assign({}, commands, { [formatter.name] : command });
     }, {})
   }

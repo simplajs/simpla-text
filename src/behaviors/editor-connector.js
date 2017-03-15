@@ -41,6 +41,15 @@ export default {
           dom: this,
           inline: this.inline,
           formatters: this.commands.map(toFormatter),
+          formatterChangedCallback: (formatter, state) => {
+            this.fire('command-changed', {
+              name: formatter.name,
+              applied: state.applied,
+              meta: state.meta
+            });
+          },
+          selectCallback: (selection) => this.fire('select', { selection }),
+          inputCallback: () => this.fire('input'),
           editableCallback: () => this.editable
         });
       });

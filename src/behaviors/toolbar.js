@@ -1,7 +1,7 @@
 export default {
   listeners: {
     'select': '_updateToolbarFromSelect',
-    'formatter-updated': '_handleFormatterUpdated',
+    'command-changed': '_updateCommands',
     'blur': '_hideToolbar'
   },
 
@@ -27,11 +27,11 @@ export default {
     this.$.toolbar.hoverOverSelection(selection);
   },
 
-  _handleFormatterUpdated(event) {
-    let { name, state } = event.detail,
+  _updateCommands(event) {
+    let { name, applied } = event.detail,
         toolbar = this.$.toolbar;
 
-    if (state.applied) {
+    if (applied) {
       toolbar.activeTools = [ ...toolbar.activeTools, name ];
     } else {
       toolbar.activeTools = toolbar.activeTools.filter(tool => tool !== name);

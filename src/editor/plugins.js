@@ -18,20 +18,20 @@ export function getKeymapPlugin({ inline, schema }) {
   return makeKeymapPlugin(mappings);
 }
 
-export function getInputPlugin({ dom }) {
+export function getInputPlugin({ callback }) {
   return new Plugin({
     state: {
       init: () => {},
       apply: (tr) => {
         if (tr.docChanged) {
-          dom.fire('input');
+          callback();
         }
       }
     }
   });
 }
 
-export function getSelectPlugin({ dom }) {
+export function getSelectPlugin({ callback }) {
   return new Plugin({
     state: {
       init: () => {
@@ -44,7 +44,7 @@ export function getSelectPlugin({ dom }) {
 
         if (currentSelection !== selection) {
           nativeSelection = selection && window.getSelection();
-          dom.fire('select', { selection: nativeSelection });
+          callback(nativeSelection);
         }
 
         return selection;
@@ -53,20 +53,13 @@ export function getSelectPlugin({ dom }) {
   })
 }
 
-export function getFormatterStatePlugin({ dom, formatter }) {
-  let notifyDom = (state) => {
-    dom.fire('formatter-updated', {
-      name: formatter.name,
-      state
-    });
-  };
-
+export function getFormatterStatePlugin({ callback, formatter }) {
   return new Plugin({
     state: {
       init: (config, docState) => {
         let state = formatter.getState(docState);
 
-        notifyDom(state);
+        callback(formatter, state);
 
         return state;
       },
@@ -75,7 +68,7 @@ export function getFormatterStatePlugin({ dom, formatter }) {
         let state = formatter.getState(newDocState);
 
         if (!formatter.areEqual(currentState, state)) {
-          notifyDom(state);
+          callback(formatter, state);
           return state;
         }
 
