@@ -1,43 +1,53 @@
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { DOMParser } from 'prosemirror-model';
-import { getInputPlugin, getKeymapPlugin, getSelectPlugin } from './plugins';
-import getSchemaFor from './schemas';
+import { getInputPlugin, getKeymapPlugin, getSelectPlugin, getFormatterStatePlugin, getFormatterKeymapPlugin } from './plugins';
+import getSchema from './schemas';
 import commands from './commands';
+import * as formatters from './formatters';
 
 export default class Editor {
-  constructor(dom, { plaintext, inline, editable }) {
+  constructor({ dom, inline, editableCallback, formatters }) {
     let plugins,
         schema,
         state,
         doc;
 
-    schema = getSchemaFor({ plaintext, inline });
+    const toStatePlugin = (formatter) => getFormatterStatePlugin({ schema, dom, formatter }),
+          toKeymapPlugin = (formatter) => getFormatterKeymapPlugin({ schema, dom, formatter });
+
+    schema = getSchema({ dom, inline, formatters });
 
     plugins = [
       getInputPlugin({ dom }),
       getSelectPlugin({ dom }),
-      getKeymapPlugin({ plaintext, inline, schema })
+      getKeymapPlugin({ inline, schema }),
+      ...formatters.map(toStatePlugin),
+      ...formatters.map(toKeymapPlugin)
     ];
 
     doc = DOMParser.fromSchema(schema).parse(dom);
     state = EditorState.create({ doc, schema, plugins })
 
-    this._plaintext = plaintext;
     this._inline = inline;
-    this._editable = editable;
     this._dom = dom;
 
     this._view = new EditorView({ mount: dom }, {
-      editable: () => this.editable,
+      editable: editableCallback,
       state
     });
+
+    this.commands = formatters.reduce((commands, formatter) => {
+      let command = (state, dispatch) => {
+        return formatter.getCommand(state)(state, dispatch);
+      };
+
+      return Object.assign({}, commands, { [formatter.name] : command });
+    }, {})
   }
 
-  static fromElement(element) {
-    let { plaintext, inline, editable } = element;
-
-    return new Editor(element, { plaintext, inline, editable });
+  static get formatters() {
+    return formatters;
   }
 
   /**
@@ -46,18 +56,6 @@ export default class Editor {
 
   get inline() {
     return this._inline;
-  }
-
-  get plaintext() {
-    return this._plaintext;
-  }
-
-  set editable(value) {
-    this._editable = value;
-  }
-
-  get editable() {
-    return this._editable;
   }
 
   get view() {
@@ -80,12 +78,13 @@ export default class Editor {
    * Public instance methods
    */
 
-  runCommand(commandName, options = {}) {
-    let command = commands[commandName],
-        { dry = false } = options,
-        { view, state, schema } = this,
-        { dispatch } = view;
+  runCommand(commandName) {
+    let command = this.commands[commandName];
 
-    return command({ schema })(state, dry ? null : dispatch);
+    if (!command) {
+      throw new Error(`Command ${commandName} not found.`);
+    }
+
+    return command(this.state, this.view.dispatch);
   }
 }

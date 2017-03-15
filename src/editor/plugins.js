@@ -1,8 +1,8 @@
 import { Plugin } from 'prosemirror-state';
 import { keymap as makeKeymapPlugin } from 'prosemirror-keymap';
-import { makeRichtextMaps, makeInlineMaps, makeBlockMaps, base as baseKeymap } from './keymaps';
+import { makeInlineMaps, makeBlockMaps, base as baseKeymap } from './keymaps';
 
-export function getKeymapPlugin({ plaintext, inline, schema }) {
+export function getKeymapPlugin({ inline, schema }) {
   let mappings;
 
   if (!schema) {
@@ -12,7 +12,6 @@ export function getKeymapPlugin({ plaintext, inline, schema }) {
   mappings = Object.assign(
     {},
     baseKeymap,
-    plaintext ? {} : makeRichtextMaps({ schema }),
     inline ? makeInlineMaps({ schema }) : makeBlockMaps({ schema })
   );
 
@@ -52,4 +51,42 @@ export function getSelectPlugin({ dom }) {
       }
     }
   })
+}
+
+export function getFormatterStatePlugin({ dom, formatter }) {
+  let notifyDom = (state) => {
+    dom.fire('formatter-updated', {
+      name: formatter.name,
+      state
+    });
+  };
+
+  return new Plugin({
+    state: {
+      init: (config, docState) => {
+        let state = formatter.getState(docState);
+
+        notifyDom(state);
+
+        return state;
+      },
+
+      apply: (tr, currentState, oldDocState, newDocState) => {
+        let state = formatter.getState(newDocState);
+
+        if (!formatter.areEqual(currentState, state)) {
+          notifyDom(state);
+          return state;
+        }
+
+        return currentState;
+      }
+    }
+  })
+}
+
+export function getFormatterKeymapPlugin({ schema, formatter }) {
+  return makeKeymapPlugin({
+    [formatter.keyCommand]: formatter.getCommand({ schema })
+  });
 }

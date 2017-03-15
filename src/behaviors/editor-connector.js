@@ -1,8 +1,15 @@
 const EDITOR_COMPONENT = 'simpla-text-editor.html';
 
 export default {
+  properties: {
+    commands: {
+      type: Array,
+      computed: '_computeCommands(plaintext)'
+    }
+  },
+
   observers: [
-    '_checkEditorPrepped(editable, plaintext, inline)'
+    '_checkEditorPrepped(editable, commands, inline)'
   ],
 
   getEditor() {
@@ -26,7 +33,17 @@ export default {
         let editorUrl = this.resolveUrl(EDITOR_COMPONENT);
         this.importHref(editorUrl, resolve, reject);
       })
-      .then(() => window.SimplaText.Editor.fromElement(this));
+      .then(() => {
+        const Editor = window.SimplaText.Editor,
+              toFormatter = (command) => Editor.formatters[command];
+
+        return new Editor({
+          dom: this,
+          inline: this.inline,
+          formatters: this.commands.map(toFormatter),
+          editableCallback: () => this.editable
+        });
+      });
     }
 
     return this.__waitForEditor;
@@ -36,5 +53,9 @@ export default {
     if (editable) {
       this.getEditor();
     }
+  },
+
+  _computeCommands(plaintext) {
+    return plaintext ? [] : [ 'bold', 'italic', 'underline' ];
   }
 }

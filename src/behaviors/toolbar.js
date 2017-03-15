@@ -1,6 +1,7 @@
 export default {
   listeners: {
     'select': '_updateToolbarFromSelect',
+    'formatter-updated': '_handleFormatterUpdated',
     'blur': '_hideToolbar'
   },
 
@@ -9,9 +10,9 @@ export default {
   },
 
   _handleToolbarCommand(event) {
-    let { name, config = {} } = event.detail;
+    let { name, options = {} } = event.detail;
 
-    this.runCommand(name, config);
+    this.runCommand(name, options);
   },
 
   _updateToolbarFromSelect(event) {
@@ -23,11 +24,17 @@ export default {
     }
 
     this.$.toolbar.hidden = !selection;
-
     this.$.toolbar.hoverOverSelection(selection);
-    this.$.toolbar.filterActiveTools(commandName => {
-      return this.runCommand(commandName, { dry: true })
-        .then(willChangeState => !willChangeState);
-    });
+  },
+
+  _handleFormatterUpdated(event) {
+    let { name, state } = event.detail,
+        toolbar = this.$.toolbar;
+
+    if (state.applied) {
+      toolbar.activeTools = [ ...toolbar.activeTools, name ];
+    } else {
+      toolbar.activeTools = toolbar.activeTools.filter(tool => tool !== name);
+    }
   }
 }

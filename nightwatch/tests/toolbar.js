@@ -28,9 +28,9 @@ module.exports = {
 
   'Shows on highlight': highlight(),
 
-  'Bolds text': checkCommand({ name: 'toggle-bold', tag: 'strong' }),
-  'Italicises text': checkCommand({ name: 'toggle-italic', tag: 'em' }),
-  'Underlines text': checkCommand({ name: 'toggle-underline', tag: 'u' }),
+  'Bolds text': checkCommand({ name: 'bold', tag: 'strong' }),
+  'Italicises text': checkCommand({ name: 'italic', tag: 'em' }),
+  'Underlines text': checkCommand({ name: 'underline', tag: 'u' }),
 
   'finish': (browser) => browser.end()
 }
