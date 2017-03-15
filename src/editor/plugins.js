@@ -1,6 +1,7 @@
 import { Plugin } from 'prosemirror-state';
 import { keymap as makeKeymapPlugin } from 'prosemirror-keymap';
-import { makeInlineMaps, makeBlockMaps, base as baseKeymap } from './keymaps';
+import { makeInlineMaps, makeBlockMaps, historyKeymap, base as baseKeymap } from './keymaps';
+import { history } from 'prosemirror-history';
 
 export function getKeymapPlugin({ inline, schema }) {
   let mappings;
@@ -12,6 +13,7 @@ export function getKeymapPlugin({ inline, schema }) {
   mappings = Object.assign(
     {},
     baseKeymap,
+    historyKeymap,
     inline ? makeInlineMaps({ schema }) : makeBlockMaps({ schema })
   );
 
@@ -83,3 +85,5 @@ export function getFormatterKeymapPlugin({ schema, formatter }) {
     [formatter.keyCommand]: formatter.getCommand({ schema })()
   });
 }
+
+export { history as getHistoryPlugin }

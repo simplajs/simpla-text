@@ -45,6 +45,7 @@
     "http-server": "^0.9.0",
     "nightwatch": "^0.9.13",
     "postcss-import": "^9.1.0",
+    "prosemirror-history": "^0.18.0",
     "rollup-plugin-babel": "^2.6.0",
     "rollup-plugin-commonjs": "^7.0.0",
     "rollup-plugin-json": "^2.1.0",
