@@ -8,7 +8,7 @@ const u = {
   }, {
     style: 'font-style',
     getAttrs: (value) => {
-      if (value === 'italic') {
+      if (value === 'underline') {
         return true;
       }
     }
