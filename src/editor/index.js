@@ -17,12 +17,15 @@ export default class Editor {
           inputCallback = noop,
           formatterChangedCallback = noop
         } = options,
+        hasKeyCommand,
         toStatePlugin,
         toKeymapPlugin,
         plugins,
         schema,
         state,
         doc;
+
+    hasKeyCommand = (formatter) => !!formatter.keyCommand;
 
     toStatePlugin = (formatter) => {
       return getFormatterStatePlugin({
@@ -43,7 +46,7 @@ export default class Editor {
       getSelectPlugin({ callback: selectCallback }),
       getKeymapPlugin({ inline, schema }),
       ...formatters.map(toStatePlugin),
-      ...formatters.map(toKeymapPlugin)
+      ...formatters.filter(hasKeyCommand).map(toKeymapPlugin)
     ];
 
     doc = DOMParser.fromSchema(schema).parse(dom);
@@ -91,13 +94,13 @@ export default class Editor {
    * Public instance methods
    */
 
-  runCommand(commandName) {
+  runCommand(commandName, options = {}) {
     let command = this.commands[commandName];
 
     if (!command) {
       throw new Error(`Command ${commandName} not found.`);
     }
 
-    return command(this.state, this.view.dispatch);
+    return command(options)(this.state, this.view.dispatch);
   }
 }

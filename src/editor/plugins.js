@@ -80,6 +80,6 @@ export function getFormatterStatePlugin({ callback, formatter }) {
 
 export function getFormatterKeymapPlugin({ schema, formatter }) {
   return makeKeymapPlugin({
-    [formatter.keyCommand]: formatter.getCommand({ schema })
+    [formatter.keyCommand]: formatter.getCommand({ schema })()
   });
 }

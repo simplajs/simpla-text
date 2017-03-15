@@ -61,6 +61,6 @@ export default {
   },
 
   _computeCommands(plaintext) {
-    return plaintext ? [] : [ 'bold', 'italic', 'underline' ];
+    return plaintext ? [] : [ 'bold', 'italic', 'underline', 'link' ];
   }
 }

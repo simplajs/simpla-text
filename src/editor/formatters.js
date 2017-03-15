@@ -1,5 +1,24 @@
-import { toggleMark, addMark } from './commands'
-import { strong, u, em } from './marks';
+import { toggleMark } from './commands'
+import { strong, u, em, link as linkSpec } from './marks';
+
+const markIsApplied = (state, type) => {
+  let { doc, selection } = state,
+      { from, to } = selection;
+
+  return doc.rangeHasMark(from, to, type);
+}
+
+const findMarkInRange = (node, from, to, type) => {
+  let found = null;
+  node.nodesBetween(from, to, ({ marks }) => {
+    for ( var i = 0, k = marks.length; !found && i < k; i++) {
+      if (marks[i].type === type) {
+        found = [i];
+      }
+    }
+  });
+  return found;
+}
 
 function makeBasicFormatter({ name, specification, keyCommand }) {
   return {
@@ -8,12 +27,12 @@ function makeBasicFormatter({ name, specification, keyCommand }) {
     keyCommand,
 
     getCommand({ schema }) {
-      return toggleMark(schema.marks[name]);
+      return (opts) => toggleMark(schema.marks[name], opts);
     },
 
     getState(state) {
       return {
-        applied: !addMark(state.schema.marks[name])(state),
+        applied: markIsApplied(state, state.schema.marks[name]),
         meta: null
       };
     },
@@ -23,6 +42,40 @@ function makeBasicFormatter({ name, specification, keyCommand }) {
     }
   }
 }
+
+export const link = Object.assign(
+  makeBasicFormatter({
+    name: 'link',
+    specification: linkSpec
+  }), {
+    getState(state) {
+      if (!state) {
+        return { applied: false, meta: null };
+      }
+
+      let { selection, doc, schema } = state,
+          mark = null;
+
+      mark = findMarkInRange(
+        doc,
+        selection.from,
+        selection.to,
+        schema.marks[this.name]
+      );
+
+      return {
+        applied: !!mark,
+        meta: mark ? Object.assign({}, mark.attrs) : null
+      };
+    },
+
+    areEqual(a, b) {
+      let getHref = (from) => from.meta && from.meta.href;
+
+      return a.applied === b.applied && getHref(a) === getHref(b);
+    }
+  }
+);
 
 export const bold = makeBasicFormatter({
   name: 'bold',

@@ -1,6 +1,6 @@
 import { marks } from 'prosemirror-schema-basic';
 
-const { em, strong } = marks;
+const { em, strong, link } = marks;
 
 const u = {
   parseDOM: [{
@@ -17,4 +17,4 @@ const u = {
   toDOM: () => ['u']
 };
 
-export { em, strong, u };
+export { em, strong, u, link };
