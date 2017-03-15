@@ -42,25 +42,51 @@
     </style>
     <button
       class="tool"
-      on-tap="_runCommand"
-      active$="[[_checkToolIsActive('bold', activeTools)]]"
+      on-tap="_handleToolTap"
+      active$="[[tools.bold.active]]"
       data-command="bold">b</button>
     <button
       class="tool"
-      on-tap="_runCommand"
-      active$="[[_checkToolIsActive('italic', activeTools)]]"
+      on-tap="_handleToolTap"
+      active$="[[tools.italic.active]]"
       data-command="italic">i</button>
     <button
       class="tool"
-      on-tap="_runCommand"
-      active$="[[_checkToolIsActive('underline', activeTools)]]"
+      on-tap="_handleToolTap"
+      active$="[[tools.underline.active]]"
       data-command="underline">u</button>
     <button
       class="tool"
-      on-tap="_toggleLinkInput">l<input id="link-input" type="text" hidden /></button>
+      active$="[[_either(tools.link.active, _linkInputOpen)]]"
+      on-tap="_toggleLinkInput">
+      l
+    </button>
+    <span hidden$="[[!_linkInputOpen]]">
+      <input type="text" on-keyup="_potentiallyCloseInput" value="{{_storedHref::input}}" />
+    </span>
   </template>
   <script>
-    const GUTTER = 5;
+    const GUTTER = 5,
+          INITIAL_TOOLS = () => ({
+            bold: {
+              active: false
+            },
+
+            italic: {
+              active: false
+            },
+
+            underline: {
+              active: false
+            },
+
+            link: {
+              active: false,
+              meta: {
+                href: ''
+              }
+            }
+          });
 
     function addPadding(rect, padding) {
       return {
@@ -79,29 +105,27 @@
 
         this.properties = {
           tools: {
-            type: Array,
-            value: () => [ 'bold', 'italic', 'underline', 'link' ]
+            type: Object,
+            value: INITIAL_TOOLS
           },
 
-          activeTools: {
-            type: Array,
-            value: () => []
+          _linkInputOpen: {
+            type: Boolean,
+            value: false,
+            observer: '_runLinkCommand'
+          },
+
+          _storedHref: {
+            type: String,
+            value: ''
           }
-        }
-      }
+        };
 
-      filterActiveTools(isActive) {
-        const byActive = ({ active }) => !!active,
-              toControl = ({ name }) => name,
-              getStatus = (name) => {
-                return isActive(name)
-                  .then(active => ({ name, active }));
-              };
-
-        return Promise.all(this.tools.map(getStatus))
-          .then(status => status.filter(byActive))
-          .then(status => status.map(toControl))
-          .then(commands => this.activeTools = commands);
+        this.listeners = {
+          'keyup': '_stopEvent',
+          'keydown': '_stopEvent',
+          'keypress': '_stopEvent'
+        };
       }
 
       hoverOverSelection(selection) {
@@ -112,7 +136,7 @@
             offsetLeft,
             offsetTop;
 
-        if (!selection) {
+        if (!selection || !selection.rangeCount) {
           return;
         }
 
@@ -144,9 +168,6 @@
         });
       }
 
-      /**
-       * TODO: Read window from arg and update offsets to keep inside the window
-       */
       _getOffsetsFromBounds({ rangeBounds, parentOffsets, ownBounds, boundaries, gutter = GUTTER }) {
         let { left, top } = rangeBounds,
             centerOffset = (rangeBounds.width - ownBounds.width) / 2;
@@ -183,20 +204,61 @@
         };
       }
 
-      _runCommand(event) {
+      _handleToolTap(event) {
         let { command } = event.target.dataset;
 
-        this.fire('command', { name: command });
+        this._runCommand(command);
+      }
+
+      _runCommand(command, options = {}) {
+        this.fire('command', { name: command, options });
       }
 
       _toggleLinkInput() {
-        this.$['link-input'].hidden = !this.$['link-input'].hidden;
+        this._linkInputOpen = !this._linkInputOpen;
       }
 
-      _checkToolIsActive(tool, activeTools) {
-        return activeTools.indexOf(tool) !== -1;
+      _either(a, b) {
+        return a || b;
       }
-    }
+
+      _stopEvent(event) {
+        event.stopPropagation();
+      }
+
+      _potentiallyCloseInput(event) {
+        const ENTER = 13,
+              ESC = 27;
+
+        if (event.keyCode === ENTER) {
+          this._linkInputOpen = false;
+        }
+
+        if (event.keyCode === ESC) {
+          event.target.value = this.get('tools.link.meta.href') || '';
+          this._linkInputOpen = false;
+        }
+      }
+
+      _runLinkCommand(inputOpen) {
+        let currentHref = this._storedHref && this._storedHref.trim();
+
+        if (inputOpen) {
+          this._storedHref = this.get('tools.link.meta.href') || '';
+        } else {
+          // HACK: This smells bad - it's active, so we're removing the link before
+          //  reapplying it, I think it'll cause us problems, and regardless it
+          //  just ain't clean
+          if (this.get('tools.link.active')) {
+            this._runCommand('link');
+          }
+
+          if (currentHref) {
+            this._runCommand('link', { href: currentHref });
+          }
+        }
+      }
+     }
 
     Polymer(SimplaTextToolbar)
   </script>

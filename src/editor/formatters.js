@@ -13,7 +13,7 @@ const findMarkInRange = (node, from, to, type) => {
   node.nodesBetween(from, to, ({ marks }) => {
     for ( var i = 0, k = marks.length; !found && i < k; i++) {
       if (marks[i].type === type) {
-        found = [i];
+        found = marks[i];
       }
     }
   });

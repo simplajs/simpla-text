@@ -28,13 +28,10 @@ export default {
   },
 
   _updateCommands(event) {
-    let { name, applied } = event.detail,
+    let { name, applied, meta } = event.detail,
         toolbar = this.$.toolbar;
 
-    if (applied) {
-      toolbar.activeTools = [ ...toolbar.activeTools, name ];
-    } else {
-      toolbar.activeTools = toolbar.activeTools.filter(tool => tool !== name);
-    }
+    toolbar.set(`tools.${name}.active`, applied);
+    toolbar.set(`tools.${name}.meta`, meta);
   }
 }
