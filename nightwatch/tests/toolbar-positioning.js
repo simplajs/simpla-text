@@ -49,7 +49,7 @@ const clickOnCorner = (y, x) => (browser) => {
 
   browser
     .click(selector)
-    .highlight(2, 'right', 'word')
+    .highlight(2, 'word', 'right')
     .saveScreenshot(`./screenshots/toolbar-positioning/${y}-${x}.png`)
 
   checkToolbarInWindow(selector)(browser);

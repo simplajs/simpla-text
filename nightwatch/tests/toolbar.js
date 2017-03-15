@@ -10,7 +10,7 @@ const init = () => (browser) => {
 
 const highlight = () => (browser) => {
   browser
-    .highlight(1, 'left', 'word')
+    .highlightLastWord()
     .saveScreenshot('./screenshots/toolbar/highlight.png');
 }
 
@@ -31,6 +31,45 @@ module.exports = {
   'Bolds text': checkCommand({ name: 'bold', tag: 'strong' }),
   'Italicises text': checkCommand({ name: 'italic', tag: 'em' }),
   'Underlines text': checkCommand({ name: 'underline', tag: 'u' }),
+
+  'Creating / Updating Links': function(browser) {
+    browser
+      .clickOnCommand('link')
+      .saveScreenshot('./screenshots/toolbar/link-open.png')
+      .keys([ 'http://xkcd.com/', browser.Keys.ENTER ])
+      .verify.containsTag('simpla-text', 'a')
+      // Note we're using contains here as an anchor tag will normalize the URL
+      .verify.attributeEquals('simpla-text a', 'href', 'http://xkcd.com/')
+      .saveScreenshot('./screenshots/toolbar/added-link.png')
+
+      // This is because after creating a link, it loses focus, in future we
+      //  should probably patch this, and remove these lines
+      .click('simpla-text')
+      // Move to the end of text
+      .highlightLastWord()
+      .clickOnCommand('link')
+
+      // Essentially highlight all, but CMD+a isn't working for some reason...
+      .moveCursor('right')
+      .highlight(10, 'words', 'left')
+      .keys(browser.Keys.BACK_SPACE)
+      .keys([ 'http://google.com/', browser.Keys.ENTER ])
+      .verify.containsTag('simpla-text', 'a')
+      .verify.attributeEquals('simpla-text a', 'href', 'http://google.com/')
+  },
+
+  'Removing Links': function(browser) {
+    browser
+      .click('simpla-text')
+      .highlightLastWord()
+      .clickOnCommand('link')
+
+      .moveCursor('right')
+      .highlight(10, 'words', 'left')
+
+      .keys([ browser.Keys.BACK_SPACE, browser.Keys.ENTER ])
+      .verify.doesNotContainTag('simpla-text', 'a')
+  },
 
   'finish': (browser) => browser.end()
 }

@@ -58,11 +58,12 @@
     <button
       class="tool"
       active$="[[_either(tools.link.active, _linkInputOpen)]]"
-      on-tap="_toggleLinkInput">
+      on-tap="_toggleLinkInput"
+      data-command="link">
       l
     </button>
     <span hidden$="[[!_linkInputOpen]]">
-      <input type="text" on-keyup="_potentiallyCloseInput" value="{{_storedHref::input}}" />
+      <input id="_linkInput" type="text" on-keyup="_checkForExitKeys" value="{{_storedHref::input}}" />
     </span>
   </template>
   <script>
@@ -112,7 +113,7 @@
           _linkInputOpen: {
             type: Boolean,
             value: false,
-            observer: '_runLinkCommand'
+            observer: '_linkInputOpenObserver'
           },
 
           _storedHref: {
@@ -226,7 +227,7 @@
         event.stopPropagation();
       }
 
-      _potentiallyCloseInput(event) {
+      _checkForExitKeys(event) {
         const ENTER = 13,
               ESC = 27;
 
@@ -240,11 +241,12 @@
         }
       }
 
-      _runLinkCommand(inputOpen) {
+      _linkInputOpenObserver(inputOpen) {
         let currentHref = this._storedHref && this._storedHref.trim();
 
         if (inputOpen) {
           this._storedHref = this.get('tools.link.meta.href') || '';
+          this.$._linkInput.focus();
         } else {
           // HACK: This smells bad - it's active, so we're removing the link before
           //  reapplying it, I think it'll cause us problems, and regardless it

@@ -5,7 +5,7 @@ const init = () => (browser) => {
     .pause(500) // Wait for async loads to occur
     .click('simpla-text')
     .keys('Hello World')
-    .highlight(1, 'left', 'word')
+    .highlight(1, 'word', 'left')
     .saveScreenshot('./screenshots/keyboard/init.png');
 }
 
