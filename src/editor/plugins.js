@@ -26,7 +26,10 @@ export function getInputPlugin({ callback }) {
       init: () => {},
       apply: (tr) => {
         if (tr.docChanged) {
-          callback();
+          // Run callback in microtask queue so that the current transaction
+          //  has been applied, if done immediately then view won't have updated
+          //  yet
+          Promise.resolve().then(callback);
         }
       }
     }

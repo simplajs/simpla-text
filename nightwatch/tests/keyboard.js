@@ -1,9 +1,9 @@
 const init = () => (browser) => {
   browser
     .url('http://localhost:3333/')
-    .setProperty('simpla-text', 'editable', true)
+    .setProperty('#main', 'editable', true)
     .pause(500) // Wait for async loads to occur
-    .click('simpla-text')
+    .click('#main')
     .keys('Hello World')
     .highlight(1, 'word', 'left')
     .saveScreenshot('./screenshots/keyboard/init.png');
@@ -19,11 +19,11 @@ const checkCommand = ({ name, key, tag, mod }) => (browser) => {
 
   browser
     .pressKeys()
-    .verify.elementPresent(`simpla-text ${tag}`, `Added ${tag} tag`)
+    .verify.elementPresent(`#main ${tag}`, `Added ${tag} tag`)
     .saveScreenshot(`./screenshots/keyboard/${name}.png`)
     // Now just check it can toggle it back off
     .pressKeys()
-    .verify.elementNotPresent(`simpla-text ${tag}`, `Removed ${tag} tag`)
+    .verify.elementNotPresent(`#main ${tag}`, `Removed ${tag} tag`)
 }
 
 module.exports = {

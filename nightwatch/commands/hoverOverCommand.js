@@ -1,7 +1,7 @@
 module.exports = {
-  command(name) {
-    this.execute(function(name) {
-      var text = document.querySelector('simpla-text'),
+  command(selector, name) {
+    this.execute(function(selector, name) {
+      var text = document.querySelector(selector),
           toolbar = text.$.toolbar,
           command = toolbar.$$('[data-command="' + name + '"]'),
           textBounds,
@@ -16,9 +16,9 @@ module.exports = {
         width: commandBounds.width,
         height: commandBounds.height
       }
-    }, [ name ], function(response) {
+    }, [ selector, name ], function(response) {
       let { offsetLeft, offsetTop, width, height } = response.value;
-      this.moveToElement('simpla-text', offsetLeft + width / 2, offsetTop + height / 2);
+      this.moveToElement(selector, offsetLeft + width / 2, offsetTop + height / 2);
     });
   }
 }

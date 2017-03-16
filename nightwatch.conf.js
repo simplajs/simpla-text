@@ -7,6 +7,7 @@ module.exports = {
     'nightwatch/tests'     // we use '/test' as the name of our test directory by default. So 'test/e2e' for 'e2e'.
   ],
   'custom_commands_path': './nightwatch/commands',
+  'custom_assertions_path': './nightwatch/assertions',
   'output_folder': false,
   'selenium': { // downloaded by selenium-download module (see readme)
     'start_process': true, // tells nightwatch to start/stop the selenium process
