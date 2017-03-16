@@ -2,8 +2,7 @@ export default {
   properties: {
     editable: {
       type: Boolean,
-      reflectToAttribute: true,
-      value: () => Simpla.getState('editable')
+      reflectToAttribute: true
     },
 
     uid: {
@@ -17,67 +16,62 @@ export default {
   },
 
   attached() {
-    this._observers = {
-      editable: Simpla.observeState('editable', editable => {
-        this.editable = editable;
-      })
-    };
-
-    if (this.uid) {
-      this._attachUidObserver();
-    }
-
     this._attached = true;
+
+    this._observers = {
+      editable: this._observeAndInitEditable(),
+      uid: this.uid && this._observeAndInitUid()
+    };
   },
 
   detached() {
+    this._attached = false;
+
     Object.keys(this._observers || {})
-      .map(prop => this._observers[prop])
-      .forEach(observer => observer.unobserve());
+      .forEach(key => this._observers[key].unobserve());
+  },
+
+  _observeAndInitEditable() {
+    this.editable = Simpla.getState('editable');
+
+    return Simpla.observeState('editable', editable => {
+      this.editable = editable;
+    });
+  },
+
+  _observeAndInitUid() {
+    let callback = item => this._restoreFromSimpla(item);
+
+    Simpla.get(this.uid).then(callback);
+    return Simpla.observe(this.uid, callback);
   },
 
   _observeUid(uid) {
-    if (this._attached && uid) {
-      Simpla.get(uid).then(item => this._restoreFromSimpla(item));
-      this._attachUidObserver();
-    }
-  },
+    if (this._attached) {
+      if (this._observers.uid) {
+        this._observers.uid.unobserve();
+      }
 
-  _attachUidObserver() {
-    if (this._observers.uid) {
-      this._observers.uid.unobserve();
+      if (uid) {
+        this._observeAndInitUid();
+      }
     }
-
-    this._observers.uid = Simpla.observe(
-      this.uid,
-      (item) => this._restoreFromSimpla(item)
-    );
   },
 
   _restoreFromSimpla(item) {
-    let data;
-
-    if (!item) {
-      return;
-    }
-
-    data = item.data;
-
-    if (this.innerHTML !== data.html) {
-      this.innerHTML = data.html;
+    if (item && this.innerHTML !== item.data.html) {
+      this.innerHTML = item.data.html;
     }
   },
 
   _setToSimpla() {
-    if (!this.uid) {
-      return;
+    if (this.uid) {
+      Simpla.set(this.uid, {
+        type: 'Text',
+        data: {
+          html: this.innerHTML
+        }
+      })
     }
-
-    Simpla.set(this.uid, {
-      type: 'Text',
-      data: {
-        html: this.innerHTML
-      }
-    })
   }
 }
