@@ -33,7 +33,7 @@ export function getInputPlugin({ callback }) {
   });
 }
 
-export function getSelectPlugin({ callback }) {
+export function getSelectPlugin({ callback, getSelection }) {
   return new Plugin({
     state: {
       init: () => {
@@ -45,7 +45,7 @@ export function getSelectPlugin({ callback }) {
             nativeSelection;
 
         if (currentSelection !== selection) {
-          nativeSelection = selection && window.getSelection();
+          nativeSelection = selection && getSelection();
           callback(nativeSelection);
         }
 

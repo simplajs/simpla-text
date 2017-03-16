@@ -20,10 +20,13 @@ export default class Editor {
         hasKeyCommand,
         toStatePlugin,
         toKeymapPlugin,
+        getSelection,
         plugins,
         schema,
         state,
         doc;
+
+    getSelection = () => this.view.root.getSelection();
 
     hasKeyCommand = (formatter) => !!formatter.keyCommand;
 
@@ -43,7 +46,7 @@ export default class Editor {
 
     plugins = [
       getInputPlugin({ callback: inputCallback }),
-      getSelectPlugin({ callback: selectCallback }),
+      getSelectPlugin({ callback: selectCallback, getSelection }),
       getKeymapPlugin({ inline, schema }),
       getHistoryPlugin(),
       ...formatters.map(toStatePlugin),
