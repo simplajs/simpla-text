@@ -28,11 +28,13 @@ export default {
     this._attached = false;
 
     Object.keys(this._observers || {})
-      .forEach(key => this._observers[key].unobserve());
+      .forEach(key => this._observers[key] && this._observers[key].unobserve());
   },
 
   _observeAndInitEditable() {
-    this.editable = Simpla.getState('editable');
+    if (typeof this.editable === 'undefined') {
+      this.editable = Simpla.getState('editable');
+    }
 
     return Simpla.observeState('editable', editable => {
       this.editable = editable;
@@ -53,7 +55,7 @@ export default {
       }
 
       if (uid) {
-        this._observeAndInitUid();
+        this._observers.uid = this._observeAndInitUid();
       }
     }
   },

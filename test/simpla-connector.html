@@ -20,6 +20,11 @@
         <simpla-text></simpla-text>
       </template>
     </test-fixture>
+    <test-fixture id="declared-editable">
+      <template>
+        <simpla-text editable></simpla-text>
+      </template>
+    </test-fixture>
     <script>
       describe('simpla connector', () => {
         let uid = 'test-uid',
@@ -41,6 +46,22 @@
 
             Simpla.editable(false);
             expect(component.editable).to.be.false;
+          });
+
+          it('should prefer declarative over Simplas state', () => {
+            let component;
+
+            Simpla.editable(false);
+            component = fixture('declared-editable');
+            expect(component.editable).to.be.true;
+          });
+
+          it('should follow Simpla on attach', () => {
+            let component;
+
+            Simpla.editable(true);
+            component = fixture('simple');
+            expect(component.editable).to.be.true;
           });
         });
 
