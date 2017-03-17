@@ -1,24 +1,25 @@
+const TOOLBAR_TAG = 'simpla-text-toolbar';
+
 module.exports = {
-  command(selector, name) {
+  command(name) {
     this.execute(function(selector, name) {
-      var text = document.querySelector(selector),
-          toolbar = text.$.toolbar,
+      var toolbar = document.querySelector(selector),
           command = toolbar.$$('[data-command="' + name + '"]'),
-          textBounds,
+          toolbarBounds,
           commandBounds;
 
       commandBounds = command.getBoundingClientRect();
-      textBounds = text.getBoundingClientRect();
+      toolbarBounds = toolbar.getBoundingClientRect();
 
       return {
-        offsetLeft: commandBounds.left - textBounds.left,
-        offsetTop: commandBounds.top - textBounds.top,
+        offsetLeft: commandBounds.left - toolbarBounds.left,
+        offsetTop: commandBounds.top - toolbarBounds.top,
         width: commandBounds.width,
         height: commandBounds.height
       }
-    }, [ selector, name ], function(response) {
+    }, [ TOOLBAR_TAG, name ], function(response) {
       let { offsetLeft, offsetTop, width, height } = response.value;
-      this.moveToElement(selector, offsetLeft + width / 2, offsetTop + height / 2);
+      this.moveToElement(TOOLBAR_TAG, offsetLeft + width / 2, offsetTop + height / 2);
     });
   }
 }

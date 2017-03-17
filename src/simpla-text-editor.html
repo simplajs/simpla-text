@@ -22,6 +22,8 @@
 
         --tool-size: 25px;
 
+        position: absolute;
+        z-index: 9999;
         display: flex;
       }
 
@@ -110,6 +112,29 @@
             value: INITIAL_TOOLS
           },
 
+          target: {
+            type: HTMLElement,
+            value: null,
+            observer: '_attachListenersToTarget'
+          },
+
+          range: {
+            type: Object,
+            value: null,
+            observer: 'hoverOverRange'
+          },
+
+          hidden: {
+            type: Boolean,
+            reflectToAttribute: true
+          },
+
+          tabindex: {
+            type: Number,
+            value: 0,
+            reflectToAttribute: true
+          },
+
           _linkInputOpen: {
             type: Boolean,
             value: false,
@@ -125,11 +150,12 @@
         this.listeners = {
           'keyup': '_stopEvent',
           'keydown': '_stopEvent',
-          'keypress': '_stopEvent'
+          'keypress': '_stopEvent',
+          'focus': '_storeSelection'
         };
       }
 
-      hoverOverSelection(selection) {
+      hoverOverRange(range) {
         let rangeBounds,
             ownBounds,
             parentOffsets,
@@ -137,23 +163,20 @@
             offsetLeft,
             offsetTop;
 
-        if (!selection || !selection.rangeCount) {
+        this.hidden = !range;
+        if (!range) {
           return;
         }
 
-        rangeBounds = selection.getRangeAt(0).getBoundingClientRect();
+        rangeBounds = range.getBoundingClientRect();
         ownBounds = this.getBoundingClientRect();
         parentOffsets = this.parentElement.getBoundingClientRect();
+
         boundaries = {
           top: window.scrollY,
           left: window.scrollX,
           right: window.innerWidth + window.scrollX,
           bottom: window.innerHeight + window.scrollY
-        };
-
-        parentOffsets = {
-          top: parentOffsets.top + window.scrollY,
-          left: parentOffsets.left + window.scrollX
         };
 
         ({ offsetLeft, offsetTop } = this._getOffsetsFromBounds({
@@ -169,7 +192,7 @@
         });
       }
 
-      _getOffsetsFromBounds({ rangeBounds, parentOffsets, ownBounds, boundaries, gutter = GUTTER }) {
+      _getOffsetsFromBounds({ rangeBounds, ownBounds, parentOffsets, boundaries, gutter = GUTTER }) {
         let { left, top } = rangeBounds,
             centerOffset = (rangeBounds.width - ownBounds.width) / 2;
 
@@ -212,7 +235,15 @@
       }
 
       _runCommand(command, options = {}) {
-        this.fire('command', { name: command, options });
+        if (this.target) {
+          let currentState = this.target.state,
+              transaction = currentState.tr.setSelection(this.__selection),
+              newState = currentState.apply(transaction);
+
+          this.target.dom.focus();
+          this.target.view.updateState(newState);
+          this.target.runCommand(command, options);
+        }
       }
 
       _toggleLinkInput() {
@@ -258,6 +289,22 @@
           if (currentHref) {
             this._runCommand('link', { href: currentHref });
           }
+        }
+      }
+
+      _storeSelection() {
+        if (this.target) {
+          this.__selection = this.target.state.selection;
+        }
+      }
+
+      _attachListenersToTarget(target) {
+        if (target) {
+          target.dom.addEventListener('blur', () => {
+            if (document.activeElement !== this) {
+              this.hidden = true;
+            }
+          });
         }
       }
      }

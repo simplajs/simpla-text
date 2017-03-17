@@ -1,107 +1,77 @@
 <link rel="import" href="../polymer/polymer.html">
+<style media="screen">
+  simpla-text[contenteditable] {
+    outline: none;
+  }
+</style>
+<script>
+  import editor from './behaviors/editor-connector';
+  import inlineBlock from './behaviors/inline-block';
+  import simpla from './behaviors/simpla-connector';
 
-<dom-module id="simpla-text">
-  <template>
-    <style>
-      :host, *, *::before, *::after {
-        box-sizing: border-box;
+  class SimplaText {
+    beforeRegister() {
+      this.is = 'simpla-text';
+
+      this.properties = {
+        editing: {
+          type: Boolean,
+          readOnly: true,
+          value: false
+        },
+
+        editable: {
+          type: Boolean,
+          reflectToAttribute: true
+        },
+
+        plaintext: {
+          type: Boolean,
+          value: false
+        }
+      };
+
+      this.listeners = {
+        'tap': '_handleTap',
+        'blur': '_handleBlur',
+        'focus': '_handleFocus'
+      };
+    }
+
+    get behaviors() {
+      return [ editor, inlineBlock, simpla ];
+    }
+
+    _handleBlur() {
+      this._setEditing(false);
+    }
+
+    _handleFocus() {
+      if (this.editable) {
+        this._setEditing(true);
       }
+    }
 
-      :host {
-        -moz-osx-font-smoothing: grayscale;
-         -webkit-font-smoothing: antialiased;
-                 font-smoothing: antialiased;
-
-        outline: none;
+    _handleTap() {
+      if (this.editable) {
+        this._setEditing(true);
       }
+    }
 
-      .toolbar-wrapper {
-        position: relative;
-      }
-
-      .toolbar {
-        position: absolute;
-      }
-    </style>
-    <div class="toolbar-wrapper">
-      <simpla-text-toolbar
-        id="toolbar"
-        class="toolbar"
-        on-command="_handleToolbarCommand"
-        hidden>
-      </simpla-text-toolbar>
-    </div>
-    <slot></slot>
-  </template>
-
-  <script>
-    import editor from './behaviors/editor-connector';
-    import inlineBlock from './behaviors/inline-block';
-    import simpla from './behaviors/simpla-connector';
-    import toolbar from './behaviors/toolbar';
-
-    class SimplaText {
-      beforeRegister() {
-        this.properties = {
-          editing: {
-            type: Boolean,
-            readOnly: true,
-            value: false
-          },
-
-          editable: {
-            type: Boolean,
-            reflectToAttribute: true
-          },
-
-          plaintext: {
-            type: Boolean,
-            value: false
-          }
-        };
-
-        this.listeners = {
-          'tap': '_handleTap',
-          'blur': '_handleBlur',
-          'focus': '_handleFocus'
-        };
-      }
-
-      get behaviors() {
-        return [ editor, inlineBlock, simpla, toolbar ];
-      }
-
-      _handleBlur() {
+    _editableObserver(editable) {
+      if (!editable) {
         this._setEditing(false);
       }
+    }
 
-      _handleFocus() {
-        if (this.editable) {
-          this._setEditing(true);
-        }
-      }
+    get value() {
+      return this.innerHTML;
+    }
 
-      _handleTap() {
-        if (this.editable) {
-          this._setEditing(true);
-        }
-      }
+    set value(value) {
+      this.innerHTML = value;
+    }
+  };
 
-      _editableObserver(editable) {
-        if (!editable) {
-          this._setEditing(false);
-        }
-      }
-
-      get value() {
-        return this.innerHTML;
-      }
-
-      set value(value) {
-        this.innerHTML = value;
-      }
-    };
-
-    Polymer(SimplaText)
-  </script>
-</dom-module>
+  Polymer(SimplaText)
+</script>

@@ -2,9 +2,8 @@ const assert = require('assert');
 
 const getBounds = (selector, callback) => (browser) => {
   browser
-    .execute(function(selector) {
-      var text = document.querySelector(selector),
-          toolbar = text.$.toolbar;
+    .execute(function() {
+      var toolbar = document.querySelector('simpla-text-toolbar');
 
       return {
         toolbar: toolbar.getBoundingClientRect(),
@@ -18,11 +17,11 @@ const getBounds = (selector, callback) => (browser) => {
         },
         range: window.getSelection().getRangeAt(0).getBoundingClientRect()
       };
-    }, [ selector ], callback);
+    }, [], callback);
 }
 
-const checkToolbarInWindow = (selector) => (browser) => {
-  getBounds(selector, function(response) {
+const checkToolbarInWindow = (browser) => {
+  getBounds(function(response) {
     let { toolbar, window } = response.value;
 
     assert(toolbar.top > window.top, 'Toolbar top is within window');
@@ -32,8 +31,8 @@ const checkToolbarInWindow = (selector) => (browser) => {
   })(browser);
 }
 
-const checkToolbarNotOverRange = (selector) => (browser) => {
-  getBounds(selector, function(response) {
+const checkToolbarNotOverRange = (browser) => {
+  getBounds(function(response) {
     let { toolbar, range } = response.value;
 
     assert(
@@ -52,8 +51,8 @@ const clickOnCorner = (y, x) => (browser) => {
     .highlight(2, 'word', 'right')
     .saveScreenshot(`./screenshots/toolbar-positioning/${y}-${x}.png`)
 
-  checkToolbarInWindow(selector)(browser);
-  checkToolbarNotOverRange(selector)(browser);
+  checkToolbarInWindow(browser);
+  checkToolbarNotOverRange(browser);
 };
 
 module.exports = {

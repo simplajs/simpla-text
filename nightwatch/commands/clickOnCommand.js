@@ -1,7 +1,7 @@
 module.exports = {
-  command(...args) {
+  command(selector, name) {
     this
-      .hoverOverCommand(...args)
+      .hoverOverCommand(name)
       .mouseButtonClick();
   }
 }

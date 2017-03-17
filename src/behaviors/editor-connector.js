@@ -1,4 +1,5 @@
 const EDITOR_COMPONENT = 'simpla-text-editor.html';
+const toolbar = document.createElement('simpla-text-toolbar');
 
 export default {
   properties: {
@@ -42,9 +43,44 @@ export default {
           inline: this.inline,
           formatters: this.commands.map(toFormatter),
           formatterChangedCallback: ({ name }, { applied, meta }) => {
-            this.fire('command-changed', { name, applied, meta });
+            this
+              .getEditor()
+              .then(editor => {
+                if (toolbar.target === editor) {
+                  this._tools = this._tools || {};
+                  this._tools[name] = { applied, meta };
+
+                  if (toolbar.set) {
+                    toolbar.set(`tools.${name}.active`, applied);
+                    toolbar.set(`tools.${name}.meta`, meta);
+                  } else {
+                    toolbar.tools = toolbar.tools || {};
+                    toolbar.tools[name] = { applied, meta };
+                  }
+                }
+              });
           },
-          selectCallback: (selection) => this.fire('select', { selection }),
+          selectCallback: (selection) => {
+            this.fire('select', { selection });
+
+            if (toolbar.parentElement !== document.body) {
+              document.body.appendChild(toolbar);
+            }
+
+            toolbar.range = selection && selection.rangeCount && selection.getRangeAt(0);
+            toolbar.tools = this._tools;
+
+            // We're only setting the target on the toolbar editor if selection
+            //  is truthy, as we want the toolbar to still have a reference to it
+            //  even if this loses focus e.g. toolbar receiving input for link href
+            if (selection) {
+              this
+                .getEditor()
+                .then(editor => {
+                  toolbar.target = editor;
+                });
+            }
+          },
           inputCallback: () => this.fire('input'),
           editableCallback: () => this.editable
         });
