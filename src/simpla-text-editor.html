@@ -300,8 +300,8 @@
 
       _attachListenersToTarget(target) {
         if (target) {
-          target.dom.addEventListener('blur', () => {
-            if (document.activeElement !== this) {
+          target.dom.addEventListener('blur', (event) => {
+            if (event.relatedTarget !== this) {
               this.hidden = true;
             }
           });
