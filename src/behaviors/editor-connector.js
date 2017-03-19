@@ -68,7 +68,10 @@ export default {
             }
 
             toolbar.range = selection && selection.rangeCount && selection.getRangeAt(0);
-            toolbar.tools = this._tools;
+
+            if (this._tools) {
+              toolbar.tools = this._tools;
+            }
 
             // We're only setting the target on the toolbar editor if selection
             //  is truthy, as we want the toolbar to still have a reference to it
