@@ -21,7 +21,15 @@
 
     <!-- Import component -->
     <link rel="import" href="../simpla-text.html">
-    <link rel="import" href="../iron-test-helpers/iron-test-helpers.html">
+
+    <dom-module id="shadow-test">
+      <template>
+        <simpla-text editable></simpla-text>
+      </template>
+      <script>
+        Polymer({ is: 'shadow-test' });
+      </script>
+    </dom-module>
   </head>
   <body unresolved>
     <h1>Basic Editor</h1>
@@ -43,5 +51,7 @@
     <simpla-text uid="text-0" editable>Hello World</simpla-text>
     <simpla-text uid="text-0" editable>Hello World</simpla-text>
 
+    <h1>Shadow DOM Editor</h1>
+    <shadow-test></shadow-test>
   </body>
 </html>

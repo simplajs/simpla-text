@@ -5,7 +5,7 @@
   "main": "simpla-text.html",
   "scripts": {
     "test": "gulp test:local",
-    "postinstall": "node nightwatch.conf.js",
+    "postinstall": "node nightwatch.conf.js && cd node_modules/prosemirror-view && npm install",
     "test:e2e": "node_modules/.bin/nightwatch --config nightwatch.conf.js"
   },
   "author": "Simpla &lt;admin@simpla.io&gt;",
@@ -45,7 +45,14 @@
     "http-server": "^0.9.0",
     "nightwatch": "^0.9.13",
     "postcss-import": "^9.1.0",
-    "prosemirror-history": "^0.18.0",
+    "prosemirror-commands": "^0.19.0",
+    "prosemirror-example-setup": "^0.19.0",
+    "prosemirror-history": "^0.19.0",
+    "prosemirror-keymap": "^0.19.0",
+    "prosemirror-model": "^0.19.0",
+    "prosemirror-schema-basic": "^0.19.0",
+    "prosemirror-state": "^0.19.0",
+    "prosemirror-view": "https://github.com/bedeoverend/prosemirror-view#6e3d72c112a929dc83280d0cbf3312b50f6965bf",
     "rollup-plugin-babel": "^2.6.0",
     "rollup-plugin-commonjs": "^7.0.0",
     "rollup-plugin-json": "^2.1.0",
@@ -54,14 +61,5 @@
     "selenium-download": "^2.0.9",
     "web-component-tester": "^4.0.0",
     "yargs": "^6.6.0"
-  },
-  "dependencies": {
-    "prosemirror-commands": "^0.18.0",
-    "prosemirror-example-setup": "^0.18.0",
-    "prosemirror-keymap": "^0.18.0",
-    "prosemirror-model": "^0.18.0",
-    "prosemirror-schema-basic": "^0.18.0",
-    "prosemirror-state": "^0.18.0",
-    "prosemirror-view": "^0.18.0"
   }
 }
