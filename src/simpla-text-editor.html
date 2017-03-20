@@ -158,48 +158,61 @@
       hoverOverRange(range) {
         let rangeBounds,
             ownBounds,
-            parentOffsets,
             boundaries,
-            offsetLeft,
-            offsetTop;
+            left,
+            top;
 
         this.hidden = !range;
         if (!range) {
           return;
         }
 
-        rangeBounds = range.getBoundingClientRect();
+        rangeBounds = addPadding(range.getBoundingClientRect(), GUTTER);
         ownBounds = this.getBoundingClientRect();
-        parentOffsets = this.parentElement.getBoundingClientRect();
 
-        boundaries = {
-          top: window.scrollY,
-          left: window.scrollX,
-          right: window.innerWidth + window.scrollX,
-          bottom: window.innerHeight + window.scrollY
-        };
+        boundaries = addPadding({
+          top: 0,
+          left: 0,
+          right: window.innerWidth,
+          bottom: window.innerHeight
+        }, -GUTTER);
 
-        ({ offsetLeft, offsetTop } = this._getOffsetsFromBounds({
+        ({ left, top } = this._getPositionsFromBounds({
           rangeBounds,
-          parentOffsets,
           ownBounds,
           boundaries
         }));
 
+        // NOTE: HACK - This is doing a check: if the left and top will place is
+        //  _relative_ to the parent element, then it should incorporate the
+        //  parent's offsets from the viewport, otherwise it should just incorporate
+        //  the scroll values (scroll values are already considered by parent
+        //  in the truthy case). But this feels really fragile and should be fixed
+        //  via CSS or something more solid.
+        if (window.getComputedStyle(this.parentElement).position === 'relative') {
+          let parentOffsets = this.parentElement.getBoundingClientRect();
+          left -= parentOffsets.left;
+          top -= parentOffsets.top;
+        } else {
+          left += window.scrollX;
+          top += window.scrollY;
+        }
+
         Object.assign(this.style, {
-          left: `${offsetLeft}px`,
-          top: `${offsetTop}px`
+          left: `${left}px`,
+          top: `${top}px`
         });
       }
 
-      _getOffsetsFromBounds({ rangeBounds, ownBounds, parentOffsets, boundaries, gutter = GUTTER }) {
-        let { left, top } = rangeBounds,
-            centerOffset = (rangeBounds.width - ownBounds.width) / 2;
+      _getPositionsFromBounds({ ownBounds, rangeBounds, boundaries }) {
+        let isOverRange = (dim) => dim > rangeBounds.top && dim < rangeBounds.bottom,
+            centerOffset = (rangeBounds.width - ownBounds.width) / 2,
+            left,
+            top;
 
-        boundaries = addPadding(boundaries, -gutter);
-
-        left += centerOffset;
-        top -= ownBounds.height + gutter;
+        // Move to center above range
+        left = rangeBounds.left + centerOffset;
+        top = rangeBounds.top - ownBounds.height;
 
         // Fit to within boundaries
         if (left < boundaries.left) {
@@ -208,10 +221,6 @@
 
         if (top < boundaries.top) {
           top = boundaries.top;
-
-          if (top < rangeBounds.top && top > rangeBounds.bottom || top + ownBounds.height < rangeBounds.bottom && top + ownBounds.height > rangeBounds.top) {
-            top = rangeBounds.bottom + gutter;
-          }
         }
 
         if (left + ownBounds.width > boundaries.right) {
@@ -222,10 +231,12 @@
           top = boundaries.bottom - ownBounds.height;
         }
 
-        return {
-          offsetLeft: left - parentOffsets.left,
-          offsetTop: top - parentOffsets.top
-        };
+        // Ensure it isn't covering the range
+        if (isOverRange(top) || isOverRange(top + ownBounds.height)) {
+          top = rangeBounds.bottom;
+        }
+
+        return { top, left };
       }
 
       _handleToolTap(event) {
