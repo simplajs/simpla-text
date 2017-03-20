@@ -27,7 +27,10 @@
         <simpla-text editable></simpla-text>
       </template>
       <script>
-        Polymer({ is: 'shadow-test' });
+        // Protects incase HTMLImports didn't load sync
+        window.HTMLImports.whenReady(function() {
+          Polymer({ is: 'shadow-test' });
+        })
       </script>
     </dom-module>
   </head>
