@@ -20,10 +20,10 @@
   ],
   "dependencies": {
     "polymer": "^1.6.0",
-    "simpla": "simplaio/simpla#2.0-preview",
     "simple-button": "SimpleElements/simple-button#^0.2.3"
   },
   "devDependencies": {
+    "simpla": "simplaio/simpla#2.0-preview",
     "webcomponentsjs": "^0.7.14",
     "web-component-tester": "^4.0.0",
     "iron-test-helpers": "PolymerElements/iron-test-helpers#^1.4.1",
