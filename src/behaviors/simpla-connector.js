@@ -61,8 +61,8 @@ export default {
   },
 
   _restoreFromSimpla(item) {
-    if (item && this.innerHTML !== item.data.html) {
-      this.innerHTML = item.data.html;
+    if (item && this.innerHTML !== item.data.text) {
+      this.innerHTML = item.data.text;
     }
   },
 
