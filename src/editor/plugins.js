@@ -93,50 +93,67 @@ export function getPlaceholderPlugin({ placeholder }) {
   const REMOVED_PLACEHOLDER = false,
         APPLIED_PLACEHOLDER = true;
 
-  return new Plugin({
+  let plugin;
+
+  function isEmpty(state) {
+    return state.doc.textContent === '';
+  }
+
+  function maybeAddPlaceholder(view) {
+    let { showingPlaceholder, shouldShowPlaceholder } = plugin.getState(view.state);
+
+    if (!showingPlaceholder && shouldShowPlaceholder) {
+      view.dispatch(
+        view.state.tr
+          .insertText(placeholder)
+          .setMeta(plugin, APPLIED_PLACEHOLDER)
+      );
+    }
+  }
+
+  function maybeRemovePlaceholder(view) {
+    let { showingPlaceholder, shouldShowPlaceholder } = this.getState(view.state);
+
+    if (showingPlaceholder && !shouldShowPlaceholder) {
+      view.dispatch(
+        view.state.tr
+          .delete(0, view.state.doc.content.size)
+          .setMeta(plugin, REMOVED_PLACEHOLDER)
+      );
+    }
+  }
+
+  plugin = new Plugin({
+    view(view) {
+      maybeAddPlaceholder(view);
+      return {};
+    },
+
     props: {
-      onFocus(view) {
-        let { showingPlaceholder } = this.getState(view.state);
-
-        if (showingPlaceholder) {
-          view.dispatch(
-            view.state.tr
-              .delete(0, view.state.doc.content.size)
-              .setMeta(this, REMOVED_PLACEHOLDER)
-          );
-        }
-      },
-
-      onBlur(view) {
-        let { shouldShowPlaceholder } = this.getState(view.state);
-
-        if (shouldShowPlaceholder) {
-          view.dispatch(
-            view.state.tr
-              .insertText(placeholder)
-              .setMeta(this, APPLIED_PLACEHOLDER)
-          );
-        }
-      }
+      onFocus: maybeRemovePlaceholder,
+      onBlur: maybeAddPlaceholder
     },
 
     state: {
       init(config, state) {
         return {
-          shouldShowPlaceholder: state.doc.textContent === '',
+          shouldShowPlaceholder: isEmpty(state),
           showingPlaceholder: false
         };
       },
-      apply(tr, pluginState, oldState, newState) {
+
+      apply(tr, pluginState, oldState, state) {
         let hasMeta = typeof tr.getMeta(this) !== 'undefined';
 
         return {
-          shouldShowPlaceholder: newState.doc.textContent === '',
+          shouldShowPlaceholder: isEmpty(state),
           showingPlaceholder: hasMeta ? tr.getMeta(this) : pluginState.showingPlaceholder
         };
       }
     }
-  })
+  });
+
+  return plugin;
 }
 
 export { history as getHistoryPlugin }

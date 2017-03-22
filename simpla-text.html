@@ -1,1 +1,422 @@
-<link rel="import" href="../polymer/polymer.html"> <dom-module id="simpla-text"> <template> <style>:host{display:block}:host([contenteditable]){outline:0}:host([inline]){display:inline}</style> <slot></slot> </template> <script>!function(){"use strict";var e="simpla-text-editor.html",t=document.createElement("simpla-text-toolbar"),i={properties:{commands:{type:Array,computed:"_computeCommands(plaintext)"}},observers:["_checkEditorPrepped(editable, commands, inline)"],getEditor:function(){var e=this;return Promise.resolve(this._editor||this._createEditor()).then(function(t){return e._editor=t,t})},runCommand:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};return this.getEditor().then(function(i){return i.runCommand(e,t)})},_createEditor:function(){var i=this;return this.__waitForEditor||(this.__waitForEditor=new Promise(function(t,n){var r=i.resolveUrl(e);i.importHref(r,t,n)}).then(function(){var e=window.SimplaText,n=e.Editor,r=e.formatters,o=function(e){return r[e]};return new n({dom:i,inline:i.inline,formatters:i.commands.map(o),placeholder:i.placeholder,formatterChangedCallback:function(e,n){var r=e.name,o=n.applied,a=n.meta;i.getEditor().then(function(e){t.target===e&&(i._tools=i._tools||{},i._tools[r]={applied:o,meta:a},t.set?(t.set("tools."+r+".active",o),t.set("tools."+r+".meta",a)):(t.tools=t.tools||{},t.tools[r]={applied:o,meta:a}))})},selectCallback:function(e){i.fire("select",{selection:e}),t.parentElement!==document.body&&document.body.appendChild(t),t.range=e&&e.rangeCount&&e.getRangeAt(0),i._tools&&(t.tools=i._tools),e&&i.getEditor().then(function(e){t.target=e})},inputCallback:function(){return i.fire("input")},editableCallback:function(){return i.editable}})})),this.__waitForEditor},_checkEditorPrepped:function(e){e&&this.getEditor()},_computeCommands:function(e){return e?[]:["bold","italic","underline","link"]}},n=["h1","h2","h3","h4","h5","h6","p","li","dd","figcaption","mark","q","s","time","u","legend","option","b","big","i","small","tt","abbr","acronym","cite","pre","code","dfn","em","kbd","strong","samp","var","a","span","sub","sup","button","label"],r={properties:{inline:{type:Boolean,reflectToAttribute:!0}},attached:function(){this._autoSetMode()},_autoSetMode:function(){var e=this.parentElement&&this.parentElement.nodeName.toLowerCase();"undefined"==typeof this.inline&&(this.inline=n.indexOf(e)!==-1)}},o={properties:{editable:{type:Boolean,reflectToAttribute:!0},uid:{type:String,observer:"_observeUid"}},listeners:{input:"_setToSimpla"},attached:function(){this._attached=!0,this._observers={editable:this._observeAndInitEditable(),uid:this.uid&&this._observeAndInitUid()}},detached:function(){var e=this;this._attached=!1,Object.keys(this._observers||{}).forEach(function(t){return e._observers[t]&&e._observers[t].unobserve()})},_observeAndInitEditable:function(){var e=this;return"undefined"==typeof this.editable&&(this.editable=Simpla.getState("editable")),Simpla.observeState("editable",function(t){e.editable=t})},_observeAndInitUid:function(){var e=this,t=function(t){return e._restoreFromSimpla(t)};return Simpla.get(this.uid).then(t),Simpla.observe(this.uid,t)},_observeUid:function(e){this._attached&&(this._observers.uid&&this._observers.uid.unobserve(),e&&(this._observers.uid=this._observeAndInitUid()))},_restoreFromSimpla:function(e){e&&this.innerHTML!==e.data.text&&(this.innerHTML=e.data.text)},_setToSimpla:function(){this.uid&&Simpla.set(this.uid,{type:"Text",data:{text:this.innerHTML}})}},a=function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")},s=function(){function e(e,t){for(var i=0;i<t.length;i++){var n=t[i];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,i,n){return i&&e(t.prototype,i),n&&e(t,n),t}}(),l=function(){function e(){a(this,e)}return s(e,[{key:"beforeRegister",value:function(){this.is="simpla-text",this.properties={editing:{type:Boolean,readOnly:!0,value:!1},editable:{type:Boolean,reflectToAttribute:!0},plaintext:{type:Boolean,value:!1},placeholder:{type:String,value:"Enter your text..."}},this.listeners={tap:"_handleTap",blur:"_handleBlur",focus:"_handleFocus"}}},{key:"_handleBlur",value:function(){this._setEditing(!1)}},{key:"_handleFocus",value:function(){this.editable&&this._setEditing(!0)}},{key:"_handleTap",value:function(){this.editable&&this._setEditing(!0)}},{key:"_editableObserver",value:function(e){e||this._setEditing(!1)}},{key:"behaviors",get:function(){return[i,r,o]}},{key:"value",get:function(){return this.innerHTML},set:function(e){this.innerHTML=e}}]),e}();Polymer(l)}()</script> </dom-module> 
+<link rel="import" href="../polymer/polymer.html">
+<dom-module id="simpla-text">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      :host([contenteditable]) {
+        outline: none;
+      }
+
+      :host([inline]) {
+        display: inline;
+      }
+    </style>
+    <slot></slot>
+  </template>
+  <script>(function () {
+'use strict';
+
+var EDITOR_COMPONENT = 'simpla-text-editor.html';
+var toolbar = document.createElement('simpla-text-toolbar');
+
+var editor = {
+  properties: {
+    commands: {
+      type: Array,
+      computed: '_computeCommands(plaintext)'
+    }
+  },
+
+  observers: ['_checkEditorPrepped(editable, commands, inline)'],
+
+  getEditor: function getEditor() {
+    var _this = this;
+
+    return Promise.resolve(this._editor || this._createEditor()).then(function (editor) {
+      _this._editor = editor;
+      return editor;
+    });
+  },
+  runCommand: function runCommand(commandName) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    return this.getEditor().then(function (editor) {
+      return editor.runCommand(commandName, options);
+    });
+  },
+  _createEditor: function _createEditor() {
+    var _this2 = this;
+
+    if (!this.__waitForEditor) {
+      this.__waitForEditor = new Promise(function (resolve, reject) {
+        var editorUrl = _this2.resolveUrl(EDITOR_COMPONENT);
+        _this2.importHref(editorUrl, resolve, reject);
+      }).then(function () {
+        var _window$SimplaText = window.SimplaText,
+            Editor = _window$SimplaText.Editor,
+            formatters = _window$SimplaText.formatters,
+            toFormatter = function toFormatter(command) {
+          return formatters[command];
+        };
+
+        return new Editor({
+          dom: _this2,
+          inline: _this2.inline,
+          formatters: _this2.commands.map(toFormatter),
+          placeholder: _this2.placeholder,
+          formatterChangedCallback: function formatterChangedCallback(_ref, _ref2) {
+            var name = _ref.name;
+            var applied = _ref2.applied,
+                meta = _ref2.meta;
+
+            _this2.getEditor().then(function (editor) {
+              if (toolbar.target === editor) {
+                _this2._tools = _this2._tools || {};
+                _this2._tools[name] = { applied: applied, meta: meta };
+
+                if (toolbar.set) {
+                  toolbar.set('tools.' + name + '.active', applied);
+                  toolbar.set('tools.' + name + '.meta', meta);
+                } else {
+                  toolbar.tools = toolbar.tools || {};
+                  toolbar.tools[name] = { applied: applied, meta: meta };
+                }
+              }
+            });
+          },
+          selectCallback: function selectCallback(selection) {
+            _this2.fire('select', { selection: selection });
+
+            if (toolbar.parentElement !== document.body) {
+              document.body.appendChild(toolbar);
+            }
+
+            toolbar.range = selection && selection.rangeCount && selection.getRangeAt(0);
+
+            if (_this2._tools) {
+              toolbar.tools = _this2._tools;
+            }
+
+            // We're only setting the target on the toolbar editor if selection
+            //  is truthy, as we want the toolbar to still have a reference to it
+            //  even if this loses focus e.g. toolbar receiving input for link href
+            if (selection) {
+              _this2.getEditor().then(function (editor) {
+                toolbar.target = editor;
+              });
+            }
+          },
+          inputCallback: function inputCallback() {
+            return _this2.fire('input');
+          },
+          editableCallback: function editableCallback() {
+            return _this2.editable;
+          }
+        });
+      });
+    }
+
+    return this.__waitForEditor;
+  },
+  _checkEditorPrepped: function _checkEditorPrepped(editable) {
+    if (editable) {
+      this.getEditor();
+    }
+  },
+  _computeCommands: function _computeCommands(plaintext) {
+    return plaintext ? [] : ['bold', 'italic', 'underline', 'link'];
+  }
+};
+
+var INLINE_ELEMENTS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'li', 'dd', 'figcaption', 'mark', 'q', 's', 'time', 'u', 'legend', 'option', 'b', 'big', 'i', 'small', 'tt', 'abbr', 'acronym', 'cite', 'pre', 'code', 'dfn', 'em', 'kbd', 'strong', 'samp', 'var', 'a', 'span', 'sub', 'sup', 'button', 'label'];
+
+var inline = {
+  properties: {
+    inline: {
+      type: Boolean,
+      reflectToAttribute: true
+    }
+  },
+
+  attached: function attached() {
+    this._autoSetMode();
+  },
+  _autoSetMode: function _autoSetMode() {
+    var parentName = this.parentElement && this.parentElement.nodeName.toLowerCase();
+
+    if (typeof this.inline !== 'undefined') {
+      return;
+    }
+
+    this.inline = INLINE_ELEMENTS.indexOf(parentName) !== -1;
+  }
+};
+
+var simpla = {
+  properties: {
+    editable: {
+      type: Boolean,
+      reflectToAttribute: true
+    },
+
+    uid: {
+      type: String,
+      observer: '_observeUid'
+    }
+  },
+
+  listeners: {
+    'input': '_setToSimpla'
+  },
+
+  attached: function attached() {
+    this._attached = true;
+
+    this._observers = {
+      editable: this._observeAndInitEditable(),
+      uid: this.uid && this._observeAndInitUid()
+    };
+  },
+  detached: function detached() {
+    var _this = this;
+
+    this._attached = false;
+
+    Object.keys(this._observers || {}).forEach(function (key) {
+      return _this._observers[key] && _this._observers[key].unobserve();
+    });
+  },
+  _observeAndInitEditable: function _observeAndInitEditable() {
+    var _this2 = this;
+
+    if (typeof this.editable === 'undefined') {
+      this.editable = Simpla.getState('editable');
+    }
+
+    return Simpla.observeState('editable', function (editable) {
+      _this2.editable = editable;
+    });
+  },
+  _observeAndInitUid: function _observeAndInitUid() {
+    var _this3 = this;
+
+    var callback = function callback(item) {
+      return _this3._restoreFromSimpla(item);
+    };
+
+    Simpla.get(this.uid).then(callback);
+    return Simpla.observe(this.uid, callback);
+  },
+  _observeUid: function _observeUid(uid) {
+    if (this._attached) {
+      if (this._observers.uid) {
+        this._observers.uid.unobserve();
+      }
+
+      if (uid) {
+        this._observers.uid = this._observeAndInitUid();
+      }
+    }
+  },
+  _restoreFromSimpla: function _restoreFromSimpla(item) {
+    if (item && this.innerHTML !== item.data.text) {
+      this.innerHTML = item.data.text;
+    }
+  },
+  _setToSimpla: function _setToSimpla() {
+    if (this.uid) {
+      Simpla.set(this.uid, {
+        type: 'Text',
+        data: {
+          text: this.innerHTML
+        }
+      });
+    }
+  }
+};
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+
+
+
+
+
+
+var get$1 = function get$1(object, property, receiver) {
+  if (object === null) object = Function.prototype;
+  var desc = Object.getOwnPropertyDescriptor(object, property);
+
+  if (desc === undefined) {
+    var parent = Object.getPrototypeOf(object);
+
+    if (parent === null) {
+      return undefined;
+    } else {
+      return get$1(parent, property, receiver);
+    }
+  } else if ("value" in desc) {
+    return desc.value;
+  } else {
+    var getter = desc.get;
+
+    if (getter === undefined) {
+      return undefined;
+    }
+
+    return getter.call(receiver);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var set$1 = function set$1(object, property, value, receiver) {
+  var desc = Object.getOwnPropertyDescriptor(object, property);
+
+  if (desc === undefined) {
+    var parent = Object.getPrototypeOf(object);
+
+    if (parent !== null) {
+      set$1(parent, property, value, receiver);
+    }
+  } else if ("value" in desc && desc.writable) {
+    desc.value = value;
+  } else {
+    var setter = desc.set;
+
+    if (setter !== undefined) {
+      setter.call(receiver, value);
+    }
+  }
+
+  return value;
+};
+
+var SimplaText = function () {
+  function SimplaText() {
+    classCallCheck(this, SimplaText);
+  }
+
+  createClass(SimplaText, [{
+    key: 'beforeRegister',
+    value: function beforeRegister() {
+      this.is = 'simpla-text';
+
+      this.properties = {
+        editing: {
+          type: Boolean,
+          readOnly: true,
+          value: false
+        },
+
+        editable: {
+          type: Boolean,
+          reflectToAttribute: true
+        },
+
+        plaintext: {
+          type: Boolean,
+          value: false
+        },
+
+        placeholder: {
+          type: String,
+          value: 'Enter your text...'
+        }
+      };
+
+      this.listeners = {
+        'tap': '_handleTap',
+        'blur': '_handleBlur',
+        'focus': '_handleFocus'
+      };
+    }
+  }, {
+    key: '_handleBlur',
+    value: function _handleBlur() {
+      this._setEditing(false);
+    }
+  }, {
+    key: '_handleFocus',
+    value: function _handleFocus() {
+      if (this.editable) {
+        this._setEditing(true);
+      }
+    }
+  }, {
+    key: '_handleTap',
+    value: function _handleTap() {
+      if (this.editable) {
+        this._setEditing(true);
+      }
+    }
+  }, {
+    key: '_editableObserver',
+    value: function _editableObserver(editable) {
+      if (!editable) {
+        this._setEditing(false);
+      }
+    }
+  }, {
+    key: 'behaviors',
+    get: function get() {
+      return [editor, inline, simpla];
+    }
+  }, {
+    key: 'value',
+    get: function get() {
+      return this.innerHTML;
+    },
+    set: function set(value) {
+      this.innerHTML = value;
+    }
+  }]);
+  return SimplaText;
+}();
+
+
+
+Polymer(SimplaText);
+
+}());
+</script>
+</dom-module>
