@@ -2,15 +2,23 @@
 <dom-module id="simpla-text">
   <template>
     <style>
+      :host {
+        display: block;
+      }
+
       :host([contenteditable]) {
         outline: none;
+      }
+
+      :host([inline]) {
+        display: inline;
       }
     </style>
     <slot></slot>
   </template>
   <script>
     import editor from './behaviors/editor-connector';
-    import inlineBlock from './behaviors/inline-block';
+    import inline from './behaviors/inline';
     import simpla from './behaviors/simpla-connector';
 
     class SimplaText {
@@ -43,7 +51,7 @@
       }
 
       get behaviors() {
-        return [ editor, inlineBlock, simpla ];
+        return [ editor, inline, simpla ];
       }
 
       _handleBlur() {

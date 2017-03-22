@@ -9,12 +9,7 @@ export default {
   properties: {
     inline: {
       type: Boolean,
-      observer: '_inlineObserver'
-    },
-
-    block: {
-      type: Boolean,
-      observer: '_blockObserver'
+      reflectToAttribute: true
     }
   },
 
@@ -22,18 +17,10 @@ export default {
     this._autoSetMode();
   },
 
-  _inlineObserver(inline) {
-    this.block = !inline;
-  },
-
-  _blockObserver(block) {
-    this.inline = !block
-  },
-
   _autoSetMode() {
     let parentName = this.parentElement && this.parentElement.nodeName.toLowerCase();
 
-    if (typeof this.inline !== 'undefined' || typeof this.block !== 'undefined') {
+    if (typeof this.inline !== 'undefined') {
       return;
     }
 

@@ -17,7 +17,7 @@
   <body>
     <test-fixture id="simple">
       <template>
-        <simpla-text></simpla-text>
+        <simpla-text editable></simpla-text>
       </template>
     </test-fixture>
     <test-fixture id="forced-inline">
@@ -27,18 +27,10 @@
         </div>
       </template>
     </test-fixture>
-    <test-fixture id="forced-block">
-      <template>
-        <div>
-          <span><simpla-text block editable></simpla-text></span>
-        </div>
-      </template>
-    </test-fixture>
-    <test-fixture id="auto-inline-block">
+    <test-fixture id="auto-inline">
       <template>
         <div>
           <span><simpla-text editable></simpla-text></span>
-          <div><simpla-text editable></simpla-text></div>
         </div>
       </template>
     </test-fixture>
@@ -55,7 +47,7 @@
             component.innerHTML = '<p>Hello World</p>';
 
             return flushEditor(component)
-              .then(function() {
+              .then(() => {
                 expect(component.innerHTML).to.equal('Hello World');
               });
           });
@@ -64,9 +56,13 @@
             component.innerHTML = 'Hello<br />World';
 
             return flushEditor(component)
-              .then(function() {
+              .then(() => {
                 expect(component.innerHTML).to.match(/\<br/);
               });
+          });
+
+          it('should be display:inline;', () => {
+            expect(window.getComputedStyle(component).display).to.equal('inline');
           });
         });
       }
@@ -83,7 +79,7 @@
             component.innerHTML = '<p>Hello World</p>';
 
             return flushEditor(component)
-              .then(function() {
+              .then(() => {
                 expect(component.innerHTML).to.match(/<p/);
               });
           });
@@ -92,50 +88,52 @@
             component.innerHTML = '';
 
             return flushEditor(component)
-              .then(function() {
+              .then(() => {
                 expect(component.innerHTML).to.match(/<p/);
               });
+          });
+
+          it('should be display:block;', () => {
+            expect(window.getComputedStyle(component).display).to.equal('block');
           });
         });
       }
 
-      describe('inline-block behavior', () => {
+      describe('default behavior', () => {
         let component;
 
-        describe('inline mode', () => {
+        beforeEach(() => {
+          component = fixture('simple');
+          return flushEditor(component);
+        });
+
+        checkWorksAsBlock(() => component, 'should behave as a block');
+      });
+
+      describe('inline behavior', () => {
+        let component;
+
+        describe('forced inline mode', () => {
           beforeEach(function() {
             component = fixture('forced-inline').querySelector('simpla-text');
             return flushEditor(component);
           });
 
           it('should have inline true', () => {
-            expect(component.inline).to.be.true;
+            expect(component.inline).to.equal.true;
           });
 
           checkWorksAsInline(() => component);
         });
 
-        describe('block mode', () => {
-          let component;
-
-          beforeEach(function() {
-            component = fixture('forced-block').querySelector('simpla-text');
-          });
-
-          checkWorksAsBlock(() => component);
-        });
-
         describe('auto mode', () => {
-          let inlineComponent,
-              blockComponent;
+          let inlineComponent;
 
-          beforeEach(function() {
-            let wrapper = fixture('auto-inline-block');
+          beforeEach(() => {
+            let wrapper = fixture('auto-inline');
             inlineComponent = wrapper.querySelector('span > simpla-text');
-            blockComponent = wrapper.querySelector('div > simpla-text');
           });
 
-          checkWorksAsBlock(() => blockComponent, 'auto-block formats as block');
           checkWorksAsInline(() => inlineComponent, 'auto-inline formats as inline')
         });
       });
