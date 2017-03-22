@@ -36,7 +36,7 @@
         });
 
         afterEach(function() {
-          // return Simpla.remove(uid);
+          return Simpla.remove(uid);
         });
 
         describe('editable', () => {
@@ -70,7 +70,7 @@
             return Simpla.set(uid, {
               type: 'Text',
               data: {
-                html: 'Hello World'
+                text: 'Hello World'
               }
             })
             .then(wait())
@@ -80,7 +80,7 @@
               return Simpla.set(uid, {
                 type: 'Text',
                 data: {
-                  html: 'Hello World, again'
+                  text: 'Hello World, again'
                 }
               });
             })
@@ -101,7 +101,7 @@
               .then(() => Simpla.get(uid))
               .then((response) => {
                 expect(response).to.be.ok;
-                expect(response.data.html).to.match(/Hello World/);
+                expect(response.data.text).to.match(/Hello World/);
               });
           });
         });
