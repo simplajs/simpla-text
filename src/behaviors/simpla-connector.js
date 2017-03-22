@@ -71,7 +71,7 @@ export default {
       Simpla.set(this.uid, {
         type: 'Text',
         data: {
-          html: this.innerHTML
+          text: this.innerHTML
         }
       })
     }
