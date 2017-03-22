@@ -5,7 +5,7 @@ const util = require('util');
  *
  * ```
  *    this.demoTest = function (client) {
- *      browser.assert.elementContainsTag("simpla-text", "strong");
+ *      browser.assert.inSyncWith(".source", ".replica");
  *    };
  * ```
  */

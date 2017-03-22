@@ -1,7 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { DOMParser } from 'prosemirror-model';
-import { getHistoryPlugin, getInputPlugin, getKeymapPlugin, getSelectPlugin, getFormatterStatePlugin, getFormatterKeymapPlugin } from './plugins';
+import { getPlaceholderPlugin, getHistoryPlugin, getInputPlugin, getKeymapPlugin, getSelectPlugin, getFormatterStatePlugin, getFormatterKeymapPlugin } from './plugins';
 import getSchema from './schemas';
 
 const noop = () => {};
@@ -15,6 +15,7 @@ export default class Editor {
           editableCallback = noop,
           selectCallback = noop,
           inputCallback = noop,
+          placeholder = '',
           formatterChangedCallback = noop
         } = options,
         hasKeyCommand,
@@ -45,6 +46,7 @@ export default class Editor {
     schema = getSchema({ inline, formatters });
 
     plugins = [
+      getPlaceholderPlugin({ placeholder }),
       getInputPlugin({ callback: inputCallback }),
       getSelectPlugin({ callback: selectCallback, getSelection }),
       getKeymapPlugin({ inline, schema }),

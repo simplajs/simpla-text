@@ -42,6 +42,7 @@ export default {
           dom: this,
           inline: this.inline,
           formatters: this.commands.map(toFormatter),
+          placeholder: this.placeholder,
           formatterChangedCallback: ({ name }, { applied, meta }) => {
             this
               .getEditor()

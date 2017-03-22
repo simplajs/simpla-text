@@ -89,4 +89,54 @@ export function getFormatterKeymapPlugin({ schema, formatter }) {
   });
 }
 
+export function getPlaceholderPlugin({ placeholder }) {
+  const REMOVED_PLACEHOLDER = false,
+        APPLIED_PLACEHOLDER = true;
+
+  return new Plugin({
+    props: {
+      onFocus(view) {
+        let { showingPlaceholder } = this.getState(view.state);
+
+        if (showingPlaceholder) {
+          view.dispatch(
+            view.state.tr
+              .delete(0, view.state.doc.content.size)
+              .setMeta(this, REMOVED_PLACEHOLDER)
+          );
+        }
+      },
+
+      onBlur(view) {
+        let { shouldShowPlaceholder } = this.getState(view.state);
+
+        if (shouldShowPlaceholder) {
+          view.dispatch(
+            view.state.tr
+              .insertText(placeholder)
+              .setMeta(this, APPLIED_PLACEHOLDER)
+          );
+        }
+      }
+    },
+
+    state: {
+      init(config, state) {
+        return {
+          shouldShowPlaceholder: state.doc.textContent === '',
+          showingPlaceholder: false
+        };
+      },
+      apply(tr, pluginState, oldState, newState) {
+        let hasMeta = typeof tr.getMeta(this) !== 'undefined';
+
+        return {
+          shouldShowPlaceholder: newState.doc.textContent === '',
+          showingPlaceholder: hasMeta ? tr.getMeta(this) : pluginState.showingPlaceholder
+        };
+      }
+    }
+  })
+}
+
 export { history as getHistoryPlugin }
