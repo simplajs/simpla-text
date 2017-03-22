@@ -10,7 +10,8 @@ export default {
   },
 
   observers: [
-    '_checkEditorPrepped(editable, commands, inline)'
+    '_checkEditorPrepped(editable, commands, inline)',
+    '_refreshEditableOnEditor(editable)'
   ],
 
   getEditor() {
@@ -92,6 +93,16 @@ export default {
     }
 
     return this.__waitForEditor;
+  },
+
+  _refreshEditableOnEditor() {
+    // The editor's view just needs to be refreshed so that it does calls the
+    //  supplied editable callback, that will in turn set editable on the view
+    //  to the value of this.editable
+    this.getEditor()
+      .then(editor => {
+        editor.view.updateState(editor.state);
+      });
   },
 
   _checkEditorPrepped(editable) {

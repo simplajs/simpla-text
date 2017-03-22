@@ -4,6 +4,7 @@ module.exports = {
   'Setup and initial placeholder': (browser) => {
     browser
       .url('http://localhost:3333/')
+      .pause(500)
       .setProperty('#main', 'placeholder', placeholder)
       .setProperty('#main', 'editable', true)
       .pause(500) // Wait for async loads to occur
