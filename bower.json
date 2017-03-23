@@ -20,7 +20,10 @@
   ],
   "dependencies": {
     "polymer": "^1.6.0",
-    "simple-button": "SimpleElements/simple-button#^0.2.3"
+    "simple-button": "SimpleElements/simple-button#^0.2.3",
+    "simpla-styles": "^0.5.6",
+    "iron-icon": "^1.0.12",
+    "iron-iconset-svg": "^1.1.0"
   },
   "devDependencies": {
     "simpla": "simplaio/simpla#2.0-preview",

@@ -1,5 +1,21 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../simpla-styles/simpla-styles.html">
+<link rel="import" href="../iron-iconset-svg/iron-iconset-svg.html">
+<link rel="import" href="../iron-icon/iron-icon.html" async>
 
+<!-- Material icons cherry picked from iron-icons -->
+<iron-iconset-svg name="simpla-text-toolbar">
+  <svg>
+    <defs>
+      <g id="format-bold"><path d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"/></g>
+      <g id="format-italic"><path d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4z"/></g>
+      <g id="format-underlined"><path d="M12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6zm-7 2v2h14v-2H5z"/></g>
+      <g id="insert-link"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></g>
+    </defs>
+  </svg>
+</iron-iconset-svg>
+
+<!-- Setup editor -->
 <script>
   import Editor from './editor';
   import * as formatters from './editor/formatters';
@@ -8,6 +24,7 @@
   Object.assign(window.SimplaText, { Editor, formatters });
 </script>
 
+<!-- Toolbar -->
 <dom-module id="simpla-text-toolbar">
   <template>
     <style>
@@ -19,58 +36,139 @@
         -moz-osx-font-smoothing: grayscale;
          -webkit-font-smoothing: antialiased;
                  font-smoothing: antialiased;
-
-        --tool-size: 25px;
-
         position: absolute;
-        z-index: 9999;
         display: flex;
-      }
+        border-radius: var(--simpla-border-radius);
 
-      :host([hidden]) {
-        display: none;
+        background: white;
+        color: var(--simpla-primary-color);
+        box-shadow: var(--simpla-elevation-1);
+
+        background: var(--simpla-grey-700);
+        color: white;
+        box-shadow: none;
+
+        z-index: var(--simpla-on-top);
+        font-size: var(--simpla-scale-0);
+        overflow: hidden;
       }
 
       .tool {
-        width: var(--tool-size);
-        height: var(--tool-size);
-        border: solid thin blue;
-        flex-shrink: 0;
+        /* Reset default button styles */
+        font: inherit;
+        color: inherit;
+        line-height: normal;
+        background: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+        border: 0;
+        padding: 0;
+        outline: 0;
+        cursor: pointer;
+
+        padding: 0.4em 0.5em;
+        border-bottom: 2px solid transparent;
+        /* Link opening transition */
+        transition: margin-left 150ms var(--simpla-easing-standard);
       }
 
       .tool[active] {
-        border-bottom: 4px solid blue;
+        border-color: var(--simpla-primary-color);
+      }
+
+      .tool__icon {
+        --iron-icon-width: var(--simpla-scale-0);
+        --iron-icon-height: var(--simpla-scale-0);
+        pointer-events: none;
+      }
+
+      .tool__link {
+        font-family: var(--simpla-font-family);
+        font-size: var(--simpla-scale-000);
+        color: var(--simpla-text-color);
+        outline: 0;
+        border: 0;
+        width: 0;
+        background: transparent;
+        transition: width 150ms var(--simpla-easing-standard),
+                    padding 150ms var(--simpla-easing-standard);
+      }
+
+      :host([link-active]) .tool__link {
+        width: 12em;
+        padding: 0 0.5em;
+      }
+
+      :host([link-active]) .tool {
+        margin-left: calc(0px - var(--simpla-scale-0) - 0.5em);
+      }
+
+      :host([link-active]) .tool:not(.tool--link) {
+        visibility: hidden;
+      }
+
+      /* Patch hidden prop in Chrome and IE */
+      :host([hidden]), *[hidden] {
+        display: none !important;
       }
     </style>
+
     <button
       class="tool"
       on-tap="_handleToolTap"
       active$="[[tools.bold.active]]"
-      data-command="bold">b</button>
+      data-command="bold">
+      <iron-icon
+        class="tool__icon"
+        icon="simpla-text-toolbar:format-bold">
+      </iron-icon>
+    </button>
+
     <button
       class="tool"
       on-tap="_handleToolTap"
       active$="[[tools.italic.active]]"
-      data-command="italic">i</button>
+      data-command="italic">
+      <iron-icon
+        class="tool__icon"
+        icon="simpla-text-toolbar:format-italic">
+      </iron-icon>
+    </button>
+
     <button
       class="tool"
       on-tap="_handleToolTap"
       active$="[[tools.underline.active]]"
-      data-command="underline">u</button>
-    <button
-      class="tool"
-      active$="[[_either(tools.link.active, _linkInputOpen)]]"
-      on-tap="_toggleLinkInput"
-      data-command="link">
-      l
+      data-command="underline">
+      <iron-icon
+        class="tool__icon"
+        icon="simpla-text-toolbar:format-underlined">
+      </iron-icon>
     </button>
-    <span hidden$="[[!_linkInputOpen]]">
-      <input id="_linkInput" type="text" on-keyup="_checkForExitKeys" value="{{_storedHref::input}}" />
-    </span>
+
+    <button
+      class="tool tool--link"
+      on-tap="_toggleLinkInput"
+      active$="[[_either(tools.link.active, linkActive)]]"
+      data-command="link">
+      <iron-icon
+        class="tool__icon"
+        icon="simpla-text-toolbar:insert-link">
+      </iron-icon>
+    </button>
+    <input
+      id="_linkInput"
+      class="tool__link"
+      type="text"
+      value="{{_storedHref::input}}"
+      on-keyup="_checkForExitKeys"
+      placeholder="Enter a URL..."
+    >
   </template>
+
   <script>
     const GUTTER = 5,
-          INITIAL_TOOLS = () => ({
+          INITIAL_TOOLS = {
             bold: {
               active: false
             },
@@ -89,7 +187,7 @@
                 href: ''
               }
             }
-          });
+          };
 
     function addPadding(rect, padding) {
       return {
@@ -107,9 +205,10 @@
         this.is = 'simpla-text-toolbar';
 
         this.properties = {
+
           tools: {
             type: Object,
-            value: INITIAL_TOOLS
+            value: () => INITIAL_TOOLS
           },
 
           target: {
@@ -135,10 +234,11 @@
             reflectToAttribute: true
           },
 
-          _linkInputOpen: {
+          linkActive: {
             type: Boolean,
             value: false,
-            observer: '_linkInputOpenObserver'
+            observer: '_linkActiveObserver',
+            reflectToAttribute: true
           },
 
           _storedHref: {
@@ -163,6 +263,7 @@
             top;
 
         this.hidden = !range;
+
         if (!range) {
           return;
         }
@@ -240,7 +341,7 @@
       }
 
       _handleToolTap(event) {
-        let { command } = event.target.dataset;
+        let { command } = Polymer.dom(event).rootTarget.dataset;
 
         this._runCommand(command);
       }
@@ -258,7 +359,7 @@
       }
 
       _toggleLinkInput() {
-        this._linkInputOpen = !this._linkInputOpen;
+        this.linkActive = !this.linkActive;
       }
 
       _either(a, b) {
@@ -274,16 +375,16 @@
               ESC = 27;
 
         if (event.keyCode === ENTER) {
-          this._linkInputOpen = false;
+          this.linkActive = false;
         }
 
         if (event.keyCode === ESC) {
           event.target.value = this.get('tools.link.meta.href') || '';
-          this._linkInputOpen = false;
+          this.linkActive = false;
         }
       }
 
-      _linkInputOpenObserver(inputOpen) {
+      _linkActiveObserver(inputOpen) {
         let currentHref = this._storedHref && this._storedHref.trim();
 
         if (inputOpen) {
