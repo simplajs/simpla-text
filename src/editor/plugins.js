@@ -1,4 +1,5 @@
 import { Plugin } from 'prosemirror-state';
+import { Decoration, DecorationSet } from 'prosemirror-view';
 import { keymap as makeKeymapPlugin } from 'prosemirror-keymap';
 import { makeInlineMaps, makeBlockMaps, historyKeymap, base as baseKeymap } from './keymaps';
 import { history } from 'prosemirror-history';
@@ -89,78 +90,28 @@ export function getFormatterKeymapPlugin({ schema, formatter }) {
   });
 }
 
-export function getPlaceholderPlugin({ placeholder }) {
-  const REMOVED_PLACEHOLDER = false,
-        APPLIED_PLACEHOLDER = true;
-
-  let plugin;
-
-  function isEmpty(state) {
-    return state.doc.textContent === '';
-  }
-
-  function maybeAddPlaceholder(view) {
-    let { showingPlaceholder, shouldShowPlaceholder } = plugin.getState(view.state);
-
-    if (!showingPlaceholder && shouldShowPlaceholder && view.editable && !view.focused) {
-      view.dispatch(
-        view.state.tr
-          .insertText(placeholder)
-          .setMeta(plugin, APPLIED_PLACEHOLDER)
-      );
-    }
-  }
-
-  function removePlaceholder(view) {
-    let { showingPlaceholder } = plugin.getState(view.state);
-
-    if (showingPlaceholder) {
-      view.dispatch(
-        view.state.tr
-          .delete(0, view.state.doc.content.size)
-          .setMeta(plugin, REMOVED_PLACEHOLDER)
-      );
-    }
-  }
-
-  plugin = new Plugin({
-    view() {
-      return {
-        update: (view) => {
-          if (view.editable) {
-            maybeAddPlaceholder(view);
-          } else {
-            removePlaceholder(view);
-          }
-        }
-      };
-    },
-
+export function getPlaceholderPlugin({ text }) {
+  return new Plugin({
     props: {
-      onFocus: removePlaceholder,
-      onBlur: maybeAddPlaceholder
-    },
+      decorations(state) {
+        let doc = state.doc,
+            noChildren = doc.childCount === 0,
+            justAnEmptyChild = doc.childCount === 1
+              && doc.firstChild.isTextblock
+              && doc.firstChild.content.size === 0;
 
-    state: {
-      init(config, state) {
-        return {
-          shouldShowPlaceholder: isEmpty(state),
-          showingPlaceholder: false
-        };
-      },
-
-      apply(tr, pluginState, oldState, state) {
-        let hasMeta = typeof tr.getMeta(this) !== 'undefined';
-
-        return {
-          shouldShowPlaceholder: isEmpty(state),
-          showingPlaceholder: hasMeta ? tr.getMeta(this) : pluginState.showingPlaceholder
-        };
+        if (noChildren || justAnEmptyChild) {
+          return DecorationSet.create(doc, [
+            Decoration.widget(
+              noChildren ? 0 : 1,
+              document.createTextNode(text),
+              { key: 'placeholder' }
+            )
+          ]);
+        }
       }
     }
-  });
-
-  return plugin;
+  })
 }
 
 export { history as getHistoryPlugin }
