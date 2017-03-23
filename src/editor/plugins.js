@@ -102,7 +102,7 @@ export function getPlaceholderPlugin({ placeholder }) {
   function maybeAddPlaceholder(view) {
     let { showingPlaceholder, shouldShowPlaceholder } = plugin.getState(view.state);
 
-    if (!showingPlaceholder && shouldShowPlaceholder) {
+    if (!showingPlaceholder && shouldShowPlaceholder && view.editable && !view.focused) {
       view.dispatch(
         view.state.tr
           .insertText(placeholder)
@@ -111,10 +111,10 @@ export function getPlaceholderPlugin({ placeholder }) {
     }
   }
 
-  function maybeRemovePlaceholder(view) {
-    let { showingPlaceholder, shouldShowPlaceholder } = this.getState(view.state);
+  function removePlaceholder(view) {
+    let { showingPlaceholder } = plugin.getState(view.state);
 
-    if (showingPlaceholder && !shouldShowPlaceholder) {
+    if (showingPlaceholder) {
       view.dispatch(
         view.state.tr
           .delete(0, view.state.doc.content.size)
@@ -124,13 +124,20 @@ export function getPlaceholderPlugin({ placeholder }) {
   }
 
   plugin = new Plugin({
-    view(view) {
-      maybeAddPlaceholder(view);
-      return {};
+    view() {
+      return {
+        update: (view) => {
+          if (view.editable) {
+            maybeAddPlaceholder(view);
+          } else {
+            removePlaceholder(view);
+          }
+        }
+      };
     },
 
     props: {
-      onFocus: maybeRemovePlaceholder,
+      onFocus: removePlaceholder,
       onBlur: maybeAddPlaceholder
     },
 
