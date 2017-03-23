@@ -82,11 +82,18 @@
       }
 
       get value() {
-        return this.innerHTML;
+        let editor = this.getEditor();
+        return editor ? editor.getHTML() : this.innerHTML;
       }
 
       set value(value) {
-        this.innerHTML = value;
+        let editor = this.getEditor();
+
+        if (editor) {
+          editor.setHTML(value);
+        } else {
+          this.innerHTML = value;
+        }
       }
     };
 

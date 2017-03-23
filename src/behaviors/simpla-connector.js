@@ -61,8 +61,8 @@ export default {
   },
 
   _restoreFromSimpla(item) {
-    if (item && this.innerHTML !== item.data.text) {
-      this.innerHTML = item.data.text;
+    if (item && this.value !== item.data.text) {
+      this.value = item.data.text;
     }
   },
 
@@ -71,7 +71,7 @@ export default {
       Simpla.set(this.uid, {
         type: 'Text',
         data: {
-          text: this.innerHTML
+          text: this.value
         }
       })
     }

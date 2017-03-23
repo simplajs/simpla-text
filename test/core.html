@@ -45,12 +45,13 @@
             component.editable = true;
 
             return flushEditor(component)
+              .then(() => component.editable = false)
+              .then(() => flushEditor(component))
               .then(() => {
-                component.editable = false;
                 expect(
-                  component.contentEditable === true ||
-                  component.contentEditable === 'true'
-                ).to.be.false;
+                  !component.contentEditable ||
+                  component.contentEditable === 'false'
+                ).to.be.true;
               });
           });
         });
