@@ -104,10 +104,11 @@ export default {
     // The editor's view just needs to be refreshed so that it does calls the
     //  supplied editable callback, that will in turn set editable on the view
     //  to the value of this.editable
-    this.loadEditor()
-      .then(editor => {
-        editor.view.updateState(editor.state);
-      });
+    let editor = this.getEditor();
+
+    if (editor) {
+      editor.view.updateState(editor.state);
+    }
   },
 
   _checkEditorPrepped(editable) {
