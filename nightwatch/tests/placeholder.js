@@ -26,13 +26,6 @@ module.exports = {
       .saveScreenshot('./screenshots/placeholder/blurred-show.png');
   },
 
-  'Hide placeholder while focused': (browser) => {
-    browser
-      .click('#main')
-      .verify.textContent('#main', '')
-      .saveScreenshot('./screenshots/placeholder/focused-hide.png');
-  },
-
   'Hide placeholder while editing and has content': (browser) => {
     browser
       .click('#main')
