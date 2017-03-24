@@ -1,4 +1,4 @@
-import { Plugin } from 'prosemirror-state';
+import { Plugin, PluginKey } from 'prosemirror-state';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 import { keymap as makeKeymapPlugin } from 'prosemirror-keymap';
 import { makeInlineMaps, makeBlockMaps, historyKeymap, base as baseKeymap } from './keymaps';
@@ -23,6 +23,7 @@ export function getKeymapPlugin({ inline, schema }) {
 
 export function getInputPlugin({ callback }) {
   return new Plugin({
+    key: new PluginKey('input'),
     state: {
       init: () => {},
       apply: (tr) => {
@@ -39,6 +40,7 @@ export function getInputPlugin({ callback }) {
 
 export function getSelectPlugin({ callback, getSelection }) {
   return new Plugin({
+    key: new PluginKey('select'),
     state: {
       init: () => {
         return null;
@@ -61,6 +63,7 @@ export function getSelectPlugin({ callback, getSelection }) {
 
 export function getFormatterStatePlugin({ callback, formatter }) {
   return new Plugin({
+    key: new PluginKey(`${formatter.name}-formatter`),
     state: {
       init: (config, docState) => {
         let state = formatter.getState(docState);
@@ -91,16 +94,38 @@ export function getFormatterKeymapPlugin({ schema, formatter }) {
 }
 
 export function getPlaceholderPlugin({ text }) {
+  let pluginKey = new PluginKey('placeholder');
+
+  function handleViewChange(view) {
+    let { viewIsEditable } = pluginKey.getState(view.state);
+
+    if (viewIsEditable !== view.editable) {
+      view.dispatch(view.state.tr.setMeta(pluginKey, { viewIsEditable: view.editable }));
+    }
+  }
+
   return new Plugin({
+    key: pluginKey,
+    view(view) {
+      handleViewChange(view);
+      return {
+        update: handleViewChange
+      };
+    },
+    state: {
+      init: () => ({ viewIsEditable: false }),
+      apply: (tr, pluginState) => tr.getMeta(pluginKey) || pluginState
+    },
     props: {
       decorations(state) {
         let doc = state.doc,
             noChildren = doc.childCount === 0,
             justAnEmptyChild = doc.childCount === 1
               && doc.firstChild.isTextblock
-              && doc.firstChild.content.size === 0;
+              && doc.firstChild.content.size === 0,
+            { viewIsEditable } = pluginKey.getState(state);
 
-        if (noChildren || justAnEmptyChild) {
+        if (viewIsEditable && (noChildren || justAnEmptyChild)) {
           return DecorationSet.create(doc, [
             Decoration.widget(
               noChildren ? 0 : 1,
@@ -110,7 +135,9 @@ export function getPlaceholderPlugin({ text }) {
           ]);
         }
       }
-    }
+    },
+    toJSON: (state) => Object.assign({}, state),
+    fromJSON: (state) => Object.ssign({}, state)
   })
 }
 
