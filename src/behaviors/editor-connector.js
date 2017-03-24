@@ -1,5 +1,6 @@
 const EDITOR_COMPONENT = 'simpla-text-editor.html';
 const toolbar = document.createElement('simpla-text-toolbar');
+const EDITOR_PROP = '_editor';
 
 export default {
   properties: {
@@ -10,19 +11,24 @@ export default {
   },
 
   observers: [
-    '_checkEditorPrepped(editable, commands, inline)'
+    '_checkEditorPrepped(editable, commands, inline)',
+    '_refreshEditableOnEditor(editable)'
   ],
 
   getEditor() {
-    return Promise.resolve(this._editor || this._createEditor())
+    return this[EDITOR_PROP];
+  },
+
+  loadEditor() {
+    return Promise.resolve(this[EDITOR_PROP] || this._createEditor())
       .then((editor) => {
-        this._editor = editor;
+        this[EDITOR_PROP] = editor;
         return editor;
       });
   },
 
   runCommand(commandName, options = {}) {
-    return this.getEditor()
+    return this.loadEditor()
       .then(editor => {
         return editor.runCommand(commandName, options);
       });
@@ -42,9 +48,10 @@ export default {
           dom: this,
           inline: this.inline,
           formatters: this.commands.map(toFormatter),
+          placeholder: this.placeholder,
           formatterChangedCallback: ({ name }, { applied, meta }) => {
             this
-              .getEditor()
+              .loadEditor()
               .then(editor => {
                 if (toolbar.target === editor) {
                   this._tools = this._tools || {};
@@ -78,7 +85,7 @@ export default {
             //  even if this loses focus e.g. toolbar receiving input for link href
             if (selection) {
               this
-                .getEditor()
+                .loadEditor()
                 .then(editor => {
                   toolbar.target = editor;
                 });
@@ -93,9 +100,20 @@ export default {
     return this.__waitForEditor;
   },
 
+  _refreshEditableOnEditor() {
+    // The editor's view just needs to be refreshed so that it does calls the
+    //  supplied editable callback, that will in turn set editable on the view
+    //  to the value of this.editable
+    let editor = this.getEditor();
+
+    if (editor) {
+      editor.view.updateState(editor.state);
+    }
+  },
+
   _checkEditorPrepped(editable) {
     if (editable) {
-      this.getEditor();
+      this.loadEditor();
     }
   },
 

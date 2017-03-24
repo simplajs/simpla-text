@@ -1,7 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { DOMParser } from 'prosemirror-model';
-import { getHistoryPlugin, getInputPlugin, getKeymapPlugin, getSelectPlugin, getFormatterStatePlugin, getFormatterKeymapPlugin } from './plugins';
+import { DOMParser, DOMSerializer } from 'prosemirror-model';
+import { getPlaceholderPlugin, getHistoryPlugin, getInputPlugin, getKeymapPlugin, getSelectPlugin, getFormatterStatePlugin, getFormatterKeymapPlugin } from './plugins';
 import getSchema from './schemas';
 
 const noop = () => {};
@@ -15,6 +15,7 @@ export default class Editor {
           editableCallback = noop,
           selectCallback = noop,
           inputCallback = noop,
+          placeholder = '',
           formatterChangedCallback = noop
         } = options,
         hasKeyCommand,
@@ -45,6 +46,7 @@ export default class Editor {
     schema = getSchema({ inline, formatters });
 
     plugins = [
+      getPlaceholderPlugin({ text: placeholder }),
       getInputPlugin({ callback: inputCallback }),
       getSelectPlugin({ callback: selectCallback, getSelection }),
       getKeymapPlugin({ inline, schema }),
@@ -53,11 +55,13 @@ export default class Editor {
       ...formatters.filter(hasKeyCommand).map(toKeymapPlugin)
     ];
 
-    doc = DOMParser.fromSchema(schema).parse(dom);
-    state = EditorState.create({ doc, schema, plugins })
-
+    this._parser = DOMParser.fromSchema(schema);
+    this._serializer = DOMSerializer.fromSchema(schema);
     this._inline = inline;
     this._dom = dom;
+
+    doc = this._parser.parse(dom);
+    state = EditorState.create({ doc, schema, plugins })
 
     this._view = new EditorView({ mount: dom }, {
       editable: editableCallback,
@@ -92,6 +96,28 @@ export default class Editor {
 
   get dom() {
     return this._dom;
+  }
+
+  getHTML() {
+    let fragment = this._serializer.serializeFragment(this.state.doc.content),
+        div = document.createElement('div');
+
+    div.appendChild(fragment);
+
+    return div.innerHTML;
+  }
+
+  setHTML(value) {
+    let div = document.createElement('div'),
+        doc = this.state.doc,
+        slice;
+
+    div.innerHTML = value;
+    slice = this._parser.parseSlice(div, {
+      preserveWhitespace: true
+    });
+
+    this.view.dispatch(this.state.tr.replace(0, doc.content.size, slice));
   }
 
   /**

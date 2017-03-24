@@ -2,7 +2,7 @@
 <script>
   function flushEditor(component, callback = () => {}) {
     return Promise.resolve()
-      .then(() => component.getEditor())
+      .then(() => component.loadEditor())
       .then((editor) => {
         if (editor.view.inDOMChange) {
           editor.view.inDOMChange.finish();
