@@ -104,6 +104,20 @@ export function getPlaceholderPlugin({ text }) {
     }
   }
 
+  function createPlaceholderNode(text) {
+    const className = 'simpla-text-placeholder';
+    let span = document.createElement('span');
+    span.innerHTML = `
+<style>
+  .${className}::before {
+    position: absolute;
+    content: '${text}'
+  };
+</style>`;
+    span.className = className;
+    return span;
+  }
+
   return new Plugin({
     key: pluginKey,
     view(view) {
@@ -129,7 +143,7 @@ export function getPlaceholderPlugin({ text }) {
           return DecorationSet.create(doc, [
             Decoration.widget(
               noChildren ? 0 : 1,
-              document.createTextNode(text),
+              createPlaceholderNode(text),
               { key: 'placeholder' }
             )
           ]);
