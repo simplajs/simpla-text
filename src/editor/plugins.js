@@ -94,6 +94,9 @@ export function getFormatterKeymapPlugin({ schema, formatter }) {
 }
 
 export function getPlaceholderPlugin({ text }) {
+  const PLACEHOLDER_CLASS = 'simpla-text-placeholder',
+        PLACEHOLDER_OPACITY = 0.5;
+
   let pluginKey = new PluginKey('placeholder');
 
   function handleViewChange(view) {
@@ -105,16 +108,18 @@ export function getPlaceholderPlugin({ text }) {
   }
 
   function createPlaceholderNode(text) {
-    const className = 'simpla-text-placeholder';
     let span = document.createElement('span');
     span.innerHTML = `
 <style>
-  .${className}::before {
+  .${PLACEHOLDER_CLASS}::before {
     position: absolute;
     content: '${text}'
   };
 </style>`;
-    span.className = className;
+
+    span.className = PLACEHOLDER_CLASS;
+    span.style.opacity = PLACEHOLDER_OPACITY;
+
     return span;
   }
 
