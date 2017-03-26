@@ -113,7 +113,8 @@ export function getPlaceholderPlugin({ text }) {
 <style>
   .${PLACEHOLDER_CLASS}::before {
     position: absolute;
-    content: '${text}'
+    content: '${text}';
+    cursor: text;
   };
 </style>`;
 
