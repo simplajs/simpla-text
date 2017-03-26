@@ -38,18 +38,11 @@
                  font-smoothing: antialiased;
         position: absolute;
         display: flex;
-        border-radius: var(--simpla-border-radius);
-
-        background: white;
-        color: var(--simpla-primary-color);
-        box-shadow: var(--simpla-elevation-1);
-
         background: var(--simpla-grey-700);
         color: white;
-        box-shadow: none;
-
-        z-index: var(--simpla-on-top);
         font-size: var(--simpla-scale-0);
+        border-radius: var(--simpla-border-radius);
+        z-index: var(--simpla-on-top);
         overflow: hidden;
       }
 
@@ -85,7 +78,7 @@
       .tool__link {
         font-family: var(--simpla-font-family);
         font-size: var(--simpla-scale-000);
-        color: var(--simpla-text-color);
+        color: white;
         outline: 0;
         border: 0;
         width: 0;
@@ -168,7 +161,7 @@
 
   <script>
     const GUTTER = 5,
-          INITIAL_TOOLS = {
+          getInitialTools = () => ({
             bold: {
               active: false
             },
@@ -187,7 +180,7 @@
                 href: ''
               }
             }
-          };
+          });
 
     function addPadding(rect, padding) {
       return {
@@ -208,7 +201,7 @@
 
           tools: {
             type: Object,
-            value: () => INITIAL_TOOLS
+            value: getInitialTools
           },
 
           target: {
