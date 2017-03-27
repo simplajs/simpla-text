@@ -244,7 +244,7 @@
           'keyup': '_stopEvent',
           'keydown': '_stopEvent',
           'keypress': '_stopEvent',
-          'focus': '_storeSelection'
+          'focusin': '_storeSelection'
         };
       }
 
@@ -406,7 +406,7 @@
       _attachListenersToTarget(target) {
         if (target) {
           target.dom.addEventListener('blur', (event) => {
-            if (event.relatedTarget !== this) {
+            if (!(event.relatedTarget === this || this.contains(event.relatedTarget))) {
               this.hidden = true;
             }
           });
