@@ -95,7 +95,25 @@ export function getFormatterKeymapPlugin({ schema, formatter }) {
 
 export function getPlaceholderPlugin({ text }) {
   const PLACEHOLDER_CLASS = 'simpla-text-placeholder',
-        PLACEHOLDER_OPACITY = 0.5;
+        PLACEHOLDER_STYLE = `
+simpla-text .${PLACEHOLDER_CLASS} {
+  display: inline-block;
+}
+simpla-text .${PLACEHOLDER_CLASS}::before {
+  content: attr(data-placeholder);
+  opacity: 0.5;
+  cursor: text;
+}`;
+
+  // ATTN: BEDE - Don't know how or where to do this in a ProseMirror plugin
+  // needs to be done properly, obvs. This is just for demonstration
+  window.SimplaText = window.SimplaText || {};
+  if (!window.SimplaText.placeholderInitialised) {
+    let placeholderStyle = document.createElement('style');
+    placeholderStyle.textContent = PLACEHOLDER_STYLE;
+    document.head.appendChild(placeholderStyle);
+    window.SimplaText.placeholderInitialised = true;
+  }
 
   let pluginKey = new PluginKey('placeholder');
 
@@ -108,20 +126,11 @@ export function getPlaceholderPlugin({ text }) {
   }
 
   function createPlaceholderNode(text) {
-    let span = document.createElement('span');
-    span.innerHTML = `
-<style>
-  .${PLACEHOLDER_CLASS}::before {
-    position: absolute;
-    content: '${text}';
-    cursor: text;
-  };
-</style>`;
+    let placeholder = document.createElement('span');
 
-    span.className = PLACEHOLDER_CLASS;
-    span.style.opacity = PLACEHOLDER_OPACITY;
-
-    return span;
+    placeholder.className = PLACEHOLDER_CLASS;
+    placeholder.setAttribute('data-placeholder', text);
+    return placeholder;
   }
 
   return new Plugin({
