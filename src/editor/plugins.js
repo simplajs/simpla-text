@@ -98,11 +98,11 @@ export function getPlaceholderPlugin({ text }) {
         PLACEHOLDER_STYLE = `
 simpla-text .${PLACEHOLDER_CLASS} {
   display: inline-block;
+  cursor: text;
 }
 simpla-text .${PLACEHOLDER_CLASS}::before {
   content: attr(data-placeholder);
   opacity: 0.5;
-  cursor: text;
 }`;
 
   // ATTN: BEDE - Don't know how or where to do this in a ProseMirror plugin
