@@ -26,16 +26,6 @@
         this.is = 'simpla-text';
 
         this.properties = {
-          editing: {
-            type: Boolean,
-            readOnly: true,
-            value: false
-          },
-
-          editable: {
-            type: Boolean,
-            reflectToAttribute: true
-          },
 
           plaintext: {
             type: Boolean,
@@ -45,6 +35,19 @@
           placeholder: {
             type: String,
             value: 'Enter your text...'
+          },
+
+          editable: {
+            type: Boolean,
+            notify: true,
+            reflectToAttribute: true
+          },
+
+          active: {
+            type: Boolean,
+            notify: true,
+            readOnly: true,
+            value: false
           }
         };
 
@@ -60,24 +63,24 @@
       }
 
       _handleBlur() {
-        this._setEditing(false);
+        this._setActive(false);
       }
 
       _handleFocus() {
         if (this.editable) {
-          this._setEditing(true);
+          this._setActive(true);
         }
       }
 
       _handleTap() {
         if (this.editable) {
-          this._setEditing(true);
+          this._setActive(true);
         }
       }
 
       _editableObserver(editable) {
         if (!editable) {
-          this._setEditing(false);
+          this._setActive(false);
         }
       }
 
