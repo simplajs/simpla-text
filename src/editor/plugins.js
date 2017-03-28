@@ -1,4 +1,4 @@
-import { Plugin, PluginKey } from 'prosemirror-state';
+import { TextSelection, Plugin, PluginKey } from 'prosemirror-state';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 import { keymap as makeKeymapPlugin } from 'prosemirror-keymap';
 import { makeInlineMaps, makeBlockMaps, historyKeymap, base as baseKeymap } from './keymaps';
@@ -94,43 +94,60 @@ export function getFormatterKeymapPlugin({ schema, formatter }) {
 }
 
 export function getPlaceholderPlugin({ text }) {
-  const PLACEHOLDER_CLASS = 'simpla-text-placeholder',
-        PLACEHOLDER_STYLE = `
-simpla-text .${PLACEHOLDER_CLASS} {
+  const CLASS_NAME = 'simpla-text-placeholder',
+        STYLE_CLASS_NAME = 'simpla-text-placeholder-styles',
+        ATTRIBUTE_NAME = 'data-placeholder',
+        STYLE_RULES = `
+.${CLASS_NAME} {
   display: inline-block;
   cursor: text;
 }
-simpla-text .${PLACEHOLDER_CLASS}::before {
-  content: attr(data-placeholder);
+.${CLASS_NAME}::before {
+  content: attr(${ATTRIBUTE_NAME});
   opacity: 0.5;
 }`;
 
-  // ATTN: BEDE - Don't know how or where to do this in a ProseMirror plugin
-  // needs to be done properly, obvs. This is just for demonstration
-  window.SimplaText = window.SimplaText || {};
-  if (!window.SimplaText.placeholderInitialised) {
-    let placeholderStyle = document.createElement('style');
-    placeholderStyle.textContent = PLACEHOLDER_STYLE;
-    document.head.appendChild(placeholderStyle);
-    window.SimplaText.placeholderInitialised = true;
-  }
-
-  let pluginKey = new PluginKey('placeholder');
+  let pluginKey = new PluginKey('placeholder'),
+      stateHasChildren = (state) => state.doc.childCount > 0,
+      getFirstNodeSpace = (state) => stateHasChildren(state) ? 1 : 0;
 
   function handleViewChange(view) {
-    let { viewIsEditable } = pluginKey.getState(view.state);
+    let { viewIsEditable } = pluginKey.getState(view.state),
+        hasPlaceholderStyles = !!view.root.querySelector(`.${STYLE_CLASS_NAME}`);
 
     if (viewIsEditable !== view.editable) {
-      view.dispatch(view.state.tr.setMeta(pluginKey, { viewIsEditable: view.editable }));
+      view.dispatch(view.state.tr.setMeta(pluginKey, {
+        viewIsEditable: view.editable,
+        hasPlaceholderStyles
+      }));
     }
   }
 
   function createPlaceholderNode(text) {
     let placeholder = document.createElement('span');
 
-    placeholder.className = PLACEHOLDER_CLASS;
-    placeholder.setAttribute('data-placeholder', text);
+    placeholder.className = CLASS_NAME;
+    placeholder.setAttribute(ATTRIBUTE_NAME, text);
+
     return placeholder;
+  }
+
+  function createStylingNode() {
+    let style = document.createElement('style');
+    style.innerHTML = STYLE_RULES;
+    style.className = STYLE_CLASS_NAME;
+    return style;
+  }
+
+  function shouldBeShowingPlaceholder(state) {
+    let doc = state.doc,
+        noChildren = !stateHasChildren(state),
+        justAnEmptyChild = doc.childCount === 1
+          && doc.firstChild.isTextblock
+          && doc.firstChild.content.size === 0,
+        { viewIsEditable } = pluginKey.getState(state);
+
+    return viewIsEditable && (noChildren || justAnEmptyChild);
   }
 
   return new Plugin({
@@ -146,22 +163,35 @@ simpla-text .${PLACEHOLDER_CLASS}::before {
       apply: (tr, pluginState) => tr.getMeta(pluginKey) || pluginState
     },
     props: {
-      decorations(state) {
-        let doc = state.doc,
-            noChildren = doc.childCount === 0,
-            justAnEmptyChild = doc.childCount === 1
-              && doc.firstChild.isTextblock
-              && doc.firstChild.content.size === 0,
-            { viewIsEditable } = pluginKey.getState(state);
+      onFocus(view) {
+        if (shouldBeShowingPlaceholder(view.state)) {
+          let atNode = view.state.doc.firstChild || view.state.doc,
+              selection = TextSelection.create(atNode, 0);
 
-        if (viewIsEditable && (noChildren || justAnEmptyChild)) {
-          return DecorationSet.create(doc, [
+          view.dispatch(view.state.tr.setSelection(selection));
+        }
+      },
+      decorations(state) {
+        if (shouldBeShowingPlaceholder(state)) {
+          let decorations = [
             Decoration.widget(
-              noChildren ? 0 : 1,
+              getFirstNodeSpace(state),
               createPlaceholderNode(text),
               { key: 'placeholder' }
             )
-          ]);
+          ];
+
+          if (!pluginKey.getState(state).hasPlaceholderStyles) {
+            decorations.push(
+              Decoration.widget(
+                getFirstNodeSpace(state),
+                createStylingNode(),
+                { key: 'placeholder-styles' }
+              )
+            );
+          }
+          
+          return DecorationSet.create(state.doc, decorations);
         }
       }
     },
