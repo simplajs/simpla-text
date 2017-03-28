@@ -6,6 +6,7 @@
   ],
   "description": "Editable richtext for the Simpla content system",
   "keywords": [
+    "simpla-element",
     "web-component",
     "simpla",
     "editable",
