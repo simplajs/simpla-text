@@ -159,8 +159,8 @@ export function getPlaceholderPlugin({ text }) {
     props: {
       onFocus(view) {
         if (shouldBeShowingPlaceholder(view.state)) {
-          let atNode = view.state.doc.firstChild || view.state.doc,
-              selection = TextSelection.create(atNode, 0);
+          let insideFirstNode = view.state.doc.content.size > 0 ? 1 : 0,
+              selection = TextSelection.create(view.state.doc, insideFirstNode);
 
           view.dispatch(view.state.tr.setSelection(selection));
         }
