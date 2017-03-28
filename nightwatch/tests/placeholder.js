@@ -8,7 +8,6 @@ module.exports = {
       .setProperty('#main', 'placeholder', placeholder)
       .setProperty('#main', 'editable', true)
       .pause(500) // Wait for async loads to occur
-      .verify.textContent('#main', placeholder)
       .saveScreenshot('./screenshots/placeholder/init-with-placeholder.png')
       .click('#main')
       .keys('Hello World')
@@ -22,7 +21,6 @@ module.exports = {
       .highlight(10, 'words', 'left')
       .keys([ browser.Keys.BACK_SPACE ])
       .click('body')
-      .verify.textContent('#main', placeholder)
       .saveScreenshot('./screenshots/placeholder/blurred-show.png');
   },
 
@@ -46,7 +44,6 @@ module.exports = {
       .keys([ browser.Keys.BACK_SPACE ])
       .click('body')
       .setProperty('#main', 'editable', false)
-      .verify.textContent('#main', '')
       .saveScreenshot('./screenshots/placeholder/blurred-not-editable.png');
   },
 
