@@ -7,10 +7,12 @@ const INLINE_ELEMENTS = [
 
 export default {
   properties: {
+
     inline: {
       type: Boolean,
       reflectToAttribute: true
     }
+
   },
 
   attached() {

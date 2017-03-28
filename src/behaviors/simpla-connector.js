@@ -1,14 +1,11 @@
 export default {
   properties: {
-    editable: {
-      type: Boolean,
-      reflectToAttribute: true
-    },
 
     uid: {
       type: String,
       observer: '_observeUid'
     }
+
   },
 
   listeners: {

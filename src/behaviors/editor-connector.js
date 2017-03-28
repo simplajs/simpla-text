@@ -4,10 +4,12 @@ const EDITOR_PROP = '_editor';
 
 export default {
   properties: {
+
     commands: {
       type: Array,
       computed: '_computeCommands(plaintext)'
     }
+
   },
 
   observers: [
