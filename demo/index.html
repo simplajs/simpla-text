@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>simpla-text Demo</title>
 
-    <!-- Import Web Components polyfill -->
-    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
-
-    <!-- Use shadow DOM if available -->
+    <!-- Setup demo page -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.24/webcomponents-lite.min.js"></script>
     <script>
       window.Polymer = { dom: 'shadow' };
     </script>
+    <link rel="import" href="../iron-demo-helpers/demo-snippet.html">
 
-    <!-- Setup Simpla -->
-    <script src="../simpla/simpla.js"></script>
+    <!-- Init Simpla -->
+    <script src="../../simpla/simpla.js"></script>
     <script>
       Simpla.init('local');
     </script>
@@ -22,50 +21,101 @@
     <!-- Import component -->
     <link rel="import" href="../simpla-text.html">
 
-    <dom-module id="shadow-test">
-      <template>
-        <simpla-text editable></simpla-text>
-      </template>
-      <script>
-        // Protects incase HTMLImports didn't load sync
-        window.HTMLImports.whenReady(function() {
-          Polymer({ is: 'shadow-test' });
-        })
-      </script>
-    </dom-module>
-
+    <!-- Demo styles -->
     <style>
+      /**
+       * Page styles
+       */
       body {
         font-family: sans-serif;
-        font-size: 16px;
+        color: #303c46
       }
 
-      h1 {
-        font-size: 1.2rem;
+      .demo {
+        width: 90%;
+        max-width: 38rem;
+        margin: 4rem auto;
+      }
+
+      .demo__title {
+        font-size: 1.4rem;
+        font-weight: 400;
       }
     </style>
   </head>
-  <body unresolved>
-    <h1>Basic Editor</h1>
-    <simpla-text editable placeholder="Hiya! Enter some text :)"></simpla-text>
 
-    <h1>Inline Editor</h1>
-    <simpla-text editable inline></simpla-text>
+  <body>
 
-    <h1>Auto Inline</h1>
-    <span><simpla-text editable></simpla-text></span>
+    <div class="demo">
+      <h1 class="demo__title">Basic demo</h1>
+      <demo-snippet>
+        <template>
+          <simpla-text path="/text"></simpla-text>
 
-    <h1>Auto Block</h1>
-    <div><simpla-text editable></simpla-text></div>
+          <script>
+            Simpla.editable(true);
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
 
-    <h1>Plaintext Editor</h1>
-    <simpla-text plaintext editable></simpla-text>
+    <div class="demo">
+      <h1 class="demo__title">Inline content</h1>
+      <demo-snippet>
+        <template>
+          <h1>
+            <simpla-text path="/heading"></simpla-text>
+          </h1>
 
-    <h1>Synced Editors</h1>
-    <simpla-text uid="text-0" editable>Hello World</simpla-text>
-    <simpla-text uid="text-0" editable>Hello World</simpla-text>
+          <simpla-text path="/inline" inline></simpla-text>
 
-    <h1>Shadow DOM Editor</h1>
-    <shadow-test></shadow-test>
+          <script>
+            Simpla.editable(true);
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="demo">
+      <h1 class="demo__title">Custom placeholders</h1>
+      <demo-snippet>
+        <template>
+          <simpla-text path="/placeholder" placeholder="Start typing..."></simpla-text>
+
+          <script>
+            Simpla.editable(true);
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="demo">
+      <h1 class="demo__title">Plaintext</h1>
+      <demo-snippet>
+        <template>
+          <simpla-text path="/paintext" plaintext></simpla-text>
+
+          <script>
+            Simpla.editable(true);
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="demo">
+      <h1 class="demo__title">Synced data</h1>
+      <demo-snippet>
+        <template>
+          <simpla-text path="/synced"></simpla-text>
+          <simpla-text path="/synced"></simpla-text>
+
+          <script>
+            Simpla.editable(true);
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
+
+
   </body>
 </html>
