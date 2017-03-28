@@ -95,7 +95,6 @@ export function getFormatterKeymapPlugin({ schema, formatter }) {
 
 export function getPlaceholderPlugin({ text }) {
   const CLASS_NAME = 'simpla-text-placeholder',
-        STYLE_CLASS_NAME = 'simpla-text-placeholder-styles',
         ATTRIBUTE_NAME = 'data-placeholder',
         STYLE_RULES = `
 .${CLASS_NAME} {
@@ -112,14 +111,10 @@ export function getPlaceholderPlugin({ text }) {
       getFirstNodeSpace = (state) => stateHasChildren(state) ? 1 : 0;
 
   function handleViewChange(view) {
-    let { viewIsEditable } = pluginKey.getState(view.state),
-        hasPlaceholderStyles = !!view.root.querySelector(`.${STYLE_CLASS_NAME}`);
+    let { viewIsEditable } = pluginKey.getState(view.state);
 
     if (viewIsEditable !== view.editable) {
-      view.dispatch(view.state.tr.setMeta(pluginKey, {
-        viewIsEditable: view.editable,
-        hasPlaceholderStyles
-      }));
+      view.dispatch(view.state.tr.setMeta(pluginKey, { viewIsEditable: view.editable }));
     }
   }
 
@@ -135,7 +130,6 @@ export function getPlaceholderPlugin({ text }) {
   function createStylingNode() {
     let style = document.createElement('style');
     style.innerHTML = STYLE_RULES;
-    style.className = STYLE_CLASS_NAME;
     return style;
   }
 
@@ -173,25 +167,18 @@ export function getPlaceholderPlugin({ text }) {
       },
       decorations(state) {
         if (shouldBeShowingPlaceholder(state)) {
-          let decorations = [
+          return DecorationSet.create(state.doc, [
             Decoration.widget(
               getFirstNodeSpace(state),
               createPlaceholderNode(text),
               { key: 'placeholder' }
+            ),
+            Decoration.widget(
+              getFirstNodeSpace(state),
+              createStylingNode(),
+              { key: 'placeholder-styles' }
             )
-          ];
-
-          if (!pluginKey.getState(state).hasPlaceholderStyles) {
-            decorations.push(
-              Decoration.widget(
-                getFirstNodeSpace(state),
-                createStylingNode(),
-                { key: 'placeholder-styles' }
-              )
-            );
-          }
-          
-          return DecorationSet.create(state.doc, decorations);
+          ]);
         }
       }
     },
