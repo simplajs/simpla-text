@@ -7,6 +7,8 @@ const notify = require('gulp-notify');
 const gulpif = require('gulp-if');
 const size = require('gulp-size');
 const plumber = require('gulp-plumber');
+const lazypipe = require('lazypipe');
+const filter = require('gulp-filter');
 const gulprun = require('run-sequence');
 const yargs = require('yargs');
 const browserSync = require('browser-sync');
@@ -97,6 +99,12 @@ const bs = browserSync.create(),
         }
       };
 
+const processJs = lazypipe()
+  .pipe(eslint)
+  .pipe(eslint.format)
+  .pipe(() => gulpif(!argv.debug, eslint.failAfterError()))
+  .pipe(rollup, OPTIONS.rollup);
+
 gulp.task('build', () => {
   let styles = processInline(),
       scripts = processInline();
@@ -106,13 +114,10 @@ gulp.task('build', () => {
 
           // Inline assets
           .pipe(inline(OPTIONS.inline))
-          .pipe(eslint())
-          .pipe(eslint.format())
-          .pipe(gulpif(!argv.debug, eslint.failAfterError()))
 
           // JS
           .pipe(scripts.extract('script'))
-            .pipe(rollup(OPTIONS.rollup))
+            .pipe(processJs())
           .pipe(scripts.restore())
 
           // CSS
@@ -126,32 +131,26 @@ gulp.task('build', () => {
         .pipe(gulp.dest('.'))
 });
 
-gulp.task('build:tests:html', () => {
-  let scripts = processInline();
+gulp.task('build:tests', () => {
+  const js = filter((file) => /\.(js)$/.test(file.path), { restore: true }),
+        html = filter((file) => /\.(html)$/.test(file.path), { restore: true }),
+        scripts = processInline();
 
-  return gulp.src(['test/**/*.html'])
-          .pipe(errorNotifier())
+  return gulp.src(['test/**/*'])
+    .pipe(errorNotifier())
 
-          // Inline assets
-          .pipe(inline(OPTIONS.inline))
-          .pipe(eslint())
-          .pipe(eslint.format())
+    .pipe(html)
+      .pipe(inline(OPTIONS.inline))
+      .pipe(scripts.extract('script'))
+        .pipe(processJs())
+      .pipe(scripts.restore())
+    .pipe(html.restore)
 
-          // JS
-          .pipe(scripts.extract('script'))
-            .pipe(rollup(OPTIONS.rollup))
-          .pipe(scripts.restore())
+    .pipe(js)
+      .pipe(processJs())
+    .pipe(js.restore)
 
-        .pipe(gulp.dest('./.test'));
-});
-
-gulp.task('build:tests:js', () => {
-  return gulp.src(['test/*.js'])
-          .pipe(errorNotifier())
-          .pipe(eslint())
-          .pipe(eslint.format())
-          .pipe(rollup(OPTIONS.rollup))
-          .pipe(gulp.dest('./.test'));
+  .pipe(gulp.dest('.test'));
 });
 
 wct.gulp.init(gulp);
@@ -161,9 +160,7 @@ gulp.task('serve:demo', () => bs.init(OPTIONS.browserSync));
 gulp.task('serve', ['serve:demo', 'serve:nightwatch']);
 gulp.task('refresh', () => bs.reload());
 
-gulp.task('build:tests', ['build:tests:html', 'build:tests:js']);
-
-gulp.task('test', ['build', 'build:tests', 'test:local']);
+gulp.task('test', () => gulprun('build', 'build:tests', 'test:local'));
 
 gulp.task('watch:src', () => gulp.watch(['src/**/*'], () => gulprun('build', 'refresh')));
 gulp.task('watch:tests', () => gulp.watch(['test/**/*'], () => gulprun('build:tests')))

@@ -21,10 +21,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/SimplaElements/simpla-text/simpla-text.git"
+    "url": "https://github.com/SimplaElements/simpla-text.git"
   },
   "bugs": {
-    "url": "https://github.com/SimplaElements/simpla-text/simpla-text/issues"
+    "url": "https://github.com/SimplaElements/simpla-text/issues"
   },
   "devDependencies": {
     "autoprefixer": "^6.0.0",
@@ -37,6 +37,7 @@
     "eslint-plugin-html": "^2.0.1",
     "gulp": "^3.9.0",
     "gulp-eslint": "^3.0.0",
+    "gulp-filter": "^5.0.0",
     "gulp-htmlmin": "^3.0.0",
     "gulp-if": "^2.0.0",
     "gulp-inline-source": "^3.0.0",
@@ -48,6 +49,7 @@
     "gulp-rollup-file": "^0.1.0",
     "gulp-size": "^2.0.0",
     "http-server": "^0.9.0",
+    "lazypipe": "^1.0.1",
     "nightwatch": "^0.9.13",
     "postcss-import": "^9.1.0",
     "prosemirror-commands": "^0.19.0",
