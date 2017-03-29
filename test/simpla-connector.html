@@ -27,16 +27,16 @@
     </test-fixture>
     <script>
       describe('simpla connector', () => {
-        let uid = 'test-uid',
+        let path = '/test-path',
             component;
 
         beforeEach(function() {
           component = fixture('simple');
-          component.uid = uid;
+          component.path = path;
         });
 
         afterEach(function() {
-          return Simpla.remove(uid);
+          return Simpla.remove(path);
         });
 
         describe('editable', () => {
@@ -67,7 +67,7 @@
 
         describe('data', () => {
           it('should observe data thats stored in the state on attach', () => {
-            return Simpla.set(uid, {
+            return Simpla.set(path, {
               type: 'Text',
               data: {
                 text: 'Hello World'
@@ -75,9 +75,9 @@
             })
             .then(wait())
             .then(function() {
-              expect(component.innerHTML).to.match(/>?Hello World<?/);
+              expect(component.value).to.match(/>?Hello World<?/);
 
-              return Simpla.set(uid, {
+              return Simpla.set(path, {
                 type: 'Text',
                 data: {
                   text: 'Hello World, again'
@@ -86,7 +86,7 @@
             })
             .then(wait())
             .then(function() {
-              expect(component.innerHTML).to.match(/>?Hello World, again<?/);
+              expect(component.value).to.match(/>?Hello World, again<?/);
             });
           });
 
@@ -95,10 +95,10 @@
 
             return flushEditor(component)
               .then(() => {
-                component.innerHTML = 'Hello World';
+                component.value = 'Hello World';
               })
               .then(wait)
-              .then(() => Simpla.get(uid))
+              .then(() => Simpla.get(path))
               .then((response) => {
                 expect(response).to.be.ok;
                 expect(response.data.text).to.match(/Hello World/);
