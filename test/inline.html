@@ -72,6 +72,7 @@
 
         beforeEach(() => {
           component = getComponent();
+          return flushEditor(component);
         });
 
         describe(description || 'formats content as block', () => {
@@ -100,14 +101,7 @@
       }
 
       describe('default behavior', () => {
-        let component;
-
-        beforeEach(() => {
-          component = fixture('simple');
-          return flushEditor(component);
-        });
-
-        checkWorksAsBlock(() => component, 'should behave as a block');
+        checkWorksAsBlock(() => fixture('simple'), 'should behave as a block');
       });
 
       describe('inline behavior', () => {
