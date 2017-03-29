@@ -8,10 +8,8 @@ before_script:
   - yarn
   - bower install
   - gulp build:tests
-script: xvfb-run wct 
-cache:
- directories:
-   - node_modules
+script: xvfb-run wct
+cache: yarn
 addons:
   firefox: latest
   apt:
