@@ -44,20 +44,20 @@
           });
 
           it('should not allow `p` tags', () => {
-            component.innerHTML = '<p>Hello World</p>';
+            component.value = '<p>Hello World</p>';
 
             return flushEditor(component)
               .then(() => {
-                expect(component.innerHTML).to.equal('Hello World');
+                expect(component.value).to.equal('Hello World');
               });
           });
 
           it('should allow `br` tags', () => {
-            component.innerHTML = 'Hello<br />World';
+            component.value = 'Hello<br />World';
 
             return flushEditor(component)
               .then(() => {
-                expect(component.innerHTML).to.match(/\<br/);
+                expect(component.value).to.match(/\<br/);
               });
           });
 
@@ -76,20 +76,20 @@
 
         describe(description || 'formats content as block', () => {
           it('should allow `p` tags', () => {
-            component.innerHTML = '<p>Hello World</p>';
+            component.value = '<p>Hello World</p>';
 
             return flushEditor(component)
               .then(() => {
-                expect(component.innerHTML).to.match(/<p/);
+                expect(component.value).to.match(/<p/);
               });
           });
 
           it('should default to empty `p` tag when no content is set', () => {
-            component.innerHTML = '';
+            component.value = '';
 
             return flushEditor(component)
               .then(() => {
-                expect(component.innerHTML).to.match(/<p/);
+                expect(component.value).to.match(/<p/);
               });
           });
 
