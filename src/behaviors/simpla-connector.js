@@ -1,9 +1,9 @@
 export default {
   properties: {
 
-    uid: {
+    path: {
       type: String,
-      observer: '_observeUid'
+      observer: '_observePath'
     }
 
   },
@@ -17,7 +17,7 @@ export default {
 
     this._observers = {
       editable: this._observeAndInitEditable(),
-      uid: this.uid && this._observeAndInitUid()
+      path: this.path && this._observeAndInitPath()
     };
   },
 
@@ -38,21 +38,21 @@ export default {
     });
   },
 
-  _observeAndInitUid() {
+  _observeAndInitPath() {
     let callback = item => this._restoreFromSimpla(item);
 
-    Simpla.get(this.uid).then(callback);
-    return Simpla.observe(this.uid, callback);
+    Simpla.get(this.path).then(callback);
+    return Simpla.observe(this.path, callback);
   },
 
-  _observeUid(uid) {
+  _observePath(path) {
     if (this._attached) {
-      if (this._observers.uid) {
-        this._observers.uid.unobserve();
+      if (this._observers.path) {
+        this._observers.path.unobserve();
       }
 
-      if (uid) {
-        this._observers.uid = this._observeAndInitUid();
+      if (path) {
+        this._observers.path = this._observeAndInitPath();
       }
     }
   },
@@ -64,8 +64,8 @@ export default {
   },
 
   _setToSimpla() {
-    if (this.uid) {
-      Simpla.set(this.uid, {
+    if (this.path) {
+      Simpla.set(this.path, {
         type: 'Text',
         data: {
           text: this.value
