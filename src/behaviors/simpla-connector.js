@@ -60,6 +60,7 @@ export default {
   _restoreFromSimpla(item) {
     if (item && this.value !== item.data.text) {
       this.value = item.data.text;
+      this.fire('contentload');
     }
   },
 
