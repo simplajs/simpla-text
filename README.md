@@ -2,7 +2,7 @@
 ![Version][bower-badge] [![Build status][travis-badge]][travis-url] [![Bower dependencies][bowerdeps-badge]][bowerdeps-url] ![Size][size-badge] <br> 
 [![Published][webcomponents-badge]][webcomponents-url] [![Simpla slack group][slack-badge]][slack-url]
 
-`simpla-text` is editable richtext for the [Simpla](https://www.simpla.io) content system. You can edit it seamlessly inline on your page, and use it on its own or inside other textual elements.
+`simpla-text` is a block of editable richtext for the [Simpla](https://www.simpla.io) content system. You can update it seamlessly inline on your page, and use it on its own or inside other textual elements.
 
 <!---
 ```
@@ -36,7 +36,7 @@ Install simpla-text with Bower (Yarn support coming soon)
 $ bower install simpla-text --save
 ```
 
-Then include the Simpla library and setup a project (read more in the [getting started guide](https://www.simpla.io/docs/getting-started))
+Then include the Simpla library and setup a project (read more about [setting up Simpla](https://www.simpla.io/docs/guides/get-started))
 
 ```html
 <script src="https://unpkg.com/simpla@^2.0.0/simpla.min.js"></script>
@@ -52,17 +52,17 @@ Import simpla-text into the `<head>` of your document
 <link rel="import" href="/bower_components/simpla-text/simpla-text.html" async>
 ```
 
-And use it anywhere you want editable text on your page. You must also specify a content path (where a text's content will be stored in Simpla's API) in the `path` attribute, or with an `sid` if you are using [simpla-paths](https://github.com/SimplaElements/simpla-paths).
+And use it anywhere you want editable text on your page. You must also specify a content path (where the element's data will be stored on Simpla's API) in a `path` attribute, or with an `sid` if you have included the [simpla-paths](https://github.com/SimplaElements/simpla-paths) component.
 
 ```html
 <simpla-text path="/my-text"></simpla-text>
 ```
 
-Read more about paths and IDs in the [structuring data guide](https://www.simpla.io/docs/structuring-data).
+Read more about [using paths and IDs with Simpla](https://www.simpla.io/docs/guides/structuring-data).
 
 ### Polyfills for cross-browser support
 
-`simpla-text` relies on emerging standards, for full cross-browser support make sure you include the [Web Components Lite](https://github.com/webcomponents/webcomponentsjs) polyfill on your page.
+`simpla-text` relies on emerging standards, for full cross-browser support make sure you include the [Web Components Lite](https://github.com/webcomponents/webcomponentsjs) polyfill.
 
 ```html
 <script src="https://unpkg.com/webcomponents.js@^0.7.24/webcomponents-lite.min.js"></script>
@@ -70,9 +70,7 @@ Read more about paths and IDs in the [structuring data guide](https://www.simpla
 
 ## Editing content
 
-The easiest way to edit `simpla-text` is by including [`simpla-admin`](http://webcomponents.org/element/SimplaElements/simpla-admin) on your site, and then just adding `#edit` to the URL.
-
-Alternatively, you can enter edit mode manually with Simpla (which makes all Simpla elements on a page editable) or set the `editable` property directly on `simpla-text`
+You can edit text by entering edit mode with Simpla, or setting the `editable` property directly on `simpla-text`.
 
 ```js
 // Enter edit mode
@@ -80,17 +78,17 @@ Simpla.editable(true);
 ```
 
 ```html
-<!-- Make only this image editable -->
-<simpla-text path="/my-text"></simpla-text>
+<!-- Make only this text editable -->
+<simpla-text path="/my-text" editable></simpla-text>
 ```
 
-Entering edit mode with Simpla is the recommended way to edit text. It ensures all elements on a page remain in sync and updates Simpla's public `'editable'` state, which other elements may rely on (eg: `simpla-admin`).
+Entering edit mode is the recommended way to edit text. It ensures all elements on a page remain in sync and updates Simpla's public `'editable'` state, which other elements may rely on.
+
+> If you include the [simpla-admin](https://webcomponents.org/element/SimplaElements/simpla-admin) component on your page, you can also enter edit mode by adding #edit to the end of your URL
 
 ## Saving content
 
-The easiest way to save content is by including [`simpla-admin`](http://webcomponents.org/element/SimplaElements/simpla-admin) on your site, and then just pressing the 'save' button while in edit mode.
-
-To save `simpla-text` content manually, call Simpla's `save` method, which will save all modified content on the page. It returns a promise.
+To save `simpla-text` content, call Simpla's `save` method, which will save all modified content on the page. It returns a promise.
 
 ```js
 // Save all modified Simpla content
@@ -98,6 +96,8 @@ Simpla.save();
 ```
 
 Note you must be authenticated before saving content - either login with `simpla-admin` or the `Simpla.login()` method.
+
+> If you have included the [simpla-admin](http://webcomponents.org/element/SimplaElements/simpla-admin) component on your site, you can save content by entering edit mode and just pressing the 'save' button.
 
 ## Inline content
 
@@ -113,7 +113,7 @@ You can use `<simpla-text>` either as a standalone text container, or inside oth
 </h1>
 ```
 
-You can also force `inline` mode manually by setting the `inline` property on simpla-text
+You can also force `inline` mode by setting the `inline` property on simpla-text
 
 ```html
 <!-- Inline content, line breaks only -->
@@ -122,7 +122,7 @@ You can also force `inline` mode manually by setting the `inline` property on si
 
 ## Initializing with static content
 
-You can write HTML content inside simpla-text just like you would with any other element. If content for the text's `path` exists on Simpla's API any internal content will be overridden
+You can write HTML content inside simpla-text just like you would with any other element. If content for the text's `path` exists on Simpla's API any static content will be overwritten
 
 ```html
 <simpla-text path="/my-text">
@@ -134,13 +134,13 @@ You can write HTML content inside simpla-text just like you would with any other
 </h1>
 ```
 
-Initializing with static content is useful for converting existing sites to Simpla, or bootstrapping a project with predefined content. By putting content inside `<simpla-text>` and then calling `Simpla.save()` you can easily set content directly to Simpla.
+Initializing with static content is useful for converting existing sites to Simpla, or bootstrapping a project with predefined content. By putting content inside `<simpla-text>` and then calling `Simpla.save()` you can easily set content directly to Simpla's API.
 
-**Note:** Since any static content is overwritten by remote data, you should not have content inside `<simpla-text>` in production, because if newer content gets saved you could experience FOUC (Flash Of Unformatted Content) when the static content is overwritten.
+**Note:** Since any static content is overwritten by remote data, you should not have content inside `<simpla-text>` in production, because if newer content gets saved you will experience FOUC (Flash Of Unformatted Content) when the static content is overwritten.
 
 ## Plaintext
 
-By default simpla-text enables editable richtext, with basic formatting controls (bold, italic, underline, links) available to the user. You can disable all formatting tools and force simpla-text to create plain text content only with the `placeholder` property.
+By default simpla-text provides editable richtext, with basic formatting controls (bold, italic, underline, links) available to the user. You can disable all formatting tools and force simpla-text to create plain text content only with the `plaintext` property.
 
 ```html
 <simpla-text path="/my-text" plaintext></simpla-text>
@@ -148,7 +148,7 @@ By default simpla-text enables editable richtext, with basic formatting controls
 
 ## Custom placeholders
 
-You can set custom placeholders (displayed when simpla-text is editable and does not have content) the same way as native elements, with the `placeholder` attribute
+You can set custom placeholders (displayed when simpla-text is editable and does not have content) the same way as native elements, with a `placeholder` attribute
 
 ```html
 <simpla-text path="/my-text" placeholder="Start typing..."></simpla-text>
@@ -161,7 +161,7 @@ You can set custom placeholders (displayed when simpla-text is editable and does
 
 Property      | Type    | Default                | Description                                                  
 ------------- | ------- | ---------------------- | -----------                                                  
-`path`        | String  | `''`                   | Path to the element's content on Simpla's API                
+`path`        | String  | `undefined`            | Path to the element's content on Simpla's API                
 `placeholder` | String  | `'Enter your text...'` | Placeholder to show when element is editable and has no content 
 `inline`      | Boolean | `false`                | Whether to allow paragraphs
 `plaintext`   | Boolean | `false`                | Whether to disable formatting tools                         
