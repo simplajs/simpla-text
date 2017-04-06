@@ -33,6 +33,7 @@
         beforeEach(function() {
           component = fixture('simple');
           component.path = path;
+          return flushEditor(component);
         });
 
         afterEach(function() {
@@ -66,28 +67,23 @@
         });
 
         describe('data', () => {
-          it('should observe data thats stored in the state on attach', () => {
+          const setContentAndWait = text => () => {
             return Simpla.set(path, {
               type: 'Text',
-              data: {
-                text: 'Hello World'
-              }
-            })
-            .then(wait())
-            .then(function() {
-              expect(component.value).to.match(/>?Hello World<?/);
+              data: { text }
+            }).then(wait());
+          };
 
-              return Simpla.set(path, {
-                type: 'Text',
-                data: {
-                  text: 'Hello World, again'
-                }
+          it('should observe data thats stored in the state on attach', () => {
+            return Promise.resolve()
+              .then(setContentAndWait('Hello World'))
+              .then(() => {
+                expect(component.value).to.match(/>?Hello World<?/);
+              })
+              .then(setContentAndWait('Hello World, again'))
+              .then(() => {
+                expect(component.value).to.match(/>?Hello World, again<?/);
               });
-            })
-            .then(wait())
-            .then(function() {
-              expect(component.value).to.match(/>?Hello World, again<?/);
-            });
           });
 
           it('while editing, it should update data in the state', () => {
@@ -97,7 +93,7 @@
               .then(() => {
                 component.value = 'Hello World';
               })
-              .then(wait)
+              .then(wait())
               .then(() => Simpla.get(path))
               .then((response) => {
                 expect(response).to.be.ok;
@@ -106,13 +102,7 @@
           });
 
           it('should fire a `contentload` event each time new content is loaded', () => {
-            let setContentAndWait = text => () => {
-                  return Simpla.set(path, {
-                    type: 'Text',
-                    data: { text }
-                  }).then(wait());
-                },
-                spy = sinon.spy();
+            let spy = sinon.spy();
 
             component.addEventListener('contentload', spy);
 
