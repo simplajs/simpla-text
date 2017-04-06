@@ -104,6 +104,28 @@
                 expect(response.data.text).to.match(/Hello World/);
               });
           });
+
+          it('should fire a `contentload` event each time new content is loaded', () => {
+            let setContentAndWait = text => () => {
+                  return Simpla.set(path, {
+                    type: 'Text',
+                    data: { text }
+                  }).then(wait());
+                },
+                spy = sinon.spy();
+
+            component.addEventListener('contentload', spy);
+
+            return Promise.resolve()
+              .then(setContentAndWait('some content'))
+              .then(() => {
+                expect(spy.callCount).to.equal(1);
+              })
+              .then(setContentAndWait('more content'))
+              .then(() => {
+                expect(spy.callCount).to.equal(2);
+              });
+          });
         });
       });
     </script>
