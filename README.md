@@ -58,7 +58,7 @@ And use it anywhere you want editable text on your page. You must also specify a
 <simpla-text path="/my-text"></simpla-text>
 ```
 
-Read more about [using paths and IDs with Simpla](https://www.simpla.io/docs/guides/structuring-data).
+> Read more about [structuring data with paths and IDs](https://www.simpla.io/docs/guides/structuring-data)
 
 ### Polyfills for cross-browser support
 
@@ -70,7 +70,7 @@ Read more about [using paths and IDs with Simpla](https://www.simpla.io/docs/gui
 
 ## Editing content
 
-You can edit text by entering edit mode with Simpla, or setting the `editable` property directly on `simpla-text`.
+Edit text by entering edit mode with Simpla, or setting the `editable` property directly on an element.
 
 ```js
 // Enter edit mode
@@ -88,7 +88,7 @@ Entering edit mode is the recommended way to edit text. It ensures all elements 
 
 ## Saving content
 
-To save `simpla-text` content, call Simpla's `save` method, which will save all modified content on the page. It returns a promise.
+Save `simpla-text` content by calling Simpla's `save` method, which will save all modified content on the page. It returns a promise.
 
 ```js
 // Save all modified Simpla content
