@@ -1,3 +1,11 @@
+const warnOnInvalidPath = error => {
+  if (error.message.toLowerCase().indexOf('invalid path') !== -1) {
+    console.warn(error.message);
+  } else {
+    throw error;
+  }
+}
+
 export default {
   properties: {
 
@@ -41,8 +49,14 @@ export default {
   _observeAndInitPath() {
     let callback = item => this._restoreFromSimpla(item);
 
-    Simpla.get(this.path).then(callback);
-    return Simpla.observe(this.path, callback);
+    Simpla.get(this.path).then(callback).catch(warnOnInvalidPath);
+
+    try {
+      return Simpla.observe(this.path, callback);
+    } catch (error) {
+      warnOnInvalidPath(error);
+    }
+
   },
 
   _observePath(path) {
@@ -67,10 +81,8 @@ export default {
     if (this.path) {
       Simpla.set(this.path, {
         type: 'Text',
-        data: {
-          text: this.value
-        }
-      })
+        data: { text: this.value }
+      }).catch(warnOnInvalidPath);
     }
   }
 }

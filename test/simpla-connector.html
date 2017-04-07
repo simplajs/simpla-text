@@ -104,6 +104,12 @@
                 expect(response.data.text).to.match(/Hello World/);
               });
           });
+
+          it('should not throw errors when setting an invalid path', () => {
+            let setBadPath = () => component.path = 'bad path';
+
+            expect(setBadPath).to.not.throw();
+          });
         });
       });
     </script>
