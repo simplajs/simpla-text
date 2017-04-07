@@ -96,6 +96,7 @@
             return flushEditor(component)
               .then(() => {
                 component.value = 'Hello World';
+                return flushEditor(component);
               })
               .then(wait())
               .then(() => Simpla.get(path))
