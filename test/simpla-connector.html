@@ -97,7 +97,7 @@
               .then(() => {
                 component.value = 'Hello World';
               })
-              .then(wait)
+              .then(wait())
               .then(() => Simpla.get(path))
               .then((response) => {
                 expect(response).to.be.ok;
