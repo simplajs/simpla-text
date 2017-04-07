@@ -72,7 +72,10 @@ export default {
   },
 
   _restoreFromSimpla(item) {
-    if (item && this.value !== item.data.text) {
+    const isValid = item && item.data && item.data.text,
+          currentValue = this.value;
+
+    if (isValid && currentValue !== item.data.text) {
       this.value = item.data.text;
     }
   },
