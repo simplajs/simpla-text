@@ -177,6 +177,8 @@
     import MobileDetect from 'mobile-detect';
 
     const GUTTER = 5,
+          detect = new MobileDetect(window.navigator.userAgent),
+          IS_MOBILE = !!(detect.mobile() || detect.tablet());
           getInitialTools = () => ({
             bold: {
               active: false
@@ -252,7 +254,8 @@
 
           mobile: {
             type: Boolean,
-            reflectToAttribute: true
+            reflectToAttribute: true,
+            value: IS_MOBILE
           },
 
           _storedHref: {
@@ -267,12 +270,6 @@
           'keypress': '_stopEvent',
           'focusin': '_storeSelection'
         };
-      }
-
-      attached() {
-        let detect = new MobileDetect(window.navigator.userAgent);
-
-        this.mobile = !!(detect.mobile() || detect.tablet());
       }
 
       hoverOverRange(range) {
