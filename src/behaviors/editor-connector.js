@@ -70,13 +70,15 @@ export default {
               });
           },
           selectCallback: (selection) => {
+            const shouldShowToolbar = selection && this.editable && !this.plaintext;
+
             this.fire('select', { selection });
 
             if (toolbar.parentElement !== document.body) {
               document.body.appendChild(toolbar);
             }
 
-            toolbar.range = selection && selection.rangeCount && selection.getRangeAt(0);
+            toolbar.range = shouldShowToolbar && selection.rangeCount && selection.getRangeAt(0);
 
             if (this._tools) {
               toolbar.tools = this._tools;

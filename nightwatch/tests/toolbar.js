@@ -11,11 +11,14 @@ const init = () => (browser) => {
 const highlight = () => (browser) => {
   browser
     .highlightLastWord()
+    .verify.visible('simpla-text-toolbar')
     .saveScreenshot('./screenshots/toolbar/highlight.png');
 }
 
 const checkCommand = ({ name, tag }) => (browser) => {
   browser
+    .click('#main')
+    .highlightLastWord()
     .clickOnCommand('#main', name)
     .saveScreenshot(`./screenshots/toolbar/${name}.png`)
     .verify.elementPresent(`#main ${tag}`, `Added ${tag} tag`)
@@ -29,6 +32,20 @@ module.exports = {
   'init': init(),
 
   'Shows on highlight': highlight(),
+
+  'Doesnt show when not editable': (browser) => {
+    browser
+      .click('#main')
+      .highlightLastWord()
+      .click('body')
+      .setProperty('#main', 'editable', false)
+      // Move cursor position to slightly inside the #main element
+      .moveToElement('#main', 5, 5)
+      .doubleClick()
+      .verify.hidden('simpla-text-toolbar')
+      .saveScreenshot('./screenshots/toolbar/hidden-while-not-editable.png')
+      .setProperty('#main', 'editable', true)
+  },
 
   'Bolds text': checkCommand({ name: 'bold', tag: 'strong' }),
   'Italicises text': checkCommand({ name: 'italic', tag: 'em' }),
