@@ -76,7 +76,7 @@ export default {
               document.body.appendChild(toolbar);
             }
 
-            toolbar.range = selection && selection.rangeCount && selection.getRangeAt(0);
+            toolbar.range = selection && this.editable && selection.rangeCount && selection.getRangeAt(0);
 
             if (this._tools) {
               toolbar.tools = this._tools;
