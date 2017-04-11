@@ -60,7 +60,7 @@
     "prosemirror-model": "^0.20.0",
     "prosemirror-schema-basic": "^0.20.0",
     "prosemirror-state": "^0.20.0",
-    "prosemirror-view": "https://github.com/bedeoverend/prosemirror-view#261a8757ccf74dfc5d98f524acfb8765e061e6e6",
+    "prosemirror-view": "https://github.com/prosemirror/prosemirror-view#3edbceb31cb3385f2cfd4fbb91c89d7ad04a879d",
     "rollup-plugin-babel": "^2.6.0",
     "rollup-plugin-commonjs": "^7.0.0",
     "rollup-plugin-json": "^2.1.0",
