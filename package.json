@@ -1,6 +1,6 @@
 {
   "name": "simpla-text",
-  "version": "0.1.7",
+  "version": "1.0.0",
   "description": "Editable richtext for the Simpla content system",
   "main": "simpla-text.html",
   "scripts": {
