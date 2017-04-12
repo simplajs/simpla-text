@@ -1,47 +1,41 @@
 {
   "name": "simpla-text",
-  "description": "adds editable dynamic text",
   "version": "0.1.7",
   "authors": [
-    "Simpla <admin@simpla.io>"
+    "Simpla <friends@simpla.io>"
   ],
-  "license": "MIT",
-  "main": "simpla-text.html",
+  "description": "Editable richtext for the Simpla content system",
   "keywords": [
     "simpla-element",
-    "web-components",
-    "text"
+    "web-component",
+    "simpla",
+    "editable",
+    "text editor",
+    "cms",
+    "polymer",
+    "content management"
   ],
+  "main": "simpla-text.html",
+  "license": "MIT",
+  "homepage": "http://webcomponents.org/element/SimplaElements/simpla-text",
+  "demos": {
+    "Demo": "demo/index.html"
+  },
   "ignore": [
     "*",
-    "!src",
     "!*.html",
     "!LICENSE"
   ],
   "dependencies": {
-    "webcomponentsjs": "^0.7.14",
-    "polymer": "^1.1.4",
-    "sm-ui-core": "SimplaElements/sm-ui-core#^0.1.0",
-    "sm-utility-placeholder": "SimplaElements/sm-utility-placeholder#^0.1.0",
-    "default-content": "SimplaElements/default-content#^0.1.0",
-    "sm-utility-connect": "SimplaElements/sm-utility-connect#^0.1.0",
-    "simpla-block": "SimplaElements/simpla-block#^0.1.0",
-    "sm-ui-toolbar": "SimplaElements/sm-ui-toolbar#^0.1.0",
-    "simpla-v2-compat": "simplaio/simpla-v2-compat#^0.1.0"
+    "polymer": "^1.6.0",
+    "simpla-styles": "^0.5.0",
+    "iron-icon": "^1.0.12",
+    "iron-iconset-svg": "^1.1.0"
   },
   "devDependencies": {
-    "web-component-tester": "^3.3.22",
-    "test-fixture": "PolymerElements/test-fixture#~1.0.0",
-    "simpla": "^1.0.0"
-  },
-  "componentImports": [
-    "polymer/polymer.html",
-    "simpla-v2-compat/simpla-v2-compat.html",
-    "sm-ui-core/sm-ui-core.html",
-    "sm-utility-placeholder/sm-utility-placeholder.html",
-    "default-content/default-content.html",
-    "sm-utility-connect/sm-utility-connect.html",
-    "simpla-block/simpla-block.html",
-    "sm-ui-toolbar/sm-ui-toolbar.html"
-  ]
+    "web-component-tester": "^4.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.2.5",
+    "iron-test-helpers": "PolymerElements/iron-test-helpers#^1.4.1",
+    "rangy": "^1.3.0"
+  }
 }

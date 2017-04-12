@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>simpla-text</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <!-- Test Helpers -->
+    <link rel="import" href="../../iron-test-helpers/iron-test-helpers.html">
+    <link rel="import" href="./test-setup.html">
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../simpla-text.html">
+
+  </head>
+  <body>
+    <test-fixture id="simple">
+      <template>
+        <simpla-text></simpla-text>
+      </template>
+    </test-fixture>
+    <test-fixture id="editing">
+      <template>
+        <simpla-text><p>Hello World</p></simpla-text>
+      </template>
+    </test-fixture>
+    <test-fixture id="plaintext">
+      <template>
+        <simpla-text editable plaintext></simpla-text>
+      </template>
+    </test-fixture>
+    </test-fixture>
+    <script>
+      describe('<simpla-text>', () => {
+        describe('state', () => {
+          let component;
+
+          beforeEach(() => {
+            component = fixture('simple');
+            return flushEditor(component);
+          });
+
+          it('should not be contenteditable when not editable', () => {
+            component.editable = true;
+
+            return flushEditor(component)
+              .then(() => component.editable = false)
+              .then(() => flushEditor(component))
+              .then(() => {
+                expect(
+                  !component.contentEditable ||
+                  component.contentEditable === 'false'
+                ).to.be.true;
+              });
+          });
+        });
+
+        describe('editing', () => {
+          let component;
+
+          function clean(str) {
+            return str.replace(/^\s+|\s+$/g, '');
+          }
+
+          beforeEach(() => {
+            component = fixture('editing');
+          });
+
+          it('should keep the internal text when editing', () => {
+            let expected = clean(component.innerText);
+            component.editable = true;
+
+            return flushEditor(component)
+              .then(() => {
+                expect(clean(component.innerText)).to.equal(expected);
+              });
+          });
+
+          describe('plaintext', () => {
+            let rich = `<p>Hello <strong>world</strong>! Isn't it <em>nice</em> today?</p>`,
+                plain = `<p>Hello world! Isn't it nice today?</p>`,
+                plaintext;
+
+            beforeEach(() => {
+              plaintext = fixture('plaintext');
+            });
+
+            it('should not accept any kind of formatted tags', () => {
+              plaintext.innerHTML = rich;
+
+              return flushEditor(plaintext)
+                .then(() => {
+                  expect(plaintext.innerHTML).to.equal(plain);
+                });
+            });
+
+            xit('should be able to be switched on async', () => {
+              let component = fixture('simple');
+
+              component.innerHTML = rich;
+              component.editable = true;
+
+              return flushEditor(component)
+                .then(() => {
+                  expect(component.innerHTML).to.equal(rich);
+                  component.plaintext = true;
+                  return flushEditor(component);
+                })
+                .then(() => {
+                  expect(component.innerHTML).to.equal(plain);
+                });
+
+            });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="/components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="/components/simpla/simpla.js"></script>
+    <script>
+      Simpla.init('local');
+    </script>
+    <link rel="import" href="/components/simpla-text/simpla-text.html">
+    <title></title>
+    <style media="screen">
+      html, body {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      simpla-text {
+        position: absolute;
+      }
+
+      .bottom {
+        bottom: -10px;
+      }
+
+      .left {
+        left: -10px;
+      }
+
+      .top {
+        top: -10px;
+      }
+
+      .right {
+        right: -10px;
+      }
+    </style>
+  </head>
+  <body>
+    <simpla-text class="top left" editable>Hello World</simpla-text>
+    <simpla-text class="top right" editable>Hello World</simpla-text>
+    <simpla-text class="bottom right" editable>Hello World</simpla-text>
+    <simpla-text class="bottom left" editable>Hello World</simpla-text>
+  </body>
+</html>

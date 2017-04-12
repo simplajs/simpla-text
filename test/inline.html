@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>simpla-text</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <!-- Test Helpers -->
+    <link rel="import" href="../../iron-test-helpers/iron-test-helpers.html">
+    <link rel="import" href="./test-setup.html">
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../simpla-text.html">
+
+  </head>
+  <body>
+    <test-fixture id="simple">
+      <template>
+        <simpla-text editable></simpla-text>
+      </template>
+    </test-fixture>
+    <test-fixture id="forced-inline">
+      <template>
+        <div>
+          <div><simpla-text inline editable></simpla-text></div>
+        </div>
+      </template>
+    </test-fixture>
+    <test-fixture id="auto-inline">
+      <template>
+        <div>
+          <span><simpla-text editable></simpla-text></span>
+        </div>
+      </template>
+    </test-fixture>
+    <script>
+      function checkWorksAsInline(getComponent, description) {
+        describe(description || 'formats content as inline', () => {
+          let component;
+
+          beforeEach(() => {
+            component = getComponent();
+          });
+
+          it('should not allow `p` tags', () => {
+            component.value = '<p>Hello World</p>';
+
+            return flushEditor(component)
+              .then(() => {
+                expect(component.value).to.equal('Hello World');
+              });
+          });
+
+          it('should allow `br` tags', () => {
+            component.value = 'Hello<br />World';
+
+            return flushEditor(component)
+              .then(() => {
+                expect(component.value).to.match(/\<br/);
+              });
+          });
+
+          it('should be display:inline;', () => {
+            expect(window.getComputedStyle(component).display).to.equal('inline');
+          });
+        });
+      }
+
+      function checkWorksAsBlock(getComponent, description) {
+        let component;
+
+        beforeEach(() => {
+          component = getComponent();
+          return flushEditor(component);
+        });
+
+        describe(description || 'formats content as block', () => {
+          it('should allow `p` tags', () => {
+            component.value = '<p>Hello World</p>';
+
+            return flushEditor(component)
+              .then(() => {
+                expect(component.value).to.match(/<p/);
+              });
+          });
+
+          it('should default to empty `p` tag when no content is set', () => {
+            component.value = '';
+
+            return flushEditor(component)
+              .then(() => {
+                expect(component.value).to.match(/<p/);
+              });
+          });
+
+          it('should be display:block;', () => {
+            expect(window.getComputedStyle(component).display).to.equal('block');
+          });
+        });
+      }
+
+      describe('default behavior', () => {
+        checkWorksAsBlock(() => fixture('simple'), 'should behave as a block');
+      });
+
+      describe('inline behavior', () => {
+        let component;
+
+        describe('forced inline mode', () => {
+          beforeEach(function() {
+            component = fixture('forced-inline').querySelector('simpla-text');
+            return flushEditor(component);
+          });
+
+          it('should have inline true', () => {
+            expect(component.inline).to.equal.true;
+          });
+
+          checkWorksAsInline(() => component);
+        });
+
+        describe('auto mode', () => {
+          let inlineComponent;
+
+          beforeEach(() => {
+            let wrapper = fixture('auto-inline');
+            inlineComponent = wrapper.querySelector('span > simpla-text');
+          });
+
+          checkWorksAsInline(() => inlineComponent, 'auto-inline formats as inline')
+        });
+      });
+    </script>
+  </body>
+</html>

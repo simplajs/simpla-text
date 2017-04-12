@@ -1,0 +1,443 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../simpla-styles/simpla-styles.html">
+<link rel="import" href="../iron-iconset-svg/iron-iconset-svg.html">
+<link rel="import" href="../iron-icon/iron-icon.html" async>
+
+<!-- Material icons cherry picked from iron-icons -->
+<iron-iconset-svg name="simpla-text-toolbar">
+  <svg>
+    <defs>
+      <g id="format-bold"><path d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"/></g>
+      <g id="format-italic"><path d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4z"/></g>
+      <g id="format-underlined"><path d="M12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6zm-7 2v2h14v-2H5z"/></g>
+      <g id="insert-link"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></g>
+    </defs>
+  </svg>
+</iron-iconset-svg>
+
+<!-- Setup editor -->
+<script>
+  import Editor from './editor';
+  import * as formatters from './editor/formatters';
+
+  window.SimplaText = window.SimplaText || {};
+  Object.assign(window.SimplaText, { Editor, formatters });
+</script>
+
+<!-- Toolbar -->
+<dom-module id="simpla-text-toolbar">
+  <template>
+    <style>
+      :host, *, *::before, *::after {
+        box-sizing: border-box;
+      }
+
+      :host {
+        -moz-osx-font-smoothing: grayscale;
+         -webkit-font-smoothing: antialiased;
+                 font-smoothing: antialiased;
+        position: absolute;
+        display: flex;
+        background: var(--simpla-grey-700);
+        color: white;
+        font-size: var(--simpla-scale-0);
+        border-radius: var(--simpla-border-radius);
+        z-index: var(--simpla-on-top);
+        overflow: hidden;
+      }
+
+      :host([mobile]) {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: 0;
+        font-size: var(--simpla-scale-1);
+      }
+
+      .tool {
+        /* Reset default button styles */
+        font: inherit;
+        color: inherit;
+        line-height: normal;
+        background: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+        border: 0;
+        padding: 0;
+        outline: 0;
+        cursor: pointer;
+
+        padding: 0.4em 0.5em;
+        border-bottom: 2px solid transparent;
+        /* Link opening transition */
+        transition: margin-left 150ms var(--simpla-easing-standard);
+      }
+
+      .tool[active] {
+        border-color: var(--simpla-primary-color);
+      }
+
+      .tool__icon {
+        --iron-icon-width: var(--simpla-scale-0);
+        --iron-icon-height: var(--simpla-scale-0);
+        pointer-events: none;
+      }
+
+      .tool__link {
+        font-family: var(--simpla-font-family);
+        font-size: var(--simpla-scale-000);
+        color: white;
+        outline: 0;
+        border: 0;
+        width: 0;
+        background: transparent;
+        transition: width 150ms var(--simpla-easing-standard),
+                    padding 150ms var(--simpla-easing-standard);
+      }
+
+      .tool__link::placeholder {
+        color: var(--simpla-med-white);
+      }
+
+      :host([link-active]) .tool__link {
+        width: 12em;
+        padding: 0 0.5em;
+      }
+
+      :host([link-active]) .tool {
+        margin-left: calc(0px - var(--simpla-scale-0) - 0.5em);
+      }
+
+      :host([link-active]) .tool:not(.tool--link) {
+        visibility: hidden;
+      }
+
+      /* Patch hidden prop in Chrome and IE */
+      :host([hidden]), *[hidden] {
+        display: none !important;
+      }
+    </style>
+
+    <button
+      class="tool"
+      on-tap="_handleToolTap"
+      active$="[[tools.bold.active]]"
+      data-command="bold">
+      <iron-icon
+        class="tool__icon"
+        icon="simpla-text-toolbar:format-bold">
+      </iron-icon>
+    </button>
+
+    <button
+      class="tool"
+      on-tap="_handleToolTap"
+      active$="[[tools.italic.active]]"
+      data-command="italic">
+      <iron-icon
+        class="tool__icon"
+        icon="simpla-text-toolbar:format-italic">
+      </iron-icon>
+    </button>
+
+    <button
+      class="tool"
+      on-tap="_handleToolTap"
+      active$="[[tools.underline.active]]"
+      data-command="underline">
+      <iron-icon
+        class="tool__icon"
+        icon="simpla-text-toolbar:format-underlined">
+      </iron-icon>
+    </button>
+
+    <button
+      class="tool tool--link"
+      on-tap="_toggleLinkInput"
+      active$="[[_either(tools.link.active, linkActive)]]"
+      data-command="link">
+      <iron-icon
+        class="tool__icon"
+        icon="simpla-text-toolbar:insert-link">
+      </iron-icon>
+    </button>
+    <input
+      id="_linkInput"
+      class="tool__link"
+      type="text"
+      value="{{_storedHref::input}}"
+      on-keyup="_checkForExitKeys"
+      placeholder="Enter a URL..."
+    >
+  </template>
+
+  <script>
+    import MobileDetect from 'mobile-detect';
+
+    const GUTTER = 5,
+          detect = new MobileDetect(window.navigator.userAgent),
+          IS_MOBILE = !!(detect.mobile() || detect.tablet()),
+          getInitialTools = () => ({
+            bold: {
+              active: false
+            },
+
+            italic: {
+              active: false
+            },
+
+            underline: {
+              active: false
+            },
+
+            link: {
+              active: false,
+              meta: {
+                href: ''
+              }
+            }
+          });
+
+    function addPadding(rect, padding) {
+      return {
+        top: rect.top - padding,
+        right: rect.right + padding,
+        bottom: rect.bottom + padding,
+        left: rect.left - padding,
+        width: rect.width + 2 * padding,
+        height: rect.height + 2 * padding
+      };
+    }
+
+    class SimplaTextToolbar extends HTMLElement {
+      beforeRegister() {
+        this.is = 'simpla-text-toolbar';
+
+        this.properties = {
+
+          tools: {
+            type: Object,
+            value: getInitialTools
+          },
+
+          target: {
+            type: HTMLElement,
+            value: null,
+            observer: '_attachListenersToTarget'
+          },
+
+          range: {
+            type: Object,
+            value: null,
+            observer: 'hoverOverRange'
+          },
+
+          hidden: {
+            type: Boolean,
+            reflectToAttribute: true
+          },
+
+          tabindex: {
+            type: Number,
+            value: 0,
+            reflectToAttribute: true
+          },
+
+          linkActive: {
+            type: Boolean,
+            value: false,
+            observer: '_linkActiveObserver',
+            reflectToAttribute: true
+          },
+
+          mobile: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: IS_MOBILE
+          },
+
+          _storedHref: {
+            type: String,
+            value: ''
+          }
+        };
+
+        this.listeners = {
+          'keyup': '_stopEvent',
+          'keydown': '_stopEvent',
+          'keypress': '_stopEvent',
+          'focusin': '_storeSelection'
+        };
+      }
+
+      hoverOverRange(range) {
+        let rangeBounds,
+            ownBounds,
+            boundaries,
+            left,
+            top;
+
+        this.hidden = !range;
+
+        if (!range || this.mobile) {
+          return;
+        }
+
+        rangeBounds = addPadding(range.getBoundingClientRect(), GUTTER);
+        ownBounds = this.getBoundingClientRect();
+
+        boundaries = addPadding({
+          top: 0,
+          left: 0,
+          right: window.innerWidth,
+          bottom: window.innerHeight
+        }, -GUTTER);
+
+        ({ left, top } = this._getPositionsFromBounds({
+          rangeBounds,
+          ownBounds,
+          boundaries
+        }));
+
+        // NOTE: HACK - This is doing a check: if the left and top will place is
+        //  _relative_ to the parent element, then it should incorporate the
+        //  parent's offsets from the viewport, otherwise it should just incorporate
+        //  the scroll values (scroll values are already considered by parent
+        //  in the truthy case). But this feels really fragile and should be fixed
+        //  via CSS or something more solid.
+        if (window.getComputedStyle(this.parentElement).position === 'relative') {
+          let parentOffsets = this.parentElement.getBoundingClientRect();
+          left -= parentOffsets.left;
+          top -= parentOffsets.top;
+        } else {
+          left += window.scrollX;
+          top += window.scrollY;
+        }
+
+        Object.assign(this.style, {
+          left: `${left}px`,
+          top: `${top}px`
+        });
+      }
+
+      _getPositionsFromBounds({ ownBounds, rangeBounds, boundaries }) {
+        let isOverRange = (dim) => dim > rangeBounds.top && dim < rangeBounds.bottom,
+            centerOffset = (rangeBounds.width - ownBounds.width) / 2,
+            left,
+            top;
+
+        // Move to center above range
+        left = rangeBounds.left + centerOffset;
+        top = rangeBounds.top - ownBounds.height;
+
+        // Fit to within boundaries
+        if (left < boundaries.left) {
+          left = boundaries.left;
+        }
+
+        if (top < boundaries.top) {
+          top = boundaries.top;
+        }
+
+        if (left + ownBounds.width > boundaries.right) {
+          left = boundaries.right - ownBounds.width;
+        }
+
+        if (top + ownBounds.height > boundaries.bottom) {
+          top = boundaries.bottom - ownBounds.height;
+        }
+
+        // Ensure it isn't covering the range
+        if (isOverRange(top) || isOverRange(top + ownBounds.height)) {
+          top = rangeBounds.bottom;
+        }
+
+        return { top, left };
+      }
+
+      _handleToolTap(event) {
+        let { command } = Polymer.dom(event).rootTarget.dataset;
+
+        this._runCommand(command);
+      }
+
+      _runCommand(command, options = {}) {
+        if (this.target) {
+          let currentState = this.target.state,
+              transaction = currentState.tr.setSelection(this.__selection),
+              newState = currentState.apply(transaction);
+
+          this.target.dom.focus();
+          this.target.view.updateState(newState);
+          this.target.runCommand(command, options);
+        }
+      }
+
+      _toggleLinkInput() {
+        this.linkActive = !this.linkActive;
+      }
+
+      _either(a, b) {
+        return a || b;
+      }
+
+      _stopEvent(event) {
+        event.stopPropagation();
+      }
+
+      _checkForExitKeys(event) {
+        const ENTER = 13,
+              ESC = 27;
+
+        if (event.keyCode === ENTER) {
+          this.linkActive = false;
+        }
+
+        if (event.keyCode === ESC) {
+          event.target.value = this.get('tools.link.meta.href') || '';
+          this.linkActive = false;
+        }
+      }
+
+      _linkActiveObserver(inputOpen) {
+        let currentHref = this._storedHref && this._storedHref.trim();
+
+        if (inputOpen) {
+          this._storedHref = this.get('tools.link.meta.href') || '';
+          this.$._linkInput.focus();
+        } else {
+          // HACK: This smells bad - it's active, so we're removing the link before
+          //  reapplying it, I think it'll cause us problems, and regardless it
+          //  just ain't clean
+          if (this.get('tools.link.active')) {
+            this._runCommand('link');
+          }
+
+          if (currentHref) {
+            this._runCommand('link', { href: currentHref });
+          }
+        }
+      }
+
+      _storeSelection() {
+        if (this.target) {
+          this.__selection = this.target.state.selection;
+        }
+      }
+
+      _attachListenersToTarget(target) {
+        if (target) {
+          target.dom.addEventListener('blur', (event) => {
+            if (!(event.relatedTarget === this || this.contains(event.relatedTarget))) {
+              this.hidden = true;
+            }
+          });
+        }
+      }
+     }
+
+    Polymer(SimplaTextToolbar)
+  </script>
+</dom-module>

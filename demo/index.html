@@ -1,53 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>simpla-text</title>
-    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>simpla-text Demo</title>
 
+    <!-- Setup demo page -->
+    <script src="https://unpkg.com/webcomponents.js@^0.7.24/webcomponents-lite.min.js"></script>
     <script>
-      window.Polymer = window.Polymer || {};
-      window.Polymer.dom = 'shadow';
+      window.Polymer = { dom: 'shadow' };
+    </script>
+    <link rel="import" href="../iron-demo-helpers/demo-snippet.html">
+
+    <!-- Init Simpla -->
+    <script src="https://unpkg.com/simpla@^2.0.0"></script>
+    <script>
+      Simpla.init('local');
     </script>
 
-    <script>
-      window.simpla = window.simpla || {
-        config: {
-          server: 'https://api.simpla.io'
-        }
-      };
-    </script>
+    <!-- Import component -->
+    <link rel="import" href="../simpla-text.html">
 
-    <link rel="import" href="../simpla-text.html" />
+    <!-- Demo styles -->
     <style>
+      /**
+       * Page styles
+       */
       body {
         font-family: sans-serif;
+        color: #303c46
+      }
+
+      .demo {
+        width: 90%;
+        max-width: 38rem;
+        margin: 4rem auto;
+      }
+
+      .demo__title {
+        font-size: 1.4rem;
+        font-weight: 400;
       }
     </style>
   </head>
 
   <body>
-    <h1>Standard</h1>
-    <simpla-text editable></simpla-text>
 
-    <h1>Custom placeholder</h1>
-    <simpla-text editable placeholder="Start typing..."></simpla-text>
+    <div class="demo">
+      <h1 class="demo__title">Basic demo</h1>
+      <demo-snippet>
+        <template>
+          <simpla-text path="/text"></simpla-text>
 
-    <h1>Default Content</h1>
-    <simpla-text use-default editable default="Hello World"></simpla-text>
-    <simpla-text use-default><default-content><p>Hello World</p></default-content></simpla-text>
+          <script>
+            Simpla.editable(true);
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
 
-    <h1>Inline Mode</h1>
-    <span><simpla-text editable></simpla-text></span>
-    <div><simpla-text editable inline></simpla-text></div>
+    <div class="demo">
+      <h1 class="demo__title">Inline content</h1>
+      <demo-snippet>
+        <template>
+          <h3>
+            <simpla-text path="/heading"></simpla-text>
+          </h3>
 
-    <h1>Inline Mode</h1>
-    <span><simpla-text editable></simpla-text></span>
-    <div><simpla-text editable inline></simpla-text></div>
+          <simpla-text path="/inline" inline></simpla-text>
 
-    <h1>Void Content</h1>
-    <simpla-text editable>This content should be void</simpla-text>
-    <simpla-text editable use-default default="This should be output">But this shouldn't</simpla-text>
-    <simpla-text editable use-default><default-content>This should be output</default-content> but this shouldn't</simpla-text>
+          <script>
+            Simpla.editable(true);
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="demo">
+      <h1 class="demo__title">Custom placeholders</h1>
+      <demo-snippet>
+        <template>
+          <simpla-text path="/placeholder" placeholder="Start typing..."></simpla-text>
+
+          <script>
+            Simpla.editable(true);
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="demo">
+      <h1 class="demo__title">Plaintext</h1>
+      <demo-snippet>
+        <template>
+          <simpla-text path="/paintext" plaintext></simpla-text>
+
+          <script>
+            Simpla.editable(true);
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="demo">
+      <h1 class="demo__title">Synced data</h1>
+      <demo-snippet>
+        <template>
+          <simpla-text path="/synced"></simpla-text>
+          <simpla-text path="/synced"></simpla-text>
+
+          <script>
+            Simpla.editable(true);
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
+
+
   </body>
 </html>

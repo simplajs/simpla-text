@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>simpla-text</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <!-- Test Helpers -->
+    <link rel="import" href="../../iron-test-helpers/iron-test-helpers.html">
+    <link rel="import" href="./test-setup.html">
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../simpla-text.html">
+
+  </head>
+  <body>
+    <test-fixture id="simple">
+      <template>
+        <simpla-text></simpla-text>
+      </template>
+    </test-fixture>
+    <test-fixture id="declared-editable">
+      <template>
+        <simpla-text editable></simpla-text>
+      </template>
+    </test-fixture>
+    <script>
+      describe('simpla connector', () => {
+        let path = '/test-path',
+            component;
+
+        beforeEach(() => {
+          component = fixture('simple');
+        });
+
+        afterEach(() => {
+          return Simpla.remove(path);
+        });
+
+        describe('editable', () => {
+          it('should be bound to Simplas editable state', () => {
+            Simpla.editable(true);
+            expect(component.editable).to.be.true;
+
+            Simpla.editable(false);
+            expect(component.editable).to.be.false;
+          });
+
+          it('should prefer declarative over Simplas state', () => {
+            let component;
+
+            Simpla.editable(false);
+            component = fixture('declared-editable');
+            expect(component.editable).to.be.true;
+          });
+
+          it('should follow Simpla on attach', () => {
+            let component;
+
+            Simpla.editable(true);
+            component = fixture('simple');
+            expect(component.editable).to.be.true;
+          });
+        });
+
+        describe('data', () => {
+          beforeEach(() => {
+            component.path = path;
+          });
+
+          it('should observe data thats stored in the state on attach', () => {
+            return Simpla.set(path, {
+              type: 'Text',
+              data: {
+                text: 'Hello World'
+              }
+            })
+            .then(wait())
+            .then(function() {
+              expect(component.value).to.match(/>?Hello World<?/);
+
+              return Simpla.set(path, {
+                type: 'Text',
+                data: {
+                  text: 'Hello World, again'
+                }
+              });
+            })
+            .then(wait())
+            .then(function() {
+              expect(component.value).to.match(/>?Hello World, again<?/);
+            });
+          });
+
+          it('while editing, it should update data in the state', () => {
+            component.editable = true;
+
+            return flushEditor(component)
+              .then(() => {
+                component.value = 'Hello World';
+                return flushEditor(component);
+              })
+              .then(wait())
+              .then(() => Simpla.get(path))
+              .then((response) => {
+                expect(response).to.be.ok;
+                expect(response.data.text).to.match(/Hello World/);
+              });
+          });
+
+          it('should not throw errors when setting an invalid path', () => {
+            let setBadPath = () => component.path = 'bad path';
+
+            expect(setBadPath).to.not.throw();
+          });
+        });
+
+        describe('loaded prop', () => {
+          let setAndWaitFor = (event) => {
+            return Simpla.set(path, { data: {} })
+              .then(() => {
+                return new Promise(resolve => {
+                  component.addEventListener(event, resolve);
+                  component.path = path;
+                });
+              });
+          };
+
+          it('should be false before loading data', () => {
+            expect(component.loaded).to.be.false;
+          });
+
+          it('should notify via loaded-changed event', () => {
+            return setAndWaitFor('loaded-changed')
+              .then(event => {
+                expect(event.detail.value).to.be.true;
+              });
+          });
+
+          it('should be true after loading data', () => {
+            return setAndWaitFor('loaded-changed')
+              .then(() => {
+                expect(component.loaded).to.be.true;
+              });
+          });
+
+          it('should reset when changing paths', () => {
+            let alternatePath = `${path}/bar`;
+
+            return setAndWaitFor('loaded-changed')
+              .then(() => {
+                expect(component.loaded).to.be.true;
+                component.path = alternatePath;
+                expect(component.loaded).to.be.false;
+              });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
