@@ -12,6 +12,13 @@ export default {
     path: {
       type: String,
       observer: '_observePath'
+    },
+
+    loaded: {
+      type: Boolean,
+      value: false,
+      readOnly: true,
+      notify: true
     }
 
   },
@@ -78,8 +85,9 @@ export default {
     if (isValid && currentValue !== item.data.text) {
       this.value = item.data.text;
     }
+    this._setLoaded(true);
   },
-
+  
   _setToSimpla() {
     if (this.path) {
       Simpla.set(this.path, {
