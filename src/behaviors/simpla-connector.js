@@ -56,6 +56,8 @@ export default {
   _observeAndInitPath() {
     let callback = item => this._restoreFromSimpla(item);
 
+    this._setLoaded(false);
+
     Simpla.get(this.path).then(callback).catch(warnOnInvalidPath);
 
     try {
@@ -87,7 +89,7 @@ export default {
     }
     this._setLoaded(true);
   },
-  
+
   _setToSimpla() {
     if (this.path) {
       Simpla.set(this.path, {

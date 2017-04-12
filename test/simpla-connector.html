@@ -144,6 +144,17 @@
                 expect(component.loaded).to.be.true;
               });
           });
+
+          it('should reset when changing paths', () => {
+            let alternatePath = `${path}/bar`;
+
+            return setAndWaitFor('loaded-changed')
+              .then(() => {
+                expect(component.loaded).to.be.true;
+                component.path = alternatePath;
+                expect(component.loaded).to.be.false;
+              });
+          });
         });
       });
     </script>
