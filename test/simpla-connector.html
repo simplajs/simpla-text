@@ -30,12 +30,11 @@
         let path = '/test-path',
             component;
 
-        beforeEach(function() {
+        beforeEach(() => {
           component = fixture('simple');
-          component.path = path;
         });
 
-        afterEach(function() {
+        afterEach(() => {
           return Simpla.remove(path);
         });
 
@@ -66,6 +65,10 @@
         });
 
         describe('data', () => {
+          beforeEach(() => {
+            component.path = path;
+          });
+
           it('should observe data thats stored in the state on attach', () => {
             return Simpla.set(path, {
               type: 'Text',
@@ -110,6 +113,47 @@
             let setBadPath = () => component.path = 'bad path';
 
             expect(setBadPath).to.not.throw();
+          });
+        });
+
+        describe('loaded prop', () => {
+          let setAndWaitFor = (event) => {
+            return Simpla.set(path, { data: {} })
+              .then(() => {
+                return new Promise(resolve => {
+                  component.addEventListener(event, resolve);
+                  component.path = path;
+                });
+              });
+          };
+
+          it('should be false before loading data', () => {
+            expect(component.loaded).to.be.false;
+          });
+
+          it('should notify via loaded-changed event', () => {
+            return setAndWaitFor('loaded-changed')
+              .then(event => {
+                expect(event.detail.value).to.be.true;
+              });
+          });
+
+          it('should be true after loading data', () => {
+            return setAndWaitFor('loaded-changed')
+              .then(() => {
+                expect(component.loaded).to.be.true;
+              });
+          });
+
+          it('should reset when changing paths', () => {
+            let alternatePath = `${path}/bar`;
+
+            return setAndWaitFor('loaded-changed')
+              .then(() => {
+                expect(component.loaded).to.be.true;
+                component.path = alternatePath;
+                expect(component.loaded).to.be.false;
+              });
           });
         });
       });
