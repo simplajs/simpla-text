@@ -167,6 +167,7 @@ Property      | Type    | Default                | Description
 `plaintext`   | Boolean | `false`                | Whether to disable formatting tools                         
 `editable`    | Boolean | `false`                | Whether the element is editable                                 
 `active`      | Boolean | `false`                | Whether the element is currently being edited                                 
+`loaded`      | Boolean | `false`                | Wether the element has loaded and rendered its content
 
 Properties can be set either directly with JavaScript or as attributes on the element
 
@@ -184,6 +185,7 @@ Event              | Description
 ------------------ | -----------                                    
 `editable-changed` | Fired whenever the `editable` property changes 
 `active-changed`   | Fired whenever the `active` property changes   
+`loaded-changed`   | Fired whenever the `loaded` property changes   
 
 ## Contributing
 
