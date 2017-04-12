@@ -84,6 +84,7 @@ const bs = browserSync.create(),
             index: 'nightwatch/server/index.html',
             routes: {
               '/components': './bower_components',
+              '/node_modules': './node_modules',
               '/components/simpla-text/simpla-text.html': './simpla-text.html',
               '/components/simpla-text/simpla-text-editor.html': './simpla-text-editor.html',
               '/': 'nightwatch/server'
