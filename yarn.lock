@@ -5288,9 +5288,17 @@ prosemirror-transform@^0.20.0:
   dependencies:
     prosemirror-model "^0.20.0"
 
-prosemirror-view@^0.20.0, "prosemirror-view@https://github.com/prosemirror/prosemirror-view#3edbceb31cb3385f2cfd4fbb91c89d7ad04a879d":
+prosemirror-view@^0.20.0:
   version "0.20.2"
   resolved "https://github.com/prosemirror/prosemirror-view#3edbceb31cb3385f2cfd4fbb91c89d7ad04a879d"
+  dependencies:
+    prosemirror-model "^0.20.0"
+    prosemirror-state "^0.20.0"
+    prosemirror-transform "^0.20.0"
+
+"prosemirror-view@https://github.com/bedeoverend/prosemirror-view#85cf905fd59e00ddf8a66039e4cd744582913355":
+  version "0.20.3"
+  resolved "https://github.com/bedeoverend/prosemirror-view#85cf905fd59e00ddf8a66039e4cd744582913355"
   dependencies:
     prosemirror-model "^0.20.0"
     prosemirror-state "^0.20.0"
@@ -6107,9 +6115,9 @@ signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
-"simpla@git+https://github.com/simplaio/simpla.git#2.0-preview":
-  version "2.0.0-preview"
-  resolved "git+https://github.com/simplaio/simpla.git#d05cb1b7f27fc36eeebd1fdd999e1ecf8f6ce05a"
+simpla@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/simpla/-/simpla-2.0.0.tgz#32038266b350a65aac9187c3315cfd0b695290f8"
   dependencies:
     es6-promise "^4.1.0"
     redux "^3.5.2"
@@ -6556,8 +6564,6 @@ ternary-stream@^2.0.1:
 test-fixture@PolymerElements/test-fixture:
   version "3.0.0-rc.1"
   resolved "https://codeload.github.com/polymerelements/test-fixture/tar.gz/26118ef0467501c33c02316e7016a2837baba10f"
-  dependencies:
-    web-component-tester "^6.0.0-prerelease.5"
 
 test-value@^2.1.0:
   version "2.1.0"
