@@ -1,4 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../simpla-element-behavior/simpla-element-behavior.html">
+
 <dom-module id="simpla-text">
   <template>
     <style>
@@ -19,7 +21,6 @@
   <script>
     import editor from './behaviors/editor-connector';
     import inline from './behaviors/inline';
-    import simpla from './behaviors/simpla-connector';
 
     class SimplaText {
       beforeRegister() {
@@ -59,7 +60,15 @@
       }
 
       get behaviors() {
-        return [ editor, inline, simpla ];
+        return [ SimplaBehaviors.Element, editor, inline ];
+      }
+
+      created() {
+        this.setupSimpla({
+          type: 'Text',
+          dataProperties: [ 'value' ],
+          updateOn: 'input'
+        });
       }
 
       _handleBlur() {
