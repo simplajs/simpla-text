@@ -11,30 +11,29 @@
       window.Polymer = { dom: 'shadow' };
     </script>
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-
-    <!-- Init Simpla -->
-    <script src="https://unpkg.com/simpla@^2.0.0"></script>
-    <script>
-      Simpla.init('local');
-    </script>
+    <link rel="import" href="../../simpla-demo-helper/simpla-demo-helper.html">
 
     <!-- Import component -->
     <link rel="import" href="../simpla-text.html">
 
     <!-- Demo styles -->
     <style>
-      /**
-       * Page styles
-       */
+      /* Page styles */
       body {
         font-family: sans-serif;
         color: #303c46
       }
 
-      .demo {
+      .wrapper {
         width: 90%;
         max-width: 38rem;
-        margin: 4rem auto;
+        margin: 2rem auto;
+      }
+
+      .demo {
+        display: inline-block;
+        width: 100%;
+        margin: 2rem auto;
       }
 
       .demo__title {
@@ -45,77 +44,60 @@
   </head>
 
   <body>
+    <div class="wrapper">
 
-    <div class="demo">
-      <h1 class="demo__title">Basic demo</h1>
-      <demo-snippet>
-        <template>
-          <simpla-text path="/text"></simpla-text>
+      <simpla-demo-helper></simpla-demo-helper>
 
-          <script>
-            Simpla.editable(true);
-          </script>
-        </template>
-      </demo-snippet>
+      <div class="demo">
+        <h1 class="demo__title">Basic demo</h1>
+        <demo-snippet>
+          <template>
+            <simpla-text path="/text"></simpla-text>
+          </template>
+        </demo-snippet>
+      </div>
+
+      <div class="demo">
+        <h1 class="demo__title">Inline content</h1>
+        <demo-snippet>
+          <template>
+            <h3>
+              <simpla-text path="/heading"></simpla-text>
+            </h3>
+
+            <simpla-text path="/inline" inline></simpla-text>
+          </template>
+        </demo-snippet>
+      </div>
+
+      <div class="demo">
+        <h1 class="demo__title">Custom placeholders</h1>
+        <demo-snippet>
+          <template>
+            <simpla-text path="/placeholder" placeholder="Start typing..."></simpla-text>
+          </template>
+        </demo-snippet>
+      </div>
+
+      <div class="demo">
+        <h1 class="demo__title">Plaintext</h1>
+        <demo-snippet>
+          <template>
+            <simpla-text path="/paintext" plaintext></simpla-text>
+          </template>
+        </demo-snippet>
+      </div>
+
+      <div class="demo">
+        <h1 class="demo__title">Synced data</h1>
+        <demo-snippet>
+          <template>
+            <simpla-text path="/synced"></simpla-text>
+            <simpla-text path="/synced"></simpla-text>
+          </template>
+        </demo-snippet>
+      </div>
+
     </div>
-
-    <div class="demo">
-      <h1 class="demo__title">Inline content</h1>
-      <demo-snippet>
-        <template>
-          <h3>
-            <simpla-text path="/heading"></simpla-text>
-          </h3>
-
-          <simpla-text path="/inline" inline></simpla-text>
-
-          <script>
-            Simpla.editable(true);
-          </script>
-        </template>
-      </demo-snippet>
-    </div>
-
-    <div class="demo">
-      <h1 class="demo__title">Custom placeholders</h1>
-      <demo-snippet>
-        <template>
-          <simpla-text path="/placeholder" placeholder="Start typing..."></simpla-text>
-
-          <script>
-            Simpla.editable(true);
-          </script>
-        </template>
-      </demo-snippet>
-    </div>
-
-    <div class="demo">
-      <h1 class="demo__title">Plaintext</h1>
-      <demo-snippet>
-        <template>
-          <simpla-text path="/paintext" plaintext></simpla-text>
-
-          <script>
-            Simpla.editable(true);
-          </script>
-        </template>
-      </demo-snippet>
-    </div>
-
-    <div class="demo">
-      <h1 class="demo__title">Synced data</h1>
-      <demo-snippet>
-        <template>
-          <simpla-text path="/synced"></simpla-text>
-          <simpla-text path="/synced"></simpla-text>
-
-          <script>
-            Simpla.editable(true);
-          </script>
-        </template>
-      </demo-snippet>
-    </div>
-
-
   </body>
 </html>
