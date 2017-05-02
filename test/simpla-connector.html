@@ -25,6 +25,11 @@
         <simpla-text editable></simpla-text>
       </template>
     </test-fixture>
+    <test-fixture id="static-content">
+      <template>
+        <simpla-text path="/static-content">Hello World</simpla-text>
+      </template>
+    </test-fixture>
     <script>
       describe('simpla connector', () => {
         let path = '/test-path',
@@ -153,6 +158,38 @@
                 expect(component.loaded).to.be.true;
                 component.path = alternatePath;
                 expect(component.loaded).to.be.false;
+              });
+          });
+        });
+
+        describe('static content', () => {
+          const attachAndGetComponent = () => fixture('static-content');
+
+          let path = '/static-content';
+
+          it(`should set it's own content into the buffer if no content is available`, () => {
+            Simpla.editable(false);
+
+            let staticComponent = attachAndGetComponent();
+
+            return Promise.resolve(wait())
+              .then(() => Simpla.get(path))
+              .then((content) => {
+                expect(content.data.text).to.equal(staticComponent.innerHTML);
+              });
+          });
+
+          it(`should not set it's own content to the buffer if the buffer is already dirty`, () => {
+            let text = 'Foo Bar';
+
+            Simpla.editable(false);
+
+            return Simpla.set(path, { data: { text } })
+              .then(attachAndGetComponent)
+              .then(wait())
+              .then(() => Simpla.get(path))
+              .then((content) => {
+                expect(content.data.text).to.equal(text);
               });
           });
         });

@@ -60,6 +60,8 @@ export default {
 
     Simpla.get(this.path).then(callback).catch(warnOnInvalidPath);
 
+    this._setToSimpla();
+
     try {
       return Simpla.observe(this.path, callback);
     } catch (error) {
