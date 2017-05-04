@@ -24,8 +24,9 @@
 
     const SIMPLA_CONFIG = {
       type: 'Text',
-      dataProperties: [ 'value' ],
-      updateOn: [ 'input' ]
+      updateOn: [ 'input' ],
+      setCallback: '_setToSimpla',
+      getCallback: '_getFromSimpla'
     };
 
     class SimplaText {
@@ -104,6 +105,19 @@
         } else {
           this.innerHTML = value;
         }
+      }
+
+      _getFromSimpla(item) {
+        if (this.value !== item.data.text) {
+          this.value = item.data.text;
+        }
+      }
+
+      _setToSimpla() {
+        Simpla.set(this.path, {
+          type: 'Text',
+          data: { text: this.value }
+        });
       }
     };
 
