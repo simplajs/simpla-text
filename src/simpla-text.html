@@ -22,6 +22,12 @@
     import editor from './behaviors/editor-connector';
     import inline from './behaviors/inline';
 
+    const SIMPLA_CONFIG = {
+      type: 'Text',
+      dataProperties: [ 'value' ],
+      updateOn: [ 'input' ]
+    };
+
     class SimplaText {
       beforeRegister() {
         this.is = 'simpla-text';
@@ -60,15 +66,7 @@
       }
 
       get behaviors() {
-        return [ SimplaBehaviors.Element, editor, inline ];
-      }
-
-      created() {
-        this.setupSimpla({
-          type: 'Text',
-          dataProperties: [ 'value' ],
-          updateOn: [ 'input' ]
-        });
+        return [ SimplaBehaviors.Element(SIMPLA_CONFIG), editor, inline ];
       }
 
       _handleBlur() {
