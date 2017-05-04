@@ -24,7 +24,7 @@
 
     const SIMPLA_CONFIG = {
       type: 'Text',
-      updateOn: [ 'input' ],
+      dataProperties: [ 'value' ],
       setCallback: '_setToSimpla',
       getCallback: '_getFromSimpla'
     };
@@ -34,7 +34,6 @@
         this.is = 'simpla-text';
 
         this.properties = {
-
           plaintext: {
             type: Boolean,
             value: false
@@ -56,14 +55,24 @@
             notify: true,
             readOnly: true,
             value: false
+          },
+
+          value: {
+            type: String,
+            observer: '_renderValue'
           }
         };
 
         this.listeners = {
           'tap': '_handleTap',
           'blur': '_handleBlur',
-          'focus': '_handleFocus'
+          'focus': '_handleFocus',
+          'input': '_refreshValue'
         };
+      }
+
+      attached() {
+        this._refreshValue();
       }
 
       get behaviors() {
@@ -92,13 +101,20 @@
         }
       }
 
-      get value() {
+      _refreshValue() {
         let editor = this.getEditor();
-        return editor ? editor.getHTML() : this.innerHTML;
+
+        this.__refreshingValue = true;
+        this.value = editor ? editor.getHTML() : this.innerHTML;
+        this.__refreshingValue = false;
       }
 
-      set value(value) {
+      _renderValue(value) {
         let editor = this.getEditor();
+
+        if (this.__refreshingValue) {
+          return;
+        }
 
         if (editor) {
           editor.setHTML(value);
