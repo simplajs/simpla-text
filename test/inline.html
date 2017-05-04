@@ -44,9 +44,9 @@
           });
 
           it('should not allow `p` tags', () => {
-            component.value = '<p>Hello World</p>';
-
             return flushEditor(component)
+              .then(() => component.value = '<p>Hello World</p>')
+              .then(() => flushEditor(component))
               .then(() => {
                 expect(component.value).to.equal('Hello World');
               });
