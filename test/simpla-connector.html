@@ -96,7 +96,8 @@
           it('while editing, it should update data in the state', () => {
             component.editable = true;
 
-            return flushEditor(component)
+            return waitForLoaded(component)
+              .then(() => flushEditor(component))
               .then(() => {
                 component.value = 'Hello World';
                 return flushEditor(component);

@@ -25,8 +25,8 @@
     const SIMPLA_CONFIG = {
       type: 'Text',
       dataProperties: [ 'value' ],
-      set: '_setToSimpla',
-      get: '_getFromSimpla'
+      setCallback: '_setToSimpla',
+      getCallback: '_getFromSimpla'
     };
 
     class SimplaText {
@@ -124,7 +124,7 @@
       }
 
       _getFromSimpla(item) {
-        if (this.value !== item.data.text) {
+        if (item && item.data && this.value !== item.data.text) {
           this.value = item.data.text;
         }
       }

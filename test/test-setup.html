@@ -16,7 +16,20 @@
     return () => new Promise((resolve) => setTimeout(resolve, time));
   }
 
-  Object.assign(window, { flushEditor, wait });
+  function waitForLoaded(component) {
+    return new Promise(resolve => {
+      let handler = function(event) {
+        if (event.detail.value) {
+          resolve();
+          component.removeEventListener('loaded-changed', handler);
+        }
+      }
+
+      component.addEventListener('loaded-changed', handler);
+    });
+  }
+
+  Object.assign(window, { flushEditor, wait, waitForLoaded });
 </script>
 
 <!-- Setup Simpla -->
