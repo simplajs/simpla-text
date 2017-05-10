@@ -1,20 +1,24 @@
 # Simpla Text
-![Version][bower-badge] [![Build status][travis-badge]][travis-url] [![Bower dependencies][bowerdeps-badge]][bowerdeps-url] ![Size][size-badge] <br> 
-[![Published][webcomponents-badge]][webcomponents-url] [![Simpla slack group][slack-badge]][slack-url]
+![Version][bower-badge] [![Build status][travis-badge]][travis-url] ![Size][size-badge] [![Published][webcomponents-badge]][webcomponents-url] [![Simpla slack group][slack-badge]][slack-url]
 
-`simpla-text` is a block of editable richtext for the [Simpla](https://www.simpla.io) content system. You can update it seamlessly inline on your page, and use it on its own or inside other textual elements.
+Simpla-text is a block of editable richtext for the [Simpla](https://www.simpla.io) content system. You can update it seamlessly inline on your page, and use it on its own or inside other textual elements.
 
 <!---
 ```
 <custom-element-demo>
   <template>
     <script src="../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="simpla-text.html">
-
-    <script src="https://unpkg.com/simpla@2.0.0-preview/simpla.js"></script>
+    <script src="https://unpkg.com/simpla@^2.0.0"></script>
     <script>
       Simpla.init('local');
+      Simpla.editable(true);
     </script>
+    <link rel="import" href="simpla-text.html">
+    <style>
+      html {
+        font-family: sans-serif
+      }
+    </style>
     <next-code-block></next-code-block>
   </template>
 </custom-element-demo>
@@ -22,10 +26,6 @@
 -->
 ```html
 <simpla-text path="/text"></simpla-text>
-
-<script>
-  Simpla.editable(true);
-</script>
 ```
 
 ## Installation and setup
@@ -39,7 +39,7 @@ $ bower install simpla-text --save
 Then include the Simpla library and setup a project (read more about [setting up Simpla](https://www.simpla.io/docs/guides/get-started))
 
 ```html
-<script src="https://unpkg.com/simpla@^2.0.0/simpla.min.js"></script>
+<script src="https://unpkg.com/simpla@^2.0.0"></script>
 <script>
   // TODO: replace 'project-id' with your project ID
   Simpla.init('project-id')
@@ -49,16 +49,14 @@ Then include the Simpla library and setup a project (read more about [setting up
 Import simpla-text into the `<head>` of your document
 
 ```html
-<link rel="import" href="/bower_components/simpla-text/simpla-text.html" async>
+<link rel="import" href="/bower_components/simpla-text/simpla-text.html">
 ```
 
-And use it anywhere you want editable text on your page. You must also specify a content path (where the element's data will be stored on Simpla's API) in a `path` attribute, or with an `sid` if you have included the [simpla-paths](https://github.com/SimplaElements/simpla-paths) component.
+And use it anywhere you want editable text on your page. You must also specify a content path (where the element's data will be stored on Simpla's API) in a `path` attribute (or with an `sid` if you're using [simpla-paths](https://github.com/SimplaElements/simpla-paths)).
 
 ```html
 <simpla-text path="/my-text"></simpla-text>
 ```
-
-> Read more about [structuring data with paths and IDs](https://www.simpla.io/docs/guides/structuring-data)
 
 ### Polyfills for cross-browser support
 
@@ -191,17 +189,14 @@ Event              | Description
 
 If you find any issues with simpla-text please report them! If you'd like to see a new feature in supported file an issue or let us know in Simpla's public [Slack group](https://slack.simpla.io). We also happily accept PRs. 
 
----
+***
 
-MIT © Simpla <friends@simpla.io>
+MIT © Simpla
 
 [bower-badge]: https://img.shields.io/bower/v/simpla-text.svg
-[bowerlicense-badge]: https://img.shields.io/bower/l/simpla-text.svg
 [travis-badge]: https://img.shields.io/travis/SimplaElements/simpla-text.svg
 [travis-url]: https://travis-ci.org/SimplaElements/simpla-text
-[bowerdeps-badge]: https://img.shields.io/gemnasium/SimplaElements/simpla-text.svg
-[bowerdeps-url]: https://gemnasium.com/bower/simpla-text
-[size-badge]: https://badges.herokuapp.com/size/github/SimplaElements/simpla-text/master/simpla-text.html?gzip=true&color=blue
+[size-badge]: https://badges.herokuapp.com/size/github/SimplaElements/simpla-text/master/simpla-text.html?gzip=true
 [webcomponents-badge]: https://img.shields.io/badge/webcomponents.org-published-blue.svg
 [webcomponents-url]: https://www.webcomponents.org/element/SimplaElements/simpla-text
 [slack-badge]: http://slack.simpla.io/badge.svg
