@@ -1,4 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../simpla-element-behavior/simpla-element-behavior.html">
+
 <dom-module id="simpla-text">
   <template>
     <style>
@@ -19,14 +21,19 @@
   <script>
     import editor from './behaviors/editor-connector';
     import inline from './behaviors/inline';
-    import simpla from './behaviors/simpla-connector';
+
+    const SIMPLA_CONFIG = {
+      type: 'Text',
+      dataProperties: [ 'value' ],
+      setCallback: '_setToSimpla',
+      getCallback: '_getFromSimpla'
+    };
 
     class SimplaText {
       beforeRegister() {
         this.is = 'simpla-text';
 
         this.properties = {
-
           plaintext: {
             type: Boolean,
             value: false
@@ -48,18 +55,28 @@
             notify: true,
             readOnly: true,
             value: false
+          },
+
+          value: {
+            type: String,
+            observer: '_renderValue'
           }
         };
 
         this.listeners = {
           'tap': '_handleTap',
           'blur': '_handleBlur',
-          'focus': '_handleFocus'
+          'focus': '_handleFocus',
+          'input': '_refreshValue'
         };
       }
 
+      attached() {
+        this._refreshValue();
+      }
+
       get behaviors() {
-        return [ editor, inline, simpla ];
+        return [ SimplaBehaviors.Element(SIMPLA_CONFIG), editor, inline ];
       }
 
       _handleBlur() {
@@ -84,19 +101,36 @@
         }
       }
 
-      get value() {
+      _refreshValue() {
         let editor = this.getEditor();
-        return editor ? editor.getHTML() : this.innerHTML;
+
+        this.__refreshingValue = true;
+        this.value = editor ? editor.getHTML() : this.innerHTML;
+        this.__refreshingValue = false;
       }
 
-      set value(value) {
+      _renderValue(value) {
         let editor = this.getEditor();
+
+        if (this.__refreshingValue) {
+          return;
+        }
 
         if (editor) {
           editor.setHTML(value);
         } else {
           this.innerHTML = value;
         }
+      }
+
+      _getFromSimpla(item) {
+        if (item && item.data && this.value !== item.data.text) {
+          this.value = item.data.text;
+        }
+      }
+
+      _setToSimpla() {
+        return { text: this.value };
       }
     };
 

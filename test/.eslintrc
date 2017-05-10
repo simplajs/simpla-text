@@ -8,6 +8,7 @@
     "sinon": true,
     "Simpla": true,
     "flushEditor": true,
+    "waitForLoaded": true,
     "wait": true,
     "fixture": true,
     "WCT": true,

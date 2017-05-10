@@ -96,7 +96,8 @@
           it('while editing, it should update data in the state', () => {
             component.editable = true;
 
-            return flushEditor(component)
+            return waitForLoaded(component)
+              .then(() => flushEditor(component))
               .then(() => {
                 component.value = 'Hello World';
                 return flushEditor(component);
@@ -107,12 +108,6 @@
                 expect(response).to.be.ok;
                 expect(response.data.text).to.match(/Hello World/);
               });
-          });
-
-          it('should not throw errors when setting an invalid path', () => {
-            let setBadPath = () => component.path = 'bad path';
-
-            expect(setBadPath).to.not.throw();
           });
         });
 
