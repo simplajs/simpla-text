@@ -62,7 +62,7 @@ export default {
             placeholder: this.placeholder,
             plugins: this.plaintext ? [] : DEFAULT_PLUGINS,
             editable: this.editable,
-            typeographer: !this.noTypographer
+            typographer: !this.noTypographer
           });
 
           updateTools = ({ name, applied, meta }) => {
