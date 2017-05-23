@@ -54,7 +54,7 @@ export default {
           placeholder: this.placeholder,
           plugins: this.plugins,
           editable: this.editable,
-          typeographer: true
+          typeographer: !this.noTypeographer
         });
 
         updateTools = ({ name, applied, meta }) => {
