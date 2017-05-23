@@ -1,30 +1,41 @@
-const EDITOR_COMPONENT = 'simpla-text-editor.html';
-const toolbar = document.createElement('simpla-text-toolbar');
-const EDITOR_PROP = '_editor';
+const TOOLBAR = document.createElement('simpla-text-toolbar'),
+      EDITOR_DEPENDENCIES = [
+        'simpla-text-toolbar.html',
+        '../simpla-richtext-behavior/simpla-richtext-behavior.html'
+       ],
+       DEFAULT_PLUGINS = [
+        'bold',
+        'italic',
+        'underline',
+        'link'
+       ];
 
 export default {
-  properties: {
-
-    commands: {
-      type: Array,
-      computed: '_computeCommands(plaintext)'
-    }
-
-  },
-
   observers: [
-    '_checkEditorPrepped(editable, commands, inline)',
-    '_refreshEditableOnEditor(editable)'
+    '_checkEditorPrepped(editable, inline)',
+    '_updateEditorEditable(editable)'
   ],
 
   getEditor() {
-    return this[EDITOR_PROP];
+    return this._editor;
+  },
+
+  _importEditorDeps() {
+    let depImports = [];
+
+    EDITOR_DEPENDENCIES.forEach(dep => {
+      depImports.push(new Promise((resolve, reject) => {
+        this.importHref(this.resolveUrl(dep), resolve, reject);
+      }));
+    });
+
+    return Promise.all(depImports);
   },
 
   loadEditor() {
-    return Promise.resolve(this[EDITOR_PROP] || this._createEditor())
+    return Promise.resolve(this._editor || this._createEditor())
       .then((editor) => {
-        this[EDITOR_PROP] = editor;
+        this._editor = editor;
         return editor;
       });
   },
@@ -32,86 +43,82 @@ export default {
   runCommand(commandName, options = {}) {
     return this.loadEditor()
       .then(editor => {
-        return editor.runCommand(commandName, options);
+        return editor.format(commandName, options);
       });
   },
 
   _createEditor() {
     if (!this.__waitForEditor) {
-      this.__waitForEditor = new Promise((resolve, reject) => {
-        let editorUrl = this.resolveUrl(EDITOR_COMPONENT);
-        this.importHref(editorUrl, resolve, reject);
-      })
-      .then(() => {
-        const { Editor, formatters } = window.SimplaText,
-              toFormatter = (command) => formatters[command];
+      this.__waitForEditor = this._importEditorDeps()
+        .then(() => {
+          const { RichText } = window.SimplaBehaviors;
 
-        return new Editor({
-          dom: this,
-          inline: this.inline,
-          formatters: this.commands.map(toFormatter),
-          placeholder: this.placeholder,
-          formatterChangedCallback: ({ name }, { applied, meta }) => {
-            this
-              .loadEditor()
-              .then(editor => {
-                if (toolbar.target === editor) {
-                  this._tools = this._tools || {};
-                  this._tools[name] = { applied, meta };
+          let editor,
+              updateTools,
+              updateRangeAndTarget;
 
-                  if (toolbar.set) {
-                    toolbar.set(`tools.${name}.active`, applied);
-                    toolbar.set(`tools.${name}.meta`, meta);
-                  } else {
-                    toolbar.tools = toolbar.tools || {};
-                    toolbar.tools[name] = { applied, meta };
-                  }
-                }
-              });
-          },
-          selectCallback: (selection) => {
+          editor = new RichText(this, {
+            inline: this.inline,
+            placeholder: this.placeholder,
+            plugins: this.plaintext ? [] : DEFAULT_PLUGINS,
+            editable: this.editable,
+            typeographer: !this.noTypeographer
+          });
+
+          updateTools = ({ name, applied, meta }) => {
+            if (TOOLBAR.target === editor) {
+              this._tools = this._tools || {};
+              this._tools[name] = { applied, meta };
+
+              if (TOOLBAR.set) {
+                TOOLBAR.set(`tools.${name}.active`, applied);
+                TOOLBAR.set(`tools.${name}.meta`, meta);
+              } else {
+                TOOLBAR.tools = TOOLBAR.tools || {};
+                TOOLBAR.tools[name] = { applied, meta };
+              }
+            }
+          }
+
+          updateRangeAndTarget = ({ selection }) => {
             const shouldShowToolbar = selection && this.editable && !this.plaintext;
 
             this.fire('select', { selection });
 
-            if (toolbar.parentElement !== document.body) {
-              document.body.appendChild(toolbar);
+            if (TOOLBAR.parentElement !== document.body) {
+              document.body.appendChild(TOOLBAR);
             }
 
-            toolbar.range = shouldShowToolbar && selection.rangeCount && selection.getRangeAt(0);
+            TOOLBAR.range = shouldShowToolbar && selection.rangeCount && selection.getRangeAt(0);
 
             if (this._tools) {
-              toolbar.tools = this._tools;
+              TOOLBAR.tools = this._tools;
             }
 
             // We're only setting the target on the toolbar editor if selection
             //  is truthy, as we want the toolbar to still have a reference to it
             //  even if this loses focus e.g. toolbar receiving input for link href
             if (selection) {
-              this
-                .loadEditor()
-                .then(editor => {
-                  toolbar.target = editor;
-                });
+              TOOLBAR.target = editor;
             }
-          },
-          inputCallback: () => this.fire('input'),
-          editableCallback: () => this.editable
+          };
+
+          editor.on('plugin', updateTools);
+          editor.on('select', updateRangeAndTarget);
+          editor.on('input', () => this.fire('input'));
+
+          return editor;
         });
-      });
     }
 
     return this.__waitForEditor;
   },
 
-  _refreshEditableOnEditor() {
-    // The editor's view just needs to be refreshed so that it does calls the
-    //  supplied editable callback, that will in turn set editable on the view
-    //  to the value of this.editable
+  _updateEditorEditable(editable) {
     let editor = this.getEditor();
 
     if (editor) {
-      editor.view.updateState(editor.state);
+      editor.editable = editable;
     }
   },
 
@@ -119,9 +126,5 @@ export default {
     if (editable) {
       this.loadEditor();
     }
-  },
-
-  _computeCommands(plaintext) {
-    return plaintext ? [] : [ 'bold', 'italic', 'underline', 'link' ];
   }
 }
