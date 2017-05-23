@@ -154,18 +154,18 @@ You can set custom placeholders (displayed when simpla-text is editable and does
 <simpla-text path="/text" placeholder="Start typing..."></simpla-text>
 ```
 
-## Typeographer
+## Typographer
 
-By default simpla-text applies 'smart typeography' rules to its content. These include:
+By default simpla-text applies 'smart typography' rules to its content. These include:
 
 - Smart quotes (`"` to `“`)
 - Automatic em dashes (`--` to `—`)
 - Automatic ellipses (`...` to `…`)
 
-You can disable the typeographer by giving simpla-text a `noTypeographer` property
+You can disable the typographer by giving simpla-text a `noTypeographer` property
 
 ```html
-<simpla-text path="/text" no-typeographer></simpla-text>
+<simpla-text path="/text" no-typographer></simpla-text>
 ```
 
 ## API reference
@@ -178,7 +178,7 @@ Property         | Type    | Default                | Description
 `placeholder`    | String  | `'Enter your text...'` | Placeholder to show when element is editable and has no content 
 `inline`         | Boolean | `false`                | Whether to allow paragraphs                                     
 `plaintext`      | Boolean | `false`                | Whether to disable formatting tools                             
-`noTypeographer` | Boolean | `false`                | Whether to disable smart typeography rules                      
+`noTypographer`  | Boolean | `false`                | Whether to disable smart typography rules                      
 `editable`       | Boolean | `false`                | Whether the element is editable                                 
 `active`         | Boolean | `false`                | Whether the element is currently being edited                   
 `loaded`         | Boolean | `false`                | Wether the element has loaded and rendered its content          
@@ -186,7 +186,7 @@ Property         | Type    | Default                | Description
 Properties can be set either directly with JavaScript or as attributes on the element, `camelCased` properties are serialized to `kebab-cased` attributes
 
 ```html
-<simpla-text path="/text" plaintext no-typeographer></simpla-text> 
+<simpla-text path="/text" plaintext no-typographer></simpla-text> 
 
 <script>
   document.querySelector('simpla-text').editable = true;
