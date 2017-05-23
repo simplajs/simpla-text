@@ -1,5 +1,5 @@
 # Simpla Text
-![Version][bower-badge] [![Build status][travis-badge]][travis-url] ![Size][size-badge] [![Published][webcomponents-badge]][webcomponents-url] [![Simpla slack group][slack-badge]][slack-url]
+[![Build status][travis-badge]][travis-url] ![Size][size-badge] ![Version][bower-badge] [![Published][webcomponents-badge]][webcomponents-url] [![Simpla slack group][slack-badge]][slack-url]
 
 Simpla-text is a block of editable richtext for the [Simpla](https://www.simpla.io) content system. You can update it seamlessly inline on your page, and use it on its own or inside other textual elements.
 
@@ -17,6 +17,7 @@ Simpla-text is a block of editable richtext for the [Simpla](https://www.simpla.
     <style>
       html {
         font-family: sans-serif
+        margin: 1rem 0;
       }
     </style>
     <next-code-block></next-code-block>
@@ -24,6 +25,7 @@ Simpla-text is a block of editable richtext for the [Simpla](https://www.simpla.
 </custom-element-demo>
 ```
 -->
+
 ```html
 <simpla-text path="/text"></simpla-text>
 ```
@@ -33,7 +35,7 @@ Simpla-text is a block of editable richtext for the [Simpla](https://www.simpla.
 Install simpla-text with Bower (Yarn support coming soon)
 
 ```sh
-$ bower install simpla-text --save
+$ bower i simpla-text --save
 ```
 
 Then include the Simpla library and setup a project (read more about [setting up Simpla](https://www.simpla.io/docs/guides/get-started))
@@ -52,10 +54,10 @@ Import simpla-text into the `<head>` of your document
 <link rel="import" href="/bower_components/simpla-text/simpla-text.html">
 ```
 
-And use it anywhere you want editable text on your page. You must also specify a content path (where the element's data will be stored on Simpla's API) in a `path` attribute (or with an `sid` if you're using [simpla-paths](https://github.com/SimplaElements/simpla-paths)).
+And use it anywhere you want editable text on your page. You must also specify a content path (where the element's data will be stored on Simpla's API) in a `path` attribute.
 
 ```html
-<simpla-text path="/my-text"></simpla-text>
+<simpla-text path="/text"></simpla-text>
 ```
 
 ### Polyfills for cross-browser support
@@ -77,7 +79,7 @@ Simpla.editable(true);
 
 ```html
 <!-- Make only this text editable -->
-<simpla-text path="/my-text" editable></simpla-text>
+<simpla-text path="/text" editable></simpla-text>
 ```
 
 Entering edit mode is the recommended way to edit text. It ensures all elements on a page remain in sync and updates Simpla's public `'editable'` state, which other elements may rely on.
@@ -103,11 +105,11 @@ You can use `<simpla-text>` either as a standalone text container, or inside oth
 
 ```html
 <!-- Standalone text container, uses paragraphs -->
-<simpla-text path="/my-text"></simpla-text>
+<simpla-text path="/text"></simpla-text>
 
 <!-- Inline content, line breaks only -->
 <h1>
-  <simpla-text path="/my-text"></simpla-text>
+  <simpla-text path="/text"></simpla-text>
 </h1>
 ```
 
@@ -115,7 +117,7 @@ You can also force `inline` mode by setting the `inline` property on simpla-text
 
 ```html
 <!-- Inline content, line breaks only -->
-<simpla-text path="/my-text" inline></simpla-text>
+<simpla-text path="/text" inline></simpla-text>
 ```
 
 ## Initializing with static content
@@ -123,12 +125,12 @@ You can also force `inline` mode by setting the `inline` property on simpla-text
 You can write HTML content inside simpla-text just like you would with any other element. If content for the text's `path` exists on Simpla's API any static content will be overwritten
 
 ```html
-<simpla-text path="/my-text">
+<simpla-text path="/text">
   <p>Some static content</p>
 </simpla-text>
 
 <h1>
-  <simpla-text path="/my-heading">Heading content</simpla-text>
+  <simpla-text path="/heading">Heading content</simpla-text>
 </h1>
 ```
 
@@ -141,7 +143,7 @@ Initializing with static content is useful for converting existing sites to Simp
 By default simpla-text provides editable richtext, with basic formatting controls (bold, italic, underline, links) available to the user. You can disable all formatting tools and force simpla-text to create plain text content only with the `plaintext` property.
 
 ```html
-<simpla-text path="/my-text" plaintext></simpla-text>
+<simpla-text path="/text" plaintext></simpla-text>
 ```
 
 ## Custom placeholders
@@ -149,7 +151,7 @@ By default simpla-text provides editable richtext, with basic formatting control
 You can set custom placeholders (displayed when simpla-text is editable and does not have content) the same way as native elements, with a `placeholder` attribute
 
 ```html
-<simpla-text path="/my-text" placeholder="Start typing..."></simpla-text>
+<simpla-text path="/text" placeholder="Start typing..."></simpla-text>
 ```
 
 
@@ -170,10 +172,10 @@ Property      | Type    | Default                | Description
 Properties can be set either directly with JavaScript or as attributes on the element
 
 ```html
-<simpla-text id="text" path="/my-text" plaintext></simpla-text> 
+<simpla-text path="/text" plaintext></simpla-text> 
 
 <script>
-  document.querySelector('#text').editable = true;
+  document.querySelector('simpla-text').editable = true;
 </script>
 ```
 

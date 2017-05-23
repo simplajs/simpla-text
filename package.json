@@ -5,7 +5,6 @@
   "main": "simpla-text.html",
   "scripts": {
     "test": "gulp test:local",
-    "install-prosemirror-view": "cd node_modules/prosemirror-view && npm install",
     "setup-nightwatch": "node nightwatch.conf.js",
     "postinstall": "npm run setup-nightwatch && npm run install-prosemirror-view",
     "test:e2e": "node_modules/.bin/nightwatch --config nightwatch.conf.js"
@@ -13,13 +12,13 @@
   "author": "Simpla <friends@simpla.io>",
   "license": "MIT",
   "keywords": [
-    "web-component",
     "simpla",
-    "editable",
-    "text editor",
+    "web-components",
+    "custom-element",
+    "richtext",
+    "editor",
     "cms",
-    "polymer",
-    "content management"
+    "content-management"
   ],
   "repository": {
     "type": "git",
