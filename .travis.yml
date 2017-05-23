@@ -2,6 +2,9 @@ dist: trusty
 language: node_js
 node_js:
   - '6'
+install:
+  - yarn
+  - bower install
 before_script:
   - npm install -g web-component-tester
   - gulp build:tests
