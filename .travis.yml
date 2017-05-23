@@ -2,11 +2,9 @@ dist: trusty
 language: node_js
 node_js:
   - '6'
-install:
-  - yarn
-  - bower install
 before_script:
-  - npm install -g web-component-tester
+  - npm install -g bower web-component-tester
+  - bower install
   - gulp build:tests
 script: xvfb-run wct
 cache: yarn
