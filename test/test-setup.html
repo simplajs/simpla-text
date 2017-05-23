@@ -1,19 +1,12 @@
 <!-- Test Helpers -->
 <script>
-  function flushEditor(component, callback = () => {}) {
-    return Promise.resolve()
-      .then(() => component.loadEditor())
-      .then((editor) => {
-        if (editor.view.inDOMChange) {
-          editor.view.inDOMChange.finish();
-        }
-
-        callback();
-      });
-  }
 
   function wait(time = 25) {
     return () => new Promise((resolve) => setTimeout(resolve, time));
+  }
+
+  function flushEditor(component) {
+    return component.loadEditor().then(wait(0));
   }
 
   function waitForLoaded(component) {

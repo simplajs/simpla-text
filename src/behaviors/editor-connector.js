@@ -5,16 +5,16 @@ const EDITOR_PROP = '_editor';
 export default {
   properties: {
 
-    commands: {
+    plugins: {
       type: Array,
-      computed: '_computeCommands(plaintext)'
+      computed: '_computePlugins(plaintext)'
     }
 
   },
 
   observers: [
-    '_checkEditorPrepped(editable, commands, inline)',
-    '_refreshEditableOnEditor(editable)'
+    '_checkEditorPrepped(editable, plugins, inline)',
+    '_updateEditorEditable(editable)'
   ],
 
   getEditor() {
@@ -32,7 +32,7 @@ export default {
   runCommand(commandName, options = {}) {
     return this.loadEditor()
       .then(editor => {
-        return editor.runCommand(commandName, options);
+        return editor.format(commandName, options);
       });
   },
 
@@ -43,75 +43,74 @@ export default {
         this.importHref(editorUrl, resolve, reject);
       })
       .then(() => {
-        const { Editor, formatters } = window.SimplaText,
-              toFormatter = (command) => formatters[command];
+        const { RichText } = window.SimplaBehaviors;
 
-        return new Editor({
-          dom: this,
+        let editor,
+            updateTools,
+            updateRangeAndTarget;
+
+        editor = new RichText(this, {
           inline: this.inline,
-          formatters: this.commands.map(toFormatter),
           placeholder: this.placeholder,
-          formatterChangedCallback: ({ name }, { applied, meta }) => {
-            this
-              .loadEditor()
-              .then(editor => {
-                if (toolbar.target === editor) {
-                  this._tools = this._tools || {};
-                  this._tools[name] = { applied, meta };
-
-                  if (toolbar.set) {
-                    toolbar.set(`tools.${name}.active`, applied);
-                    toolbar.set(`tools.${name}.meta`, meta);
-                  } else {
-                    toolbar.tools = toolbar.tools || {};
-                    toolbar.tools[name] = { applied, meta };
-                  }
-                }
-              });
-          },
-          selectCallback: (selection) => {
-            const shouldShowToolbar = selection && this.editable && !this.plaintext;
-
-            this.fire('select', { selection });
-
-            if (toolbar.parentElement !== document.body) {
-              document.body.appendChild(toolbar);
-            }
-
-            toolbar.range = shouldShowToolbar && selection.rangeCount && selection.getRangeAt(0);
-
-            if (this._tools) {
-              toolbar.tools = this._tools;
-            }
-
-            // We're only setting the target on the toolbar editor if selection
-            //  is truthy, as we want the toolbar to still have a reference to it
-            //  even if this loses focus e.g. toolbar receiving input for link href
-            if (selection) {
-              this
-                .loadEditor()
-                .then(editor => {
-                  toolbar.target = editor;
-                });
-            }
-          },
-          inputCallback: () => this.fire('input'),
-          editableCallback: () => this.editable
+          plugins: this.plugins,
+          editable: this.editable,
+          typeographer: true
         });
+
+        updateTools = ({ name, applied, meta }) => {
+          if (toolbar.target === editor) {
+            this._tools = this._tools || {};
+            this._tools[name] = { applied, meta };
+
+            if (toolbar.set) {
+              toolbar.set(`tools.${name}.active`, applied);
+              toolbar.set(`tools.${name}.meta`, meta);
+            } else {
+              toolbar.tools = toolbar.tools || {};
+              toolbar.tools[name] = { applied, meta };
+            }
+          }
+        }
+
+        updateRangeAndTarget = ({ selection }) => {
+          const shouldShowToolbar = selection && this.editable && !this.plaintext;
+
+          this.fire('select', { selection });
+
+          if (toolbar.parentElement !== document.body) {
+            document.body.appendChild(toolbar);
+          }
+
+          toolbar.range = shouldShowToolbar && selection.rangeCount && selection.getRangeAt(0);
+
+          if (this._tools) {
+            toolbar.tools = this._tools;
+          }
+
+          // We're only setting the target on the toolbar editor if selection
+          //  is truthy, as we want the toolbar to still have a reference to it
+          //  even if this loses focus e.g. toolbar receiving input for link href
+          if (selection) {
+            toolbar.target = editor;
+          }
+        };
+
+        editor.on('plugin', updateTools);
+        editor.on('select', updateRangeAndTarget);
+        editor.on('input', () => this.fire('input'));
+
+        return editor;
       });
     }
 
     return this.__waitForEditor;
   },
 
-  _refreshEditableOnEditor() {
-    // The editor's view just needs to be refreshed so that it does calls the
-    //  supplied editable callback, that will in turn set editable on the view
-    //  to the value of this.editable
+  _updateEditorEditable(editable) {
     let editor = this.getEditor();
 
     if (editor) {
-      editor.view.updateState(editor.state);
+      editor.editable = editable;
     }
   },
 
@@ -121,7 +120,7 @@ export default {
     }
   },
 
-  _computeCommands(plaintext) {
+  _computePlugins(plaintext) {
     return plaintext ? [] : [ 'bold', 'italic', 'underline', 'link' ];
   }
 }

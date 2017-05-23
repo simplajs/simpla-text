@@ -2,6 +2,7 @@
 <link rel="import" href="../simpla-styles/simpla-styles.html">
 <link rel="import" href="../iron-iconset-svg/iron-iconset-svg.html">
 <link rel="import" href="../iron-icon/iron-icon.html" async>
+<link rel="import" href="../simpla-richtext-behavior/simpla-richtext-behavior.html">
 
 <!-- Material icons cherry picked from iron-icons -->
 <iron-iconset-svg name="simpla-text-toolbar">
@@ -14,15 +15,6 @@
     </defs>
   </svg>
 </iron-iconset-svg>
-
-<!-- Setup editor -->
-<script>
-  import Editor from './editor';
-  import * as formatters from './editor/formatters';
-
-  window.SimplaText = window.SimplaText || {};
-  Object.assign(window.SimplaText, { Editor, formatters });
-</script>
 
 <!-- Toolbar -->
 <dom-module id="simpla-text-toolbar">
@@ -267,8 +259,7 @@
         this.listeners = {
           'keyup': '_stopEvent',
           'keydown': '_stopEvent',
-          'keypress': '_stopEvent',
-          'focusin': '_storeSelection'
+          'keypress': '_stopEvent'
         };
       }
 
@@ -357,22 +348,17 @@
         return { top, left };
       }
 
+      _runCommand(command, name, options = {}) {
+        if (this.target) {
+          this.target.focus();
+          this.target[command](name, options);
+        }
+      }
+
       _handleToolTap(event) {
         let { command } = Polymer.dom(event).rootTarget.dataset;
 
-        this._runCommand(command);
-      }
-
-      _runCommand(command, options = {}) {
-        if (this.target) {
-          let currentState = this.target.state,
-              transaction = currentState.tr.setSelection(this.__selection),
-              newState = currentState.apply(transaction);
-
-          this.target.dom.focus();
-          this.target.view.updateState(newState);
-          this.target.runCommand(command, options);
-        }
+        this._runCommand('toggleFormat', command);
       }
 
       _toggleLinkInput() {
@@ -408,28 +394,17 @@
           this._storedHref = this.get('tools.link.meta.href') || '';
           this.$._linkInput.focus();
         } else {
-          // HACK: This smells bad - it's active, so we're removing the link before
-          //  reapplying it, I think it'll cause us problems, and regardless it
-          //  just ain't clean
-          if (this.get('tools.link.active')) {
-            this._runCommand('link');
-          }
+          this._runCommand('removeFormat', 'link');
 
           if (currentHref) {
-            this._runCommand('link', { href: currentHref });
+            this._runCommand('format', 'link', { href: currentHref });
           }
-        }
-      }
-
-      _storeSelection() {
-        if (this.target) {
-          this.__selection = this.target.state.selection;
         }
       }
 
       _attachListenersToTarget(target) {
         if (target) {
-          target.dom.addEventListener('blur', (event) => {
+          target.on('blur', (event) => {
             if (!(event.relatedTarget === this || this.contains(event.relatedTarget))) {
               this.hidden = true;
             }
