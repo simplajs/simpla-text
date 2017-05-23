@@ -162,7 +162,7 @@ By default simpla-text applies 'smart typography' rules to its content. These in
 - Automatic em dashes (`--` to `—`)
 - Automatic ellipses (`...` to `…`)
 
-You can disable the typographer by giving simpla-text a `noTypeographer` property
+You can disable the typographer by giving simpla-text a `noTypographer` property
 
 ```html
 <simpla-text path="/text" no-typographer></simpla-text>
