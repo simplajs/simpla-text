@@ -1,6 +1,5 @@
 const EDITOR_COMPONENT = 'simpla-text-editor.html';
 const toolbar = document.createElement('simpla-text-toolbar');
-const EDITOR_PROP = '_editor';
 
 export default {
   properties: {
@@ -18,13 +17,13 @@ export default {
   ],
 
   getEditor() {
-    return this[EDITOR_PROP];
+    return this._editor;
   },
 
   loadEditor() {
-    return Promise.resolve(this[EDITOR_PROP] || this._createEditor())
+    return Promise.resolve(this._editor || this._createEditor())
       .then((editor) => {
-        this[EDITOR_PROP] = editor;
+        this._editor = editor;
         return editor;
       });
   },
