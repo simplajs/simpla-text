@@ -80,8 +80,8 @@ export default {
             }
           }
 
-          updateRangeAndTarget = ({ selection }) => {
-            const shouldShowToolbar = selection && this.editable && !this.plaintext;
+          updateRangeAndTarget = ({ empty, native: selection }) => {
+            const shouldShowToolbar = !empty && this.editable && !this.plaintext;
 
             this.fire('select', { selection });
 
