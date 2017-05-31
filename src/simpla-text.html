@@ -2,10 +2,10 @@
 <link rel="import" href="../simpla-element-behavior/simpla-element-behavior.html">
 
 <dom-module id="simpla-text">
-  <template>
-    <style>
+  <template><style>
       :host {
         display: block;
+        white-space: pre-wrap;
       }
 
       :host([contenteditable]) {
@@ -15,9 +15,7 @@
       :host([inline]) {
         display: inline;
       }
-    </style>
-    <slot></slot>
-  </template>
+    </style><slot></slot></template>
   <script>
     import editor from './behaviors/editor-connector';
     import inline from './behaviors/inline';
