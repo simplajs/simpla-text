@@ -107,7 +107,9 @@ export default {
           editor.on('select', updateRangeAndTarget);
           editor.on('input', () => this.fire('input'));
 
-          editor.setHTML(this.value);
+          if (this.value && this.value.trim()) {
+            editor.setHTML(this.value);
+          }
 
           return editor;
         });
