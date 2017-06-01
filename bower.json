@@ -32,7 +32,7 @@
     "iron-icon": "^1.0.12",
     "iron-iconset-svg": "^1.1.0",
     "simpla-element-behavior": "^0.2.0",
-    "simpla-richtext-behavior": "^0.4.0"
+    "simpla-richtext-behavior": "^0.4.4"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0",
