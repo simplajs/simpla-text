@@ -91,6 +91,7 @@
 
               return flushEditor(plaintext)
                 .then(() => {
+                  plaintext.value = plaintext.value.split('</style>')[1];
                   expect(plaintext.value).to.equal(plain);
                 });
             });
@@ -103,12 +104,13 @@
 
               return flushEditor(component)
                 .then(() => {
-                  expect(component.value).to.equal(rich);
+                  expect(component.value).to.equal(styleWidget + rich);
                   component.plaintext = true;
                   return flushEditor(component);
                 })
                 .then(() => {
-                  expect(component.value).to.equal(plain);
+                  plaintext.value = component.value.split('</style>')[1];
+                  expect(component.value).to.equal(styleWidget + plain);
                 });
 
             });
