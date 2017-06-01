@@ -24,9 +24,8 @@
       }
 
       :host {
-        -moz-osx-font-smoothing: grayscale;
-         -webkit-font-smoothing: antialiased;
-                 font-smoothing: antialiased;
+        --iron-icon-width: var(--simpla-scale-0);
+        --iron-icon-height: var(--simpla-scale-0);
         position: absolute;
         display: flex;
         background: var(--simpla-grey-700);
@@ -35,6 +34,13 @@
         border-radius: var(--simpla-border-radius);
         z-index: var(--simpla-on-top);
         overflow: hidden;
+        -moz-osx-font-smoothing: grayscale;
+         -webkit-font-smoothing: antialiased;
+                 font-smoothing: antialiased;
+      }
+
+      :host(:focus) {
+        outline: none;
       }
 
       :host([mobile]) {
@@ -48,32 +54,24 @@
       }
 
       .tool {
-        /* Reset default button styles */
-        font: inherit;
-        color: inherit;
-        line-height: normal;
-        background: none;
+        cursor: pointer;
         user-select: none;
         -webkit-touch-callout: none;
-        border: 0;
-        padding: 0;
-        outline: 0;
-        cursor: pointer;
-
         padding: 0.4em 0.5em;
         border-bottom: 2px solid transparent;
         /* Link opening transition */
-        transition: margin-left 150ms var(--simpla-easing-standard);
+        transition: margin-left 150ms var(--simpla-easing-standard),
+                    padding 150ms var(--simpla-easing-standard),
+                    opacity 50ms ease;
+      }
+
+      .tool:focus {
+        outline: none;
       }
 
       .tool[active] {
         border-color: var(--simpla-primary-color);
-      }
-
-      .tool__icon {
-        --iron-icon-width: var(--simpla-scale-0);
-        --iron-icon-height: var(--simpla-scale-0);
-        pointer-events: none;
+        color: var(--simpla-primary-color);
       }
 
       .tool__link {
@@ -97,12 +95,16 @@
         padding: 0 0.5em;
       }
 
-      :host([link-active]) .tool {
-        margin-left: calc(0px - var(--simpla-scale-0) - 0.5em);
+      :host([link-active]) .tool:not(.tool--link) {
+        opacity: 0;
+        margin-left: -1em;
+        padding-left: 0;
+        padding-right: 0;
       }
 
-      :host([link-active]) .tool:not(.tool--link) {
-        visibility: hidden;
+      /* Stop icons becoming tap targets */
+      iron-icon {
+        pointer-events: none;
       }
 
       /* Patch hidden prop in Chrome and IE */
@@ -111,8 +113,7 @@
       }
     </style>
 
-    <button
-      class="tool"
+    <a class="tool"
       on-tap="_handleToolTap"
       active$="[[tools.bold.active]]"
       data-command="bold">
@@ -120,10 +121,9 @@
         class="tool__icon"
         icon="simpla-text-toolbar:format-bold">
       </iron-icon>
-    </button>
+    </a>
 
-    <button
-      class="tool"
+    <a class="tool"
       on-tap="_handleToolTap"
       active$="[[tools.italic.active]]"
       data-command="italic">
@@ -131,10 +131,9 @@
         class="tool__icon"
         icon="simpla-text-toolbar:format-italic">
       </iron-icon>
-    </button>
+    </a>
 
-    <button
-      class="tool"
+    <a class="tool"
       on-tap="_handleToolTap"
       active$="[[tools.underline.active]]"
       data-command="underline">
@@ -142,10 +141,9 @@
         class="tool__icon"
         icon="simpla-text-toolbar:format-underlined">
       </iron-icon>
-    </button>
+    </a>
 
-    <button
-      class="tool tool--link"
+    <a class="tool tool--link"
       on-tap="_toggleLinkInput"
       active$="[[_either(tools.link.active, linkActive)]]"
       data-command="link">
@@ -153,13 +151,13 @@
         class="tool__icon"
         icon="simpla-text-toolbar:insert-link">
       </iron-icon>
-    </button>
+    </a>
     <input
       id="_linkInput"
       class="tool__link"
       type="text"
       value="{{_storedHref::input}}"
-      on-keyup="_checkForExitKeys"
+      on-keydown="_checkForExitKeys"
       placeholder="Enter a URL..."
     >
   </template>
@@ -170,6 +168,7 @@
     const GUTTER = 5,
           detect = new MobileDetect(window.navigator.userAgent),
           IS_MOBILE = !!(detect.mobile() || detect.tablet()),
+          LINK_EXIT_KEYS = [ 13, 27 ],
           getInitialTools = () => ({
             bold: {
               active: false
@@ -373,16 +372,9 @@
       }
 
       _checkForExitKeys(event) {
-        const ENTER = 13,
-              ESC = 27;
-
-        if (event.keyCode === ENTER) {
+        if (LINK_EXIT_KEYS.indexOf(event.keyCode) !== -1) {
           this.linkActive = false;
-        }
-
-        if (event.keyCode === ESC) {
-          event.target.value = this.get('tools.link.meta.href') || '';
-          this.linkActive = false;
+          event.preventDefault();
         }
       }
 
