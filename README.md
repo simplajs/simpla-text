@@ -1,7 +1,7 @@
 # Simpla Text
 [![Build status][travis-badge]][travis-url] ![Size][size-badge] ![Version][bower-badge] [![Published][webcomponents-badge]][webcomponents-url] [![Simpla slack group][slack-badge]][slack-url]
 
-Simpla-text is a block of editable richtext for the [Simpla](https://www.simpla.io) content system. You can update it seamlessly inline on your page, and use it on its own or inside other textual elements.
+Simpla-text is a web component that contains editable richtext, built on the [Simpla](https://www.simpla.io) content system. You can update it seamlessly inline on your page, and use it on its own or inside other textual elements.
 
 <!---
 ```
@@ -212,7 +212,7 @@ MIT © Simpla
 [bower-badge]: https://img.shields.io/bower/v/simpla-text.svg
 [travis-badge]: https://img.shields.io/travis/SimplaElements/simpla-text.svg
 [travis-url]: https://travis-ci.org/SimplaElements/simpla-text
-[size-badge]: https://badges.herokuapp.com/size/github/SimplaElements/simpla-text/master/simpla-text.html?gzip=true
+[size-badge]: http://img.badgesize.io/SimplaElements/simpla-text/master/simpla-text.html?compression=gzip&label=render_bundle_%28gzip%29
 [webcomponents-badge]: https://img.shields.io/badge/webcomponents.org-published-blue.svg
 [webcomponents-url]: https://www.webcomponents.org/element/SimplaElements/simpla-text
 [slack-badge]: http://slack.simpla.io/badge.svg
