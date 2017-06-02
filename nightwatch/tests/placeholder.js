@@ -32,7 +32,7 @@ module.exports = {
       .keys([ browser.Keys.BACK_SPACE ])
       .keys('Hello World')
       .click('body')
-      .verify.textContent('#main', 'Hello World')
+      .verify.innerText('#main', 'Hello World')
       .saveScreenshot('./screenshots/placeholder/blurred-hide.png');
   },
 
