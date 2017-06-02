@@ -379,13 +379,16 @@
       }
 
       _linkActiveObserver(inputOpen) {
-        let currentHref = this._storedHref && this._storedHref.trim();
+        let currentHref = this._storedHref && this._storedHref.trim(),
+            linkApplied = this.get('tools.link.applied');
 
         if (inputOpen) {
           this._storedHref = this.get('tools.link.meta.href') || '';
           this.$._linkInput.focus();
         } else {
-          this._runCommand('removeFormat', 'link');
+          if (linkApplied) {
+            this._runCommand('removeFormat', 'link');
+          }
 
           if (currentHref) {
             this._runCommand('format', 'link', { href: currentHref });

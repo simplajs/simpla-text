@@ -1,7 +1,7 @@
 const util = require('util');
 
 /**
- * Checks if both given element's innerHTML matches
+ * Checks if both given element's values match
  *
  * ```
  *    this.demoTest = function (client) {
@@ -11,7 +11,7 @@ const util = require('util');
  */
 
 exports.assertion = function(source, mirror, msg) {
-  this.DEFAULT_MSG = this.DEFAULT_MSG || 'Testing if innerHTML of <%s> and <%s> match.';
+  this.DEFAULT_MSG = this.DEFAULT_MSG || 'Testing if value of <%s> and <%s> match.';
 
   this.message = msg || util.format(this.DEFAULT_MSG, source, mirror);
 
@@ -25,7 +25,7 @@ exports.assertion = function(source, mirror, msg) {
       var sourceEl = document.querySelector(sourceSelector),
           mirrorEl = document.querySelector(mirrorSelector);
 
-      return [ sourceEl.innerHTML, mirrorEl.innerHTML ];
+      return [ sourceEl.value, mirrorEl.value ];
     }, [ source, mirror ], (result) => {
       this.result = result;
       callback(result);
