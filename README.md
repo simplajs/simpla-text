@@ -15,9 +15,10 @@ Simpla-text is a web component that contains editable richtext, built on the [Si
     </script>
     <link rel="import" href="simpla-text.html">
     <style>
-      html {
-        font-family: sans-serif
-        margin: 1rem 0;
+      body {
+        font-family: sans-serif;
+        line-height: 1.6;
+        padding: 1rem 0.5rem;
       }
     </style>
     <next-code-block></next-code-block>
