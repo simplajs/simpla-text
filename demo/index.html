@@ -40,6 +40,16 @@
         font-size: 1.4rem;
         font-weight: 400;
       }
+
+      demo-snippet h1 {
+        font-size: 1.4rem;
+        font-weight: 400;
+      }
+
+      simpla-text[path="/inline"] {
+        display: inline-block;
+        margin: 1em 0;
+      }
     </style>
   </head>
 
@@ -61,9 +71,9 @@
         <h1 class="demo__title">Inline content</h1>
         <demo-snippet>
           <template>
-            <h3>
+            <h1>
               <simpla-text path="/heading"></simpla-text>
-            </h3>
+            </h1>
 
             <simpla-text path="/inline" inline></simpla-text>
           </template>
