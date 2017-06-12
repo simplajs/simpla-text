@@ -14,5 +14,9 @@
     "WCT": true,
     "rangy": true,
     "MockInteractions": true
+  },
+
+  "rules" : {
+    "quotes": 0,
   }
 }
