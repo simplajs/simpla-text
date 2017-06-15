@@ -17,6 +17,9 @@
   "main": "simpla-text.html",
   "license": "MIT",
   "homepage": "http://webcomponents.org/element/SimplaElements/simpla-text",
+  "pages": {
+    "API Reference": "API.md"
+  },
   "demos": {
     "Demo": "demo/index.html"
   },

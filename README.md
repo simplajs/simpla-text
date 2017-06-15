@@ -31,6 +31,24 @@ Simpla-text is an element containing editable richtext, which you can update sea
 <simpla-text path="/text"></simpla-text>
 ```
 
+### Contents
+
+- [Installation and setup](#installation-and-setup)
+- [Editing content](#editing-content)
+- [Saving content](#saving-content)
+- [Inline content](#inline-content)
+- [Initializing with static content](#initializing-with-static-content)
+- [Plaintext](#plaintext)
+- [Custom placeholders](#custom-placeholders)
+- [Typographer](#typographer)
+- [Contributing](#contributing)
+
+### Resources
+
+- [API reference][api]
+- [Demo][demo]
+- [License][license]
+
 ## Installation and setup
 
 Install simpla-text with Bower (Yarn support coming soon)
@@ -39,7 +57,7 @@ Install simpla-text with Bower (Yarn support coming soon)
 $ bower i simpla-text --save
 ```
 
-[Setup Simpla][setup-simpla] on your page, then import simpla-text into your `<head>`
+[Setup Simpla][simpla-setup] on your page, then import simpla-text into your `<head>`
 
 ```html
 <link rel="import" href="/bower_components/simpla-text/simpla-text.html">
@@ -146,51 +164,21 @@ You can disable the typographer by giving simpla-text a `noTypographer` property
 <simpla-text path="/text" no-typographer></simpla-text>
 ```
 
-## API reference
-
-### Properties
-
-Property         | Type    | Default                | Description                                                     
----------------- | ------- | ---------------------- | -----------                                                     
-`path`           | String  | `undefined`            | Path to the element's content on Simpla's API                   
-`value`          | String  | `''`                   | HTML string of the content in simpla-text
-`placeholder`    | String  | `'Enter your text...'` | Placeholder to show when element is editable and has no content 
-`inline`         | Boolean | `false`                | Whether to allow paragraphs                                     
-`plaintext`      | Boolean | `false`                | Whether to disable formatting tools                             
-`noTypographer`  | Boolean | `false`                | Whether to disable smart typography rules                      
-`editable`       | Boolean | `false`                | Whether the element is editable                                 
-`active`         | Boolean | `false`                | Whether the element is currently being edited                   
-`loaded`         | Boolean | `false`                | Wether the element has loaded and rendered its content          
-
-Properties can be set either directly with JavaScript or as attributes on the element, `camelCased` properties are serialized to `kebab-cased` attributes
-
-```html
-<simpla-text path="/text" no-typographer></simpla-text> 
-
-<script>
-  document.querySelector('simpla-text').editable = true;
-</script>
-```
-
-### Events
-
-Event              | Description                                    
------------------- | -----------                                    
-`value-changed`    | Fired whenever the `value` property changes 
-`editable-changed` | Fired whenever the `editable` property changes 
-`active-changed`   | Fired whenever the `active` property changes   
-`loaded-changed`   | Fired whenever the `loaded` property changes   
-
 ## Contributing
 
-If you find any issues with simpla-text please report them! If you'd like to see a new feature in supported file an issue or let us know in Simpla's public [Slack group](https://slack.simpla.io). We also happily accept PRs. 
+If you find any issues with simpla-text please report them! If you'd like to see a new feature in supported file an issue or let us know in Simpla's public [Slack group][slack-url]. We also happily accept PRs. 
 
 ***
 
 MIT © [Simpla][simpla]
 
 [simpla]: https://www.simpla.io
-[setup-simpla]: https://www.simpla.io/docs/guides/get-started
+[simpla-setup]: https://www.simpla.io/docs/guides/get-started
+
+[api]: https://www.webcomponents.org/element/SimplaElements/simpla-text/page/API.md
+[demo]: https://www.webcomponents.org/element/SimplaElements/simpla-text/demo/demo/index.html
+[license]: https://github.com/SimplaElements/simpla-text/blob/master/LICENSE
+
 [bower-badge]: https://img.shields.io/bower/v/simpla-text.svg
 [travis-badge]: https://img.shields.io/travis/SimplaElements/simpla-text.svg
 [travis-url]: https://travis-ci.org/SimplaElements/simpla-text
