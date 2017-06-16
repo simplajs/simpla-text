@@ -41,6 +41,7 @@ Simpla-text is an element containing editable richtext, which you can update sea
 - [Plaintext](#plaintext)
 - [Custom placeholders](#custom-placeholders)
 - [Typographer](#typographer)
+- [Readonly](#readonly)
 - [Contributing](#contributing)
 
 ### Resources
@@ -162,6 +163,14 @@ You can disable the typographer by giving simpla-text a `noTypographer` property
 
 ```html
 <simpla-text path="/text" no-typographer></simpla-text>
+```
+
+## Readonly
+
+Simpla-text has a `readonly` property that stops the element from becoming editable, even if Simpla is in edit mode or you try to set `editable` on the element directly. This is useful for using simpla-text to purely consume and display content from Simpla's API.
+
+```html
+<simpla-text path="/text" readonly></simpla-text>
 ```
 
 ## Contributing

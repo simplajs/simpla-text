@@ -11,6 +11,7 @@ Property         | Type      | Default                | Description
 `plaintext`      | `Boolean` | `false`                | Whether to disable formatting tools                             
 `noTypographer`  | `Boolean` | `false`                | Whether to disable smart typography rules                      
 `editable`       | `Boolean` | `false`                | Whether the element is editable                                 
+`readonly`       | `Boolean` | `false`                | Whether the element is able to become editable                                 
 `active`         | `Boolean` | `false`                | Whether the element is currently being edited                   
 `loaded`         | `Boolean` | `false`                | Wether the element has loaded and rendered its content          
 
