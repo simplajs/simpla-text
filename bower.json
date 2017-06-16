@@ -34,7 +34,7 @@
     "simpla-styles": "^1.0.0",
     "iron-icon": "^1.0.12",
     "iron-iconset-svg": "^1.1.0",
-    "simpla-element-behavior": "^0.2.2",
+    "simpla-element-behavior": "^0.2.3",
     "simpla-richtext-behavior": "^0.4.4"
   },
   "devDependencies": {
