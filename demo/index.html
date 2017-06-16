@@ -50,6 +50,11 @@
         display: inline-block;
         margin: 1em 0;
       }
+
+      simpla-text a {
+        text-decoration: none;
+        color: #1bd4dc;
+      }
     </style>
   </head>
 
@@ -81,6 +86,15 @@
       </div>
 
       <div class="demo">
+        <h1 class="demo__title">Plaintext</h1>
+        <demo-snippet>
+          <template>
+            <simpla-text path="/paintext" plaintext></simpla-text>
+          </template>
+        </demo-snippet>
+      </div>
+
+      <div class="demo">
         <h1 class="demo__title">Custom placeholders</h1>
         <demo-snippet>
           <template>
@@ -90,10 +104,23 @@
       </div>
 
       <div class="demo">
-        <h1 class="demo__title">Plaintext</h1>
+      <h1 class="demo__title">Static content</h1>
+      <demo-snippet>
+        <template>
+          <simpla-text path="/static">
+            <p>Simpla-text is an editable richtext element for the <a href="https://www.simpla.io">Simpla</a> content system</p>
+          </simpla-text>
+        </template>
+      </demo-snippet>
+    </div>
+
+      <div class="demo">
+        <h1 class="demo__title">Readonly</h1>
         <demo-snippet>
           <template>
-            <simpla-text path="/paintext" plaintext></simpla-text>
+            <simpla-text path="/readonly" readonly>
+              <p>You can't edit this, even if Simpla is in edit mode</p>
+            </simpla-text>
           </template>
         </demo-snippet>
       </div>
@@ -104,17 +131,6 @@
           <template>
             <simpla-text path="/synced"></simpla-text>
             <simpla-text path="/synced"></simpla-text>
-          </template>
-        </demo-snippet>
-      </div>
-
-      <div class="demo">
-        <h1 class="demo__title">Readonly</h1>
-        <demo-snippet>
-          <template>
-            <simpla-text path="/readonly" readonly>
-              <p>This content is readonly, even if Simpla is in edit mode</p>
-            </simpla-text>
           </template>
         </demo-snippet>
       </div>
