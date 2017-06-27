@@ -56,6 +56,20 @@
           });
         });
 
+        describe('initial value', () => {
+          it('should retain value after editor loaded', () => {
+            let initial = '<p>Hello World</p>',
+                component = fixture('simple');
+
+            component.value = initial;
+
+            return flushEditor(component)
+              .then(() => {
+                expect(component.value).to.equal(initial);
+              });
+          });
+        });
+
         describe('editing', () => {
           let component;
 
@@ -91,7 +105,6 @@
 
               return flushEditor(plaintext)
                 .then(() => {
-                  plaintext.value = plaintext.value.split('</style>')[1];
                   expect(plaintext.value).to.equal(plain);
                 });
             });
@@ -104,13 +117,12 @@
 
               return flushEditor(component)
                 .then(() => {
-                  expect(component.value).to.equal(styleWidget + rich);
+                  expect(component.value).to.equal(rich);
                   component.plaintext = true;
                   return flushEditor(component);
                 })
                 .then(() => {
-                  plaintext.value = component.value.split('</style>')[1];
-                  expect(component.value).to.equal(styleWidget + plain);
+                  expect(component.value).to.equal(plain);
                 });
 
             });

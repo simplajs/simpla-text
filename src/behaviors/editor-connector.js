@@ -105,7 +105,10 @@ export default {
 
           editor.on('plugin', updateTools);
           editor.on('select', updateRangeAndTarget);
-          editor.on('input', () => this.fire('input'));
+          editor.on('input', () => {
+            // Ensure editor is ready before firing input events.
+            this.__waitForEditor.then(() => this.fire('input'));
+          });
 
           if (this.value && this.value.trim()) {
             editor.setHTML(this.value);
