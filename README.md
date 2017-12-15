@@ -182,7 +182,7 @@ If you find any issues with simpla-text please report them! If you'd like to see
 MIT © [Simpla][simpla]
 
 [simpla]: https://www.simpla.io
-[simpla-setup]: https://docs.simpla.io/guides/get-started.htlm
+[simpla-setup]: https://docs.simpla.io/guides/get-started.html
 
 [api]: https://www.webcomponents.org/element/simplaio/simpla-text/page/API.md
 [demo]: https://www.webcomponents.org/element/simplaio/simpla-text/demo/demo/index.html
